@@ -1,0 +1,212 @@
+:root {
+  --bg-gradient-start: #f4f4f4;
+  --bg-gradient-end: #e0e0e0;
+  --header-gradient-start: #333;
+  --header-gradient-end: #555;
+  --text-color: #333;
+  --nav-link-color: white;
+  --nav-hover-color: #2e90c5;
+  --main-bg: white;
+  --input-border: #ccc;
+  --primary-color: #007bff;
+  --primary-hover: #0056b3;
+  --footer-gradient-start: #ddd;
+  --footer-gradient-end: #bbb;
+  --footer-text: #555;
+  --shadow-color: rgba(0,0,0,0.1);
+  --focus-shadow: rgba(0,123,255,0.5);
+  --secondary-text-color: #495057;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    color: var(--text-color);
+}
+
+header {
+    background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+    color: var(--nav-link-color);
+    padding: 1rem;
+    box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+nav a {
+    color: var(--nav-link-color);
+    margin-right: 1rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: var(--nav-hover-color);
+    text-decoration: underline;
+}
+
+main {
+    padding: 2rem;
+    background-color: var(--main-bg);
+    margin: 2rem;
+    flex: 1;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px var(--shadow-color);
+}
+
+form {
+    max-width: 400px;
+}
+
+.form-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.card {
+    width: 400px;
+    height: 350px;
+    padding: 1.5rem;
+    background-color: var(--main-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px var(--focus-shadow);
+}
+
+button {
+    margin-top: 1.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    color: var(--nav-link-color);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--primary-hover);
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--footer-gradient-start) 0%, var(--footer-gradient-end) 100%);
+    color: var(--footer-text);
+}
+footer p {
+    margin: 0;
+}
+
+/* Home page styles */
+.home-main {
+    border-radius: 12px;
+    position: relative;
+}
+
+.home-main h2 {
+    font-size: 2.2rem;
+    text-align: center;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.home-main p {
+    text-align: left;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--secondary-text-color);
+    margin-bottom: 1rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* About page styles */
+.about-main {
+    border-radius: 12px;
+    position: relative;
+}
+
+.about-main h2 {
+    font-size: 2.2rem;
+    text-align: center;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.about-main p {
+    text-align: left;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--secondary-text-color);
+    margin-bottom: 1rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    header {
+        padding: 0.5rem;
+    }
+
+    nav a {
+        margin-right: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    main {
+        padding: 1rem;
+        margin: 1rem;
+        border-radius: 6px;
+    }
+
+    footer {
+        padding: 0.5rem;
+    }
+
+    footer p {
+        font-size: 0.9rem;
+    }
+
+    button {
+        width: 100%;
+    }
+}
