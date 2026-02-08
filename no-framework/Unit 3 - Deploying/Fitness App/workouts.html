@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workouts - Endurance XP</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Endurance XP</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="workouts.html" class="active">Workouts</a></li>
+                <li><a href="community.html">Community</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+            <div class="streak-display">
+                <span class="flame">🔥</span>
+                <span>12 Day Streak</span>
+            </div>
+            <div class="flex gap-2">
+                <a href="login.html" class="btn btn-ghost nav-auth-btn">Login</a>
+                <a href="register.html" class="btn btn-primary nav-auth-btn">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="page-header">
+            <h1>Exercise Library</h1>
+            <p>Browse exercises, follow workout routines, and create your own custom exercises to earn XP!</p>
+        </header>
+
+        <!-- Add Custom Exercise Section -->
+        <div class="exercise-logger mb-4">
+            <h3>➕ Create Custom Exercise</h3>
+            <p class="text-muted mb-2">Add your own exercises to the library and earn XP when you complete them!</p>
+            <div class="exercise-form">
+                <div class="form-group">
+                    <label>Exercise Name</label>
+                    <input type="text" placeholder="e.g., Mountain Climbers">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select>
+                        <option>Select category...</option>
+                        <option>Strength</option>
+                        <option>Cardio</option>
+                        <option>Flexibility</option>
+                        <option>HIIT</option>
+                        <option>Core</option>
+                        <option>Balance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>XP per Set/Min</label>
+                    <input type="number" placeholder="e.g., 25">
+                </div>
+                <button class="btn btn-primary">+ Add Exercise</button>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="card mb-3">
+            <div class="flex-between flex-wrap gap-2">
+                <div class="flex gap-2 flex-wrap">
+                    <button class="btn btn-primary">All</button>
+                    <button class="btn btn-ghost">💪 Strength</button>
+                    <button class="btn btn-ghost">🏃 Cardio</button>
+                    <button class="btn btn-ghost">🔥 HIIT</button>
+                    <button class="btn btn-ghost">🧘 Flexibility</button>
+                    <button class="btn btn-ghost">⚡ Core</button>
+                    <button class="btn btn-ghost">⭐ My Exercises</button>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" placeholder="Search exercises..." class="search-input">
+                </div>
+            </div>
+        </div>
+
+        <!-- My Following Section -->
+        <div class="card mb-4 following-card">
+            <div class="flex-between mb-2">
+                <h3 class="text-accent">⭐ Exercises You Follow</h3>
+                <span class="text-muted">8 exercises</span>
+            </div>
+            <div class="grid grid-4 gap-2">
+                <div class="followed-exercise">
+                    <div class="followed-exercise-icon">🏋️</div>
+                    <h4 class="followed-exercise-title">Bench Press</h4>
+                    <span class="exercise-xp text-sm">+50 XP/set</span>
+                </div>
+                <div class="followed-exercise">
+                    <div class="followed-exercise-icon">🦵</div>
+                    <h4 class="followed-exercise-title">Squats</h4>
+                    <span class="exercise-xp text-sm">+60 XP/set</span>
+                </div>
+                <div class="followed-exercise">
+                    <div class="followed-exercise-icon">🏃</div>
+                    <h4 class="followed-exercise-title">Running</h4>
+                    <span class="exercise-xp text-sm">+5 XP/min</span>
+                </div>
+                <div class="followed-exercise">
+                    <div class="followed-exercise-icon">💪</div>
+                    <h4 class="followed-exercise-title">Push-ups</h4>
+                    <span class="exercise-xp text-sm">+30 XP/set</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strength Exercises -->
+        <h2 class="mb-3 text-accent">💪 Strength Exercises</h2>
+        <div class="grid grid-3 mb-4">
+            <div class="workout-card">
+                <div class="workout-image">🏋️</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-primary">Strength</span>
+                        <span class="exercise-xp">+50 XP/set</span>
+                    </div>
+                    <h3>Bench Press</h3>
+                    <p>Classic chest exercise for building upper body strength and muscle mass.</p>
+                    <div class="workout-meta">
+                        <span>📊 Chest, Triceps</span>
+                        <span>👥 45K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-secondary exercise-card-btn">✓ Following</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">🦵</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-primary">Strength</span>
+                        <span class="exercise-xp">+60 XP/set</span>
+                    </div>
+                    <h3>Squats</h3>
+                    <p>Essential lower body exercise targeting quads, glutes, and core stability.</p>
+                    <div class="workout-meta">
+                        <span>📊 Legs, Core</span>
+                        <span>👥 52K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-secondary exercise-card-btn">✓ Following</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">🏋️</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-primary">Strength</span>
+                        <span class="exercise-xp">+70 XP/set</span>
+                    </div>
+                    <h3>Deadlift</h3>
+                    <p>Full body compound movement for maximum strength and muscle development.</p>
+                    <div class="workout-meta">
+                        <span>📊 Back, Legs</span>
+                        <span>👥 38K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-ghost exercise-card-btn">+ Follow</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">💪</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-primary">Strength</span>
+                        <span class="exercise-xp">+30 XP/set</span>
+                    </div>
+                    <h3>Push-ups</h3>
+                    <p>Bodyweight classic for chest, shoulders, and triceps. No equipment needed!</p>
+                    <div class="workout-meta">
+                        <span>📊 Chest, Arms</span>
+                        <span>👥 68K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-secondary exercise-card-btn">✓ Following</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">🔄</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-primary">Strength</span>
+                        <span class="exercise-xp">+40 XP/set</span>
+                    </div>
+                    <h3>Pull-ups</h3>
+                    <p>Ultimate back and bicep builder using just your body weight.</p>
+                    <div class="workout-meta">
+                        <span>📊 Back, Biceps</span>
+                        <span>👥 41K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-ghost exercise-card-btn">+ Follow</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">🏋️</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-primary">Strength</span>
+                        <span class="exercise-xp">+45 XP/set</span>
+                    </div>
+                    <h3>Shoulder Press</h3>
+                    <p>Build powerful shoulders and improve overhead pressing strength.</p>
+                    <div class="workout-meta">
+                        <span>📊 Shoulders</span>
+                        <span>👥 29K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-ghost exercise-card-btn">+ Follow</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cardio Exercises -->
+        <h2 class="mb-3 text-success">🏃 Cardio Exercises</h2>
+        <div class="grid grid-3 mb-4">
+            <div class="workout-card">
+                <div class="workout-image">🏃</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-success">Cardio</span>
+                        <span class="exercise-xp">+5 XP/min</span>
+                    </div>
+                    <h3>Running</h3>
+                    <p>Classic cardio for endurance, calorie burn, and cardiovascular health.</p>
+                    <div class="workout-meta">
+                        <span>📊 Full Body</span>
+                        <span>👥 89K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-secondary exercise-card-btn">✓ Following</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">🚴</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-success">Cardio</span>
+                        <span class="exercise-xp">+4 XP/min</span>
+                    </div>
+                    <h3>Cycling</h3>
+                    <p>Low-impact cardio that's easy on joints while building leg strength.</p>
+                    <div class="workout-meta">
+                        <span>📊 Legs</span>
+                        <span>👥 54K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-ghost exercise-card-btn">+ Follow</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">🏊</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-success">Cardio</span>
+                        <span class="exercise-xp">+6 XP/min</span>
+                    </div>
+                    <h3>Swimming</h3>
+                    <p>Full body workout that's gentle on joints with maximum calorie burn.</p>
+                    <div class="workout-meta">
+                        <span>📊 Full Body</span>
+                        <span>👥 32K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-ghost exercise-card-btn">+ Follow</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">🚶</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-success">Cardio</span>
+                        <span class="exercise-xp">+3 XP/min</span>
+                    </div>
+                    <h3>Walking</h3>
+                    <p>Perfect for beginners and active recovery days. Low impact, high benefits!</p>
+                    <div class="workout-meta">
+                        <span>📊 Full Body</span>
+                        <span>👥 72K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-secondary exercise-card-btn">✓ Following</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">🪢</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-success">Cardio</span>
+                        <span class="exercise-xp">+8 XP/min</span>
+                    </div>
+                    <h3>Jump Rope</h3>
+                    <p>High-intensity cardio that improves coordination and burns calories fast.</p>
+                    <div class="workout-meta">
+                        <span>📊 Full Body</span>
+                        <span>👥 28K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-ghost exercise-card-btn">+ Follow</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">🏔️</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-success">Cardio</span>
+                        <span class="exercise-xp">+7 XP/min</span>
+                    </div>
+                    <h3>Stair Climbing</h3>
+                    <p>Intense cardio that builds leg strength and improves endurance.</p>
+                    <div class="workout-meta">
+                        <span>📊 Legs, Cardio</span>
+                        <span>👥 19K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-ghost exercise-card-btn">+ Follow</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Core & HIIT Exercises -->
+        <h2 class="mb-3 text-orange">⚡ Core & HIIT Exercises</h2>
+        <div class="grid grid-3 mb-4">
+            <div class="workout-card">
+                <div class="workout-image">🔥</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-warning">HIIT</span>
+                        <span class="exercise-xp">+35 XP/set</span>
+                    </div>
+                    <h3>Burpees</h3>
+                    <p>Full body explosive movement that torches calories and builds endurance.</p>
+                    <div class="workout-meta">
+                        <span>📊 Full Body</span>
+                        <span>👥 41K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-ghost exercise-card-btn">+ Follow</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">🧱</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-core">Core</span>
+                        <span class="exercise-xp">+4 XP/min</span>
+                    </div>
+                    <h3>Plank</h3>
+                    <p>Isometric core exercise that builds stability and strengthens your entire core.</p>
+                    <div class="workout-meta">
+                        <span>📊 Core</span>
+                        <span>👥 56K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-secondary exercise-card-btn">✓ Following</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">🏔️</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-warning">HIIT</span>
+                        <span class="exercise-xp">+25 XP/set</span>
+                    </div>
+                    <h3>Mountain Climbers</h3>
+                    <p>Cardio and core combo that gets your heart racing while building abs.</p>
+                    <div class="workout-meta">
+                        <span>📊 Core, Cardio</span>
+                        <span>👥 38K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-ghost exercise-card-btn">+ Follow</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">🦵</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-warning">HIIT</span>
+                        <span class="exercise-xp">+20 XP/set</span>
+                    </div>
+                    <h3>Jumping Lunges</h3>
+                    <p>Explosive lower body exercise that builds power and burns calories.</p>
+                    <div class="workout-meta">
+                        <span>📊 Legs</span>
+                        <span>👥 24K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-ghost exercise-card-btn">+ Follow</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">🔄</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-core">Core</span>
+                        <span class="exercise-xp">+15 XP/set</span>
+                    </div>
+                    <h3>Crunches</h3>
+                    <p>Classic ab exercise for building a strong and defined core.</p>
+                    <div class="workout-meta">
+                        <span>📊 Core</span>
+                        <span>👥 61K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-secondary exercise-card-btn">✓ Following</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">⬆️</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-warning">HIIT</span>
+                        <span class="exercise-xp">+30 XP/set</span>
+                    </div>
+                    <h3>Box Jumps</h3>
+                    <p>Plyometric exercise for explosive power and athletic performance.</p>
+                    <div class="workout-meta">
+                        <span>📊 Legs, Power</span>
+                        <span>👥 22K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-ghost exercise-card-btn">+ Follow</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flexibility Section -->
+        <h2 class="mb-3 text-purple">🧘 Flexibility & Recovery</h2>
+        <div class="grid grid-3 mb-4">
+            <div class="workout-card">
+                <div class="workout-image">🧘</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-flexibility">Flexibility</span>
+                        <span class="exercise-xp">+3 XP/min</span>
+                    </div>
+                    <h3>Yoga Flow</h3>
+                    <p>Dynamic stretching sequence for flexibility and mindfulness.</p>
+                    <div class="workout-meta">
+                        <span>📊 Full Body</span>
+                        <span>👥 47K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-ghost exercise-card-btn">+ Follow</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">🤸</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-flexibility">Flexibility</span>
+                        <span class="exercise-xp">+2 XP/min</span>
+                    </div>
+                    <h3>Stretching</h3>
+                    <p>Essential recovery stretches to improve flexibility and prevent injury.</p>
+                    <div class="workout-meta">
+                        <span>📊 Full Body</span>
+                        <span>👥 58K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-secondary exercise-card-btn">✓ Following</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workout-card">
+                <div class="workout-image">🧘‍♂️</div>
+                <div class="workout-details">
+                    <div class="flex-between">
+                        <span class="badge badge-flexibility">Flexibility</span>
+                        <span class="exercise-xp">+4 XP/min</span>
+                    </div>
+                    <h3>Pilates</h3>
+                    <p>Low-impact exercises focusing on core strength, posture, and flexibility.</p>
+                    <div class="workout-meta">
+                        <span>📊 Core, Full Body</span>
+                        <span>👥 35K following</span>
+                    </div>
+                    <div class="exercise-card-footer">
+                        <button class="btn btn-ghost exercise-card-btn">+ Follow</button>
+                        <button class="btn btn-primary exercise-card-btn">+ Log</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- XP Guide -->
+        <div class="card xp-guide-card">
+            <h3 class="text-gold xp-guide-title">💡 XP Earning Guide</h3>
+            <div class="grid grid-3 gap-3">
+                <div class="xp-guide-item">
+                    <h4 class="text-accent xp-guide-subtitle">Strength Exercises</h4>
+                    <p class="text-muted text-sm">Earn XP per set completed. Heavier compound movements = more XP!</p>
+                    <div class="xp-guide-rate">30-70 XP per set</div>
+                </div>
+                <div class="xp-guide-item">
+                    <h4 class="text-success xp-guide-subtitle">Cardio Exercises</h4>
+                    <p class="text-muted text-sm">Earn XP per minute. Higher intensity = higher XP rate!</p>
+                    <div class="xp-guide-rate">3-8 XP per minute</div>
+                </div>
+                <div class="xp-guide-item">
+                    <h4 class="text-purple xp-guide-subtitle">Flexibility & Core</h4>
+                    <p class="text-muted text-sm">Earn XP per minute or set. Consistency is key!</p>
+                    <div class="xp-guide-rate">2-4 XP per minute</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>© 2026 Endurance XP. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

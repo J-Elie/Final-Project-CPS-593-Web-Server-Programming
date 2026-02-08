@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Endurance XP</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Endurance XP</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="workouts.html">Workouts</a></li>
+                <li><a href="community.html">Community</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+            <div class="streak-display">
+                <span class="flame">🔥</span>
+                <span>12 Day Streak</span>
+            </div>
+            <div class="flex gap-2">
+                <a href="login.html" class="btn btn-ghost nav-auth-btn">Login</a>
+                <a href="register.html" class="btn btn-primary nav-auth-btn">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container auth-container-padded">
+        <div class="card auth-card-wide">
+            <!-- Header -->
+            <div class="text-center mb-3 auth-header">
+                <div class="auth-header-icon">🎮⚔️</div>
+                <h1 class="text-lg">Begin Your Quest!</h1>
+                <p class="text-muted">Create an account to start earning XP</p>
+            </div>
+
+            <!-- Register Form -->
+            <form class="auth-form">
+                <div class="grid grid-2 gap-2 mb-3">
+                    <div class="form-group">
+                        <label class="auth-label">First Name</label>
+                        <input type="text" placeholder="John" class="auth-input w-full">
+                    </div>
+                    <div class="form-group">
+                        <label class="auth-label">Last Name</label>
+                        <input type="text" placeholder="Doe" class="auth-input w-full">
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="auth-label">Email Address</label>
+                    <input type="email" placeholder="warrior@example.com" class="auth-input w-full">
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="auth-label">Username</label>
+                    <input type="text" placeholder="FitWarrior123" class="auth-input w-full">
+                    <small class="text-muted text-sm">This will be your display name in the community</small>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="auth-label">Password</label>
+                    <input type="password" placeholder="••••••••" class="auth-input w-full">
+                    <small class="text-muted text-sm">Must be at least 8 characters</small>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="auth-label">Confirm Password</label>
+                    <input type="password" placeholder="••••••••" class="auth-input w-full">
+                </div>
+
+                <!-- Fitness Goal -->
+                <div class="form-group mb-3">
+                    <label class="auth-label">Primary Fitness Goal</label>
+                    <select class="auth-input w-full">
+                        <option>Select your goal...</option>
+                        <option>🏋️ Build Muscle & Strength</option>
+                        <option>🔥 Lose Weight & Burn Fat</option>
+                        <option>🏃 Improve Cardio & Endurance</option>
+                        <option>🧘 Increase Flexibility</option>
+                        <option>💪 General Fitness & Health</option>
+                        <option>🏆 Athletic Performance</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="auth-checkbox-label-start">
+                        <input type="checkbox" class="auth-checkbox-top">
+                        <span class="text-sm">I agree to the <a href="#" class="text-accent">Terms of Service</a> and <a href="#" class="text-accent">Privacy Policy</a></span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full p-4 text-lg font-semibold">
+                    🚀 Create Account & Start Playing
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="auth-divider">
+                <div class="auth-divider-line"></div>
+                <span class="text-muted text-sm">or sign up with</span>
+                <div class="auth-divider-line"></div>
+            </div>
+
+            <!-- Social Register -->
+            <div class="grid grid-2 gap-2 mb-3">
+                <button class="btn btn-secondary auth-social-btn">
+                    <span class="auth-social-icon">🔷</span> Google
+                </button>
+                <button class="btn btn-secondary auth-social-btn">
+                    <span class="auth-social-icon">🍎</span> Apple
+                </button>
+            </div>
+
+            <!-- Login Link -->
+            <div class="text-center auth-footer">
+                <p class="text-muted">
+                    Already have an account? 
+                    <a href="login.html" class="text-accent font-semibold">Log In</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>© 2026 Endurance XP. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

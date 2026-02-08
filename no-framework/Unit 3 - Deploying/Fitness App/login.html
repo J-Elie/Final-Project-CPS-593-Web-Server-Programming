@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Endurance XP</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Endurance XP</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="workouts.html">Workouts</a></li>
+                <li><a href="community.html">Community</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+            <div class="streak-display">
+                <span class="flame">🔥</span>
+                <span>12 Day Streak</span>
+            </div>
+            <div class="flex gap-2">
+                <a href="login.html" class="btn btn-ghost nav-auth-btn">Login</a>
+                <a href="register.html" class="btn btn-primary nav-auth-btn">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container auth-container">
+        <div class="card auth-card">
+            <!-- Header -->
+            <div class="text-center mb-3 auth-header">
+                <div class="auth-header-icon">🎮💪</div>
+                <h1 class="text-lg mb-0">Welcome Back, Warrior!</h1>
+                <p class="text-muted">Log in to continue your fitness quest</p>
+            </div>
+
+            <!-- Login Form -->
+            <form class="auth-form">
+                <div class="form-group mb-3">
+                    <label class="auth-label">Email Address</label>
+                    <input type="email" placeholder="warrior@endurancexp.com" class="auth-input w-full">
+                </div>
+
+                <div class="form-group mb-3">
+                    <div class="auth-label-row">
+                        <label class="auth-label mb-0">Password</label>
+                        <a href="#" class="text-accent text-sm">Forgot Password?</a>
+                    </div>
+                    <input type="password" placeholder="••••••••" class="auth-input w-full">
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="auth-checkbox-label">
+                        <input type="checkbox" class="auth-checkbox">
+                        <span>Keep me logged in</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full p-4 text-lg font-semibold">
+                    ⚡ Login & Continue Quest
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="auth-divider">
+                <div class="auth-divider-line"></div>
+                <span class="text-muted text-sm">or continue with</span>
+                <div class="auth-divider-line"></div>
+            </div>
+
+            <!-- Social Login -->
+            <div class="grid grid-2 gap-2 mb-3">
+                <button class="btn btn-secondary auth-social-btn">
+                    <span class="auth-social-icon">🔷</span> Google
+                </button>
+                <button class="btn btn-secondary auth-social-btn">
+                    <span class="auth-social-icon">🍎</span> Apple
+                </button>
+            </div>
+
+            <!-- Register Link -->
+            <div class="text-center auth-footer">
+                <p class="text-muted">
+                    New to Endurance XP? 
+                    <a href="register.html" class="text-accent font-semibold">Create Account</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>© 2026 Endurance XP. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

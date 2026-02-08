@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Endurance XP</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Endurance XP</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="workouts.html">Workouts</a></li>
+                <li><a href="community.html">Community</a></li>
+                <li><a href="profile.html" class="active">Profile</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+            <div class="streak-display">
+                <span class="flame">🔥</span>
+                <span>45 Day Streak</span>
+            </div>
+            <div class="flex gap-2">
+                <a href="login.html" class="btn btn-ghost nav-auth-btn">Login</a>
+                <a href="register.html" class="btn btn-primary nav-auth-btn">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Profile Banner -->
+        <div class="profile-banner"></div>
+
+        <!-- Profile Info -->
+        <div class="profile-info">
+            <div class="avatar avatar-lg">JD</div>
+            <div class="level-badge profile-level-badge">
+                <div class="level-icon">24</div>
+                <div class="level-info">
+                    <h3>Fitness Warrior</h3>
+                    <span class="text-muted">2,340 XP to next level</span>
+                </div>
+            </div>
+            <h2>Jennifer Davis</h2>
+            <p class="bio">Fitness enthusiast | Marathon runner | Gym rat 💪 On a journey to become the best version of myself. Let's motivate each other!</p>
+            
+            <!-- XP Progress Bar -->
+            <div class="xp-bar-wrapper profile-xp-bar">
+                <div class="xp-bar-bg">
+                    <div class="xp-bar-fill" style="width: 72%;"></div>
+                </div>
+                <div class="xp-bar-text">
+                    <span>Level 24</span>
+                    <span>7,660 / 10,000 XP</span>
+                    <span>Level 25</span>
+                </div>
+            </div>
+            
+            <div class="flex-center gap-2 mt-2">
+                <button class="btn btn-primary">Edit Profile</button>
+                <button class="btn btn-secondary">Share Profile</button>
+            </div>
+
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value text-gold">47,660</div>
+                    <div class="stat-label">Total XP</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">847</div>
+                    <div class="stat-label">Workouts</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">2.4K</div>
+                    <div class="stat-label">Followers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">156</div>
+                    <div class="stat-label">Achievements</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- XP This Week Chart -->
+        <div class="card mb-4">
+            <h3 class="mb-3 text-accent">📊 Weekly XP Progress</h3>
+            <div class="weekly-xp">
+                <div class="day-xp completed">
+                    <div class="weekly-chart-bar">
+                        <div class="weekly-chart-fill bg-gradient-blue" style="height: 70%;"></div>
+                    </div>
+                    <div class="day-name">Mon</div>
+                    <div class="day-points">+350</div>
+                </div>
+                <div class="day-xp completed">
+                    <div class="weekly-chart-bar">
+                        <div class="weekly-chart-fill bg-gradient-blue" style="height: 56%;"></div>
+                    </div>
+                    <div class="day-name">Tue</div>
+                    <div class="day-points">+280</div>
+                </div>
+                <div class="day-xp completed">
+                    <div class="weekly-chart-bar">
+                        <div class="weekly-chart-fill bg-gradient-blue" style="height: 84%;"></div>
+                    </div>
+                    <div class="day-name">Wed</div>
+                    <div class="day-points">+420</div>
+                </div>
+                <div class="day-xp completed">
+                    <div class="weekly-chart-bar">
+                        <div class="weekly-chart-fill bg-gradient-blue" style="height: 62%;"></div>
+                    </div>
+                    <div class="day-name">Thu</div>
+                    <div class="day-points">+310</div>
+                </div>
+                <div class="day-xp today">
+                    <div class="weekly-chart-bar">
+                        <div class="weekly-chart-fill bg-gradient-green" style="height: 98%;"></div>
+                    </div>
+                    <div class="day-name">Fri</div>
+                    <div class="day-points">+490</div>
+                </div>
+                <div class="day-xp">
+                    <div class="weekly-chart-bar">
+                        <div class="weekly-chart-fill" style="height: 10%;"></div>
+                    </div>
+                    <div class="day-name">Sat</div>
+                    <div class="day-points">—</div>
+                </div>
+                <div class="day-xp">
+                    <div class="weekly-chart-bar">
+                        <div class="weekly-chart-fill" style="height: 10%;"></div>
+                    </div>
+                    <div class="day-name">Sun</div>
+                    <div class="day-points">—</div>
+                </div>
+            </div>
+            <div class="flex-between mt-3 pt-4 border-t">
+                <span class="text-secondary">Week Total:</span>
+                <span class="text-xl font-extrabold text-success">1,850 XP</span>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-4 mt-4 mb-4">
+            <div class="card text-center">
+                <div class="stat-card-icon">🔥</div>
+                <div class="stat-value">45</div>
+                <div class="stat-label">Day Streak</div>
+            </div>
+            <div class="card text-center">
+                <div class="stat-card-icon">⚡</div>
+                <div class="stat-value text-gold">47.6K</div>
+                <div class="stat-label">Lifetime XP</div>
+            </div>
+            <div class="card text-center">
+                <div class="stat-card-icon">⏱️</div>
+                <div class="stat-value">186 hrs</div>
+                <div class="stat-label">Training Time</div>
+            </div>
+            <div class="card text-center">
+                <div class="stat-card-icon">🏆</div>
+                <div class="stat-value">#12</div>
+                <div class="stat-label">Weekly Rank</div>
+            </div>
+        </div>
+
+        <!-- Tabs Section -->
+        <div class="card mb-3">
+            <div class="flex gap-2 mb-3 border-t pt-4">
+                <button class="btn btn-primary">Activity</button>
+                <button class="btn btn-ghost">Achievements</button>
+                <button class="btn btn-ghost">Workouts</button>
+                <button class="btn btn-ghost">Progress Photos</button>
+            </div>
+
+            <!-- Recent Activity -->
+            <h3 class="mb-2">Recent Activity & XP Earned</h3>
+            
+            <div class="activity-item border-l-accent mb-3">
+                <div class="activity-header">
+                    <span class="activity-title">Morning Run</span>
+                    <span class="exercise-xp">+150 XP</span>
+                </div>
+                <span class="activity-time">Today, 6:30 AM</span>
+                <p class="activity-desc">Completed a 5K run around the park</p>
+                <div class="activity-stats">
+                    <span>🏃 5.2 km</span>
+                    <span>⏱️ 28:15</span>
+                    <span>🔥 320 cal</span>
+                </div>
+            </div>
+
+            <div class="activity-item border-l-success mb-3">
+                <div class="activity-header">
+                    <span class="activity-title">Strength Training</span>
+                    <span class="exercise-xp">+340 XP</span>
+                </div>
+                <span class="activity-time">Yesterday, 5:00 PM</span>
+                <p class="activity-desc">Upper body workout - chest and shoulders</p>
+                <div class="activity-stats">
+                    <span>💪 8 exercises</span>
+                    <span>⏱️ 52 min</span>
+                    <span>🔥 410 cal</span>
+                </div>
+            </div>
+
+            <div class="level-up-activity border-l-gold mb-3">
+                <div class="activity-header">
+                    <span class="activity-title text-gold">🎉 Level Up!</span>
+                    <span class="activity-time">2 days ago</span>
+                </div>
+                <p class="text-secondary">Reached <strong>Level 24 - Fitness Warrior</strong>! Keep grinding to unlock new rewards!</p>
+            </div>
+
+            <div class="activity-item border-l-warning mb-3">
+                <div class="activity-header">
+                    <span class="activity-title">🏆 Achievement Unlocked!</span>
+                    <span class="exercise-xp">+500 XP Bonus</span>
+                </div>
+                <span class="activity-time">2 days ago</span>
+                <p class="activity-desc">Earned "Marathon Warrior" badge - Completed 100 running workouts!</p>
+            </div>
+
+            <div class="activity-item border-l-accent">
+                <div class="activity-header">
+                    <span class="activity-title">HIIT Session</span>
+                    <span class="exercise-xp">+280 XP</span>
+                </div>
+                <span class="activity-time">3 days ago</span>
+                <p class="activity-desc">30-minute high-intensity interval training</p>
+                <div class="activity-stats">
+                    <span>🔥 12 rounds</span>
+                    <span>⏱️ 30 min</span>
+                    <span>🔥 380 cal</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements Preview -->
+        <div class="card">
+            <div class="flex-between mb-2">
+                <h3>Recent Achievements</h3>
+                <a href="#" class="text-accent">View All →</a>
+            </div>
+            <div class="achievement-grid">
+                <div class="achievement-item">
+                    <div class="achievement-icon">🏃</div>
+                    <div class="achievement-title">Marathon Warrior</div>
+                    <div class="achievement-desc">100 runs completed</div>
+                </div>
+                <div class="achievement-item">
+                    <div class="achievement-icon">🔥</div>
+                    <div class="achievement-title">On Fire</div>
+                    <div class="achievement-desc">30-day streak</div>
+                </div>
+                <div class="achievement-item">
+                    <div class="achievement-icon">💪</div>
+                    <div class="achievement-title">Iron Lifter</div>
+                    <div class="achievement-desc">500 lbs total lift</div>
+                </div>
+                <div class="achievement-item">
+                    <div class="achievement-icon">🌅</div>
+                    <div class="achievement-title">Early Bird</div>
+                    <div class="achievement-desc">50 morning workouts</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>© 2026 Endurance XP. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 3 - Deploying Projects</title>
+    <style>
+        :root {
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --accent-primary: #2563eb;
+            --accent-light: #3b82f6;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #2563eb, #3b82f6, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 10px 40px rgba(37, 99, 235, 0.2);
+        }
+
+        .project-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--accent-light);
+        }
+
+        .project-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .tag {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.35rem 0.75rem;
+            background: rgba(37, 99, 235, 0.15);
+            color: var(--accent-light);
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        footer {
+            margin-top: 3rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent-light);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Unit 3 - Deploying</h1>
+        <p class="subtitle">Select a project to view</p>
+
+        <div class="projects">
+            <a href="Fitness App/index.html" class="project-card">
+                <div class="project-icon">🎮💪</div>
+                <h2>Endurance XP</h2>
+                <p>A gamified fitness social media app where you earn XP for workouts, level up, and compete with friends on leaderboards.</p>
+                <span class="tag">Fitness RPG</span>
+            </a>
+
+            <a href="Recreation Page/index.html" class="project-card">
+                <div class="project-icon">�📚</div>
+                <h2>Re-Creation Page</h2>
+                <p>My attempt to re-create Professor Plotkin's website, using only CSS and HTML.</p>
+                <span class="tag">Re-Creation</span>
+            </a>
+        </div>
+
+        <footer>
+            <p>CPS 593 Final Project • <a href="../Unit 2 -Git/index.html">View Unit 2</a></p>
+        </footer>
+    </div>
+</body>
+</html>
