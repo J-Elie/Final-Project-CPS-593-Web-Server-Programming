@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unit 3 - Deploying Projects</title>
+    <title>CPS 593 - No Framework Projects</title>
     <style>
         :root {
             --bg-dark: #0d1117;
@@ -34,7 +34,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             text-align: center;
         }
 
@@ -53,13 +53,13 @@
             margin-bottom: 3rem;
         }
 
-        .projects {
+        .units {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
         }
 
-        .project-card {
+        .unit-card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 16px;
@@ -69,24 +69,24 @@
             transition: all 0.3s ease;
         }
 
-        .project-card:hover {
+        .unit-card:hover {
             transform: translateY(-5px);
             border-color: var(--accent-primary);
             box-shadow: 0 10px 40px rgba(37, 99, 235, 0.2);
         }
 
-        .project-icon {
+        .unit-icon {
             font-size: 4rem;
             margin-bottom: 1rem;
         }
 
-        .project-card h2 {
+        .unit-card h2 {
             font-size: 1.5rem;
             margin-bottom: 0.75rem;
             color: var(--accent-light);
         }
 
-        .project-card p {
+        .unit-card p {
             color: var(--text-secondary);
             line-height: 1.6;
         }
@@ -119,27 +119,34 @@
 </head>
 <body>
     <div class="container">
-        <h1>Unit 3 - Deploying</h1>
-        <p class="subtitle">Select a project to view</p>
+        <h1>CPS 593 Final Project</h1>
+        <p class="subtitle">No Framework Projects - Select a unit to view</p>
 
-        <div class="projects">
-            <a href="Fitness App/index.html" class="project-card">
-                <div class="project-icon">🎮💪</div>
-                <h2>Endurance XP</h2>
-                <p>A gamified fitness social media app where you earn XP for workouts, level up, and compete with friends on leaderboards.</p>
-                <span class="tag">Fitness RPG</span>
+        <div class="units">
+            <a href="Unit-2-Git/index.html" class="unit-card">
+                <div class="unit-icon">🔧📂</div>
+                <h2>Unit 2 - Git</h2>
+                <p>Endurance XP fitness app with version control. Learn git workflows while building a gamified fitness tracker.</p>
+                <span class="tag">Version Control</span>
             </a>
 
-            <a href="Recreation Page/index.html" class="project-card">
-                <div class="project-icon">�📚</div>
-                <h2>Re-Creation Page</h2>
-                <p>My attempt to re-create Professor Plotkin's website, using only CSS and HTML.</p>
-                <span class="tag">Re-Creation</span>
+            <a href="Unit-3-Deploying/index.html" class="unit-card">
+                <div class="unit-icon">🚀🌐</div>
+                <h2>Unit 3 - Deploying</h2>
+                <p>Deployment projects including the Fitness App and a recreation of Professor Plotkin's website.</p>
+                <span class="tag">Deployment</span>
+            </a>
+
+            <a href="Unit-4-Bulma/Bulma-Recreation.html" class="unit-card">
+                <div class="unit-icon">🎨💅</div>
+                <h2>Unit 4 - Bulma</h2>
+                <p>CSS framework exploration using Bulma to create responsive and styled web pages with minimal custom CSS.</p>
+                <span class="tag">CSS Framework</span>
             </a>
         </div>
 
         <footer>
-            <p>CPS 593 Final Project • <a href="../Unit 2 -Git/index.html">View Unit 2</a></p>
+            <p>CPS 593 Final Project • HTML & CSS Only</p>
         </footer>
     </div>
 </body>
