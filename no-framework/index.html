@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPS 593 - No Framework Projects</title>
+    <style>
+        :root {
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --accent-primary: #2563eb;
+            --accent-light: #3b82f6;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #2563eb, #3b82f6, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        .units {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .unit-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .unit-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 10px 40px rgba(37, 99, 235, 0.2);
+        }
+
+        .unit-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .unit-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--accent-light);
+        }
+
+        .unit-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .tag {
+            display: inline-block;
+            margin-top: auto;
+            padding: 0.35rem 0.75rem;
+            background: rgba(37, 99, 235, 0.15);
+            color: var(--accent-light);
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        footer {
+            margin-top: 3rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent-light);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CPS 593 Web Server Programming</h1>
+        <p class="subtitle">No Framework Projects - Select a unit to view</p>
+
+        <div class="units">
+            <a href="Unit-2-Git/index.html" class="unit-card">
+                <div class="unit-icon">🔧📂</div>
+                <h2>Unit 2 - Git</h2>
+                <p>Endurance XP fitness app with version control. Learn git workflows while building a gamified fitness tracker.</p>
+                <span class="tag">Version Control</span>
+            </a>
+
+            <a href="Unit-3-Deploying/index.html" class="unit-card">
+                <div class="unit-icon">🚀🌐</div>
+                <h2>Unit 3 - Deploying</h2>
+                <p>Deployment projects including the Fitness App and a recreation of Professor Plotkin's website.</p>
+                <span class="tag">Deployment</span>
+            </a>
+
+            <a href="Unit-4-Bulma/Bulma-Recreation.html" class="unit-card">
+                <div class="unit-icon">🎨💅</div>
+                <h2>Unit 4 - Bulma</h2>
+                <p>CSS framework exploration using Bulma to create responsive and styled web page. This page is also a recreation of Professor Plotkin's website.</p>
+                <span class="tag">CSS Framework</span>
+            </a>
+        </div>
+
+        <footer>
+            <p>CPS 593 Web Server Programming Final Project</p>
+        </footer>
+    </div>
+</body>
+</html>

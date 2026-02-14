@@ -20,7 +20,12 @@ For this unit, I created the base of a Fitness App website with multiple pages i
 **Hosting:** The site is deployed on both **GitHub Pages** and **Render**, providing two hosting options with automatic deployments from the repository.
 
 **Live Sites:**
-- **Render:** [https://final-project-cps-593-web-server.onrender.com/no-framework/Unit%203%20-%20Deploying/index.html](https://final-project-cps-593-web-server.onrender.com/no-framework/Unit%203%20-%20Deploying/index.html)
-- **GitHub Pages:** [https://j-elie.github.io/Final-Project-CPS-593-Web-Server-Programming/no-framework/Unit%203%20-%20Deploying/index.html](https://j-elie.github.io/Final-Project-CPS-593-Web-Server-Programming/no-framework/Unit%203%20-%20Deploying/index.html)
+- **Render:** [https://final-project-cps-593-web-server.onrender.com/no-framework/index.html](https://final-project-cps-593-web-server.onrender.com/no-framework/index.html)
+- **GitHub Pages:** [https://j-elie.github.io/Final-Project-CPS-593-Web-Server-Programming/no-framework/index.html](https://j-elie.github.io/Final-Project-CPS-593-Web-Server-Programming/no-framework/index.html)
 
+### Unit 4 Bulma
+
+For this unit, I explored the Bulma CSS framework to create responsive and styled web pages without writing custom CSS. Using elements from the official Bulma documentation, I recreated another page designed by Professor Plotkin.
+
+The page includes a navigation bar with dropdown menus, buttons with Font Awesome icons, and various Bulma components. This assignment demonstrated how CSS frameworks like Bulma can speed up development by providing pre-built, responsive design patterns that work across different screen sizes.
 
