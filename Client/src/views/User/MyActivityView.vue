@@ -1,30 +1,40 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useAuthStore } from '@/stores/authStore'
+import { usePostsStore } from '@/stores/postsStore'
+import type { Post } from '@/types/posts'
+import PostCard from '@/components/PostCard.vue'
 
-// Activity type definition
-interface Activity {
-  id: number
-  title: string
-  type: string
-  date: string
-  duration: string
-  intensity: string
-  picture: string
-  notes: string
-  createdAt: Date
-}
+// ============================================================================
+// STORE INITIALIZATION
+// ============================================================================
+const authStore = useAuthStore()
+const postsStore = usePostsStore()
 
+// ============================================================================
+// COMPUTED PROPERTIES
+// ============================================================================
+// Get only the current user's posts
+const myPosts = computed(() => {
+  if (!authStore.currentUser) return []
+  return postsStore.getPostsByUserId(authStore.currentUser.id)
+})
+
+// Sort posts by date (newest first)
+const sortedActivities = computed(() => {
+  return [...myPosts.value].sort((a, b) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime()
+  })
+})
+
+// ============================================================================
+// MODAL STATE
+// ============================================================================
 // Track modal open/closed state
 const isModalOpen = ref(false)
 
 // Track if we're editing an existing activity
 const editingActivityId = ref<number | null>(null)
-
-// Counter for generating unique IDs
-let nextId = 1
-
-// Array to store all activities
-const activities = ref<Activity[]>([])
 
 // Activity form data
 const activityForm = ref({
@@ -61,6 +71,9 @@ const today = computed(() => {
   return now.toISOString().split('T')[0]
 })
 
+// ============================================================================
+// MODAL FUNCTIONS
+// ============================================================================
 // Open the modal for adding new activity
 function openModal() {
   editingActivityId.value = null
@@ -68,7 +81,7 @@ function openModal() {
 }
 
 // Open the modal for editing an existing activity
-function editActivity(activity: Activity) {
+function editActivity(activity: Post) {
   editingActivityId.value = activity.id
   activityForm.value = {
     title: activity.title,
@@ -114,77 +127,43 @@ function addNewType() {
   }
 }
 
+// ============================================================================
+// CRUD OPERATIONS (using store)
+// ============================================================================
 // Handle form submission (add or edit)
 function submitActivity() {
+  if (!authStore.currentUser) return
+
   if (editingActivityId.value !== null) {
-    // Editing existing activity
-    const index = activities.value.findIndex((a) => a.id === editingActivityId.value)
-    if (index !== -1) {
-      const existingActivity = activities.value[index]!
-      activities.value[index] = {
-        id: existingActivity.id,
-        createdAt: existingActivity.createdAt,
-        title: activityForm.value.title,
-        type: activityForm.value.type,
-        date: activityForm.value.date,
-        duration: activityForm.value.duration,
-        intensity: activityForm.value.intensity,
-        picture: activityForm.value.picture,
-        notes: activityForm.value.notes
-      }
-    }
-  } else {
-    // Adding new activity
-    const newActivity: Activity = {
-      id: nextId++,
+    // Editing existing activity - use store
+    postsStore.updatePost(editingActivityId.value, {
       title: activityForm.value.title,
       type: activityForm.value.type,
       date: activityForm.value.date,
       duration: activityForm.value.duration,
       intensity: activityForm.value.intensity,
       picture: activityForm.value.picture,
-      notes: activityForm.value.notes,
-      createdAt: new Date()
-    }
-    activities.value.push(newActivity)
+      notes: activityForm.value.notes
+    })
+  } else {
+    // Adding new activity - use store
+    postsStore.addPost({
+      userId: authStore.currentUser.id,
+      title: activityForm.value.title,
+      type: activityForm.value.type,
+      date: activityForm.value.date,
+      duration: activityForm.value.duration,
+      intensity: activityForm.value.intensity,
+      picture: activityForm.value.picture,
+      notes: activityForm.value.notes
+    })
   }
   closeModal()
 }
 
-// Computed property to sort activities by date (newest first)
-const sortedActivities = computed(() => {
-  return [...activities.value].sort((a, b) => {
-    // Sort by date descending (newest first)
-    return new Date(b.date).getTime() - new Date(a.date).getTime()
-  })
-})
-
-// Delete an activity
+// Delete an activity - use store
 function deleteActivity(id: number) {
-  activities.value = activities.value.filter(a => a.id !== id)
-}
-
-// Format date for display
-function formatDate(dateString: string): string {
-  if (!dateString) return ''
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-}
-
-// Get intensity color class
-function getIntensityClass(intensity: string): string {
-  switch (intensity) {
-    case 'Easy': return 'is-success'
-    case 'Moderate': return 'is-warning'
-    case 'Hard': return 'is-danger'
-    case 'Extreme': return 'is-danger'
-    default: return 'is-info'
-  }
+  postsStore.deletePost(id)
 }
 </script>
 
@@ -195,13 +174,12 @@ function getIntensityClass(intensity: string): string {
       <div class="hero-body has-text-centered">
         <p class="title">
           <span class="icon-text">
-            <span class="icon">
+            <span class="icon mr-4">
               <i class="fas fa-heartbeat"></i>
             </span>
             <span>My Activities</span>
           </span>
         </p>
-        <p class="subtitle">My fitness journey</p>
       </div>
     </section>
 
@@ -229,81 +207,14 @@ function getIntensityClass(intensity: string): string {
       </div>
 
       <!-- Activity Cards -->
-      <div class="card mb-4" v-for="activity in sortedActivities" :key="activity.id">
-        <!-- Card Image (if picture provided) -->
-        <div class="card-image" v-if="activity.picture">
-          <figure class="image is-3by1">
-            <img :src="activity.picture" :alt="activity.title" />
-          </figure>
-        </div>
-
-        <div class="card-content">
-          <div class="media">
-            <div class="media-left">
-              <!-- Activity type icon -->
-              <figure class="image is-48x48">
-                <span class="icon is-large has-text-info">
-                  <i class="fas fa-2x" :class="{
-                    'fa-running': activity.type === 'Running',
-                    'fa-walking': activity.type === 'Walking',
-                    'fa-biking': activity.type === 'Cycling',
-                    'fa-swimmer': activity.type === 'Swimming',
-                    'fa-dumbbell': activity.type === 'Weightlifting',
-                    'fa-spa': activity.type === 'Yoga',
-                    'fa-fire': activity.type === 'HIIT',
-                    'fa-futbol': activity.type === 'Sports',
-                    'fa-heartbeat': !['Running', 'Walking', 'Cycling', 'Swimming', 'Weightlifting', 'Yoga', 'HIIT', 'Sports'].includes(activity.type)
-                  }"></i>
-                </span>
-              </figure>
-            </div>
-            <div class="media-content">
-              <p class="title is-4">{{ activity.title }}</p>
-              <p class="subtitle is-6">
-                <span class="tag is-info is-light">{{ activity.type }}</span>
-                <span class="tag ml-2" :class="getIntensityClass(activity.intensity)" v-if="activity.intensity">
-                  {{ activity.intensity }}
-                </span>
-              </p>
-            </div>
-            <div class="media-right">
-              <!-- Edit and Delete buttons -->
-              <div class="buttons">
-                <button class="button is-small is-warning" @click="editActivity(activity)" title="Edit">
-                  <span class="icon">
-                    <i class="fas fa-edit"></i>
-                  </span>
-                </button>
-                <button class="button is-small is-danger" @click="deleteActivity(activity.id)" title="Delete">
-                  <span class="icon">
-                    <i class="fas fa-trash"></i>
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="content">
-            <!-- Activity details -->
-            <div class="mb-3">
-              <span class="icon-text" v-if="activity.duration">
-                <span class="icon"><i class="fas fa-clock"></i></span>
-                <span>{{ activity.duration }} minutes</span>
-              </span>
-            </div>
-
-            <!-- Notes -->
-            <p v-if="activity.notes">{{ activity.notes }}</p>
-
-            <!-- Date -->
-            <br />
-            <time :datetime="activity.date">
-              <span class="icon"><i class="fas fa-calendar"></i></span>
-              {{ formatDate(activity.date) }}
-            </time>
-          </div>
-        </div>
-      </div>
+      <PostCard
+        v-for="activity in sortedActivities"
+        :key="activity.id"
+        :post="activity"
+        :show-actions="true"
+        @edit="editActivity"
+        @delete="deleteActivity"
+      />
       </div>
     </div>
 

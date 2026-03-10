@@ -51,12 +51,12 @@ const router = createRouter({
     },
 
     {
-      path: '/User/FriendsActivity',
-      name: 'friends-activity',
+      path: '/User/ActivityFeed',
+      name: 'activity-feed',
       // route level code-splitting
-      // this generates a separate chunk (FriendsActivity.[hash].js) for this route
+      // this generates a separate chunk (ActivityFeed.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/User/FriendsActivityView.vue'),
+      component: () => import('../views/User/ActivityFeedView.vue'),
     },
     {
       path: '/User/MyActivity',
@@ -67,7 +67,7 @@ const router = createRouter({
       component: () => import('../views/User/MyActivityView.vue'),
     },
     {
-      path: '/User/mystatistics',
+      path: '/User/MyStatistics',
       name: 'my-statistics',
       // route level code-splitting
       // this generates a separate chunk (MyStatistics.[hash].js) for this route

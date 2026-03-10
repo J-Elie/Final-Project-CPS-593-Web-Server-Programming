@@ -44,7 +44,7 @@
     </section>
 
     <!-- Inclusivity Section -->
-    <section class="section has-background-primary-light">
+    <section class="section inclusivity-section">
       <div class="container">
         <div class="columns is-centered">
           <div class="column is-8 has-text-centered">
@@ -63,7 +63,7 @@
     </section>
 
     <!-- Features Section -->
-    <section class="section has-background-light">
+    <section class="section features-section">
       <div class="container">
         <h2 class="title is-3 has-text-centered mb-6">Features</h2>
         <div class="columns is-multiline">
@@ -152,7 +152,7 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="section has-background-info-light">
+    <section class="section cta-section">
       <div class="container has-text-centered">
         <h2 class="title is-3">Ready to Start?</h2>
         <p class="subtitle">Your movement journey begins here at your own pace.</p>
@@ -178,4 +178,24 @@
   </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* Theme-aware section backgrounds */
+.inclusivity-section {
+  background-color: var(--bulma-primary-light, hsl(171, 100%, 96%));
+}
+
+.features-section {
+  background-color: var(--bulma-scheme-main-bis, #f5f5f5);
+}
+
+.cta-section {
+  background-color: var(--bulma-info-light, hsl(207, 61%, 93%));
+}
+
+/* Dark mode adjustments */
+:root[data-theme="dark"] .inclusivity-section,
+:root[data-theme="dark"] .features-section,
+:root[data-theme="dark"] .cta-section {
+  background-color: var(--bulma-scheme-main-bis, #1a1a1a);
+}
+</style>

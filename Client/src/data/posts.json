@@ -1,0 +1,167 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "userId": 1,
+      "title": "Morning 5K Run",
+      "type": "Running",
+      "date": "2026-03-10",
+      "duration": "24 minutes",
+      "intensity": "Moderate",
+      "picture": "",
+      "notes": "New personal best! Felt great the whole way through.",
+      "createdAt": "2026-03-10T14:30:00",
+      "likes": [2, 3, 4],
+      "comments": [
+        { "id": 1, "userId": 2, "content": "That's amazing! Keep it up!", "createdAt": "2026-03-10T14:35:00" },
+        { "id": 2, "userId": 4, "content": "Goals! I can barely do 3K", "createdAt": "2026-03-10T14:40:00" }
+      ]
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "title": "Sunrise Yoga Session",
+      "type": "Yoga",
+      "date": "2026-03-10",
+      "duration": "30 minutes",
+      "intensity": "Easy",
+      "picture": "",
+      "notes": "Morning stretching routine. My back feels so much better now.",
+      "createdAt": "2026-03-10T12:00:00",
+      "likes": [1, 3],
+      "comments": [
+        { "id": 3, "userId": 3, "content": "What routine do you follow?", "createdAt": "2026-03-10T12:15:00" }
+      ]
+    },
+    {
+      "id": 3,
+      "userId": 3,
+      "title": "Leg Day - Squats",
+      "type": "Weightlifting",
+      "date": "2026-03-09",
+      "duration": "45 minutes",
+      "intensity": "Hard",
+      "picture": "",
+      "notes": "5x5 at 225lbs. Feeling strong! Legs will be sore tomorrow.",
+      "createdAt": "2026-03-09T18:45:00",
+      "likes": [1, 2, 4],
+      "comments": [
+        { "id": 4, "userId": 4, "content": "Beast mode!", "createdAt": "2026-03-09T18:50:00" },
+        { "id": 5, "userId": 1, "content": "How long did it take you to get to that weight?", "createdAt": "2026-03-09T19:00:00" }
+      ]
+    },
+    {
+      "id": 4,
+      "userId": 4,
+      "title": "First Unassisted Pull-up!",
+      "type": "Weightlifting",
+      "date": "2026-03-09",
+      "duration": "20 minutes",
+      "intensity": "Hard",
+      "picture": "",
+      "notes": "8 months of training paid off. Finally did it without the band!",
+      "createdAt": "2026-03-09T16:20:00",
+      "likes": [1, 2],
+      "comments": []
+    },
+    {
+      "id": 5,
+      "userId": 4,
+      "title": "Evening HIIT Session",
+      "type": "Other",
+      "date": "2026-03-08",
+      "duration": "20 minutes",
+      "intensity": "Extreme",
+      "picture": "",
+      "notes": "Burned 300 calories. Sweat is just fat crying!",
+      "createdAt": "2026-03-08T22:10:00",
+      "likes": [1, 2, 3],
+      "comments": [
+        { "id": 6, "userId": 3, "content": "HIIT is no joke! Good work", "createdAt": "2026-03-08T22:15:00" },
+        { "id": 7, "userId": 4, "content": "Totally worth the pain", "createdAt": "2026-03-08T22:16:00" }
+      ]
+    },
+    {
+      "id": 6,
+      "userId": 1,
+      "title": "Recovery Walk",
+      "type": "Walking",
+      "date": "2026-03-08",
+      "duration": "40 minutes",
+      "intensity": "Easy",
+      "picture": "",
+      "notes": "Light walk around the neighborhood. Active recovery day.",
+      "createdAt": "2026-03-08T15:00:00",
+      "likes": [3],
+      "comments": []
+    },
+    {
+      "id": 7,
+      "userId": 2,
+      "title": "River Trail Bike Ride",
+      "type": "Cycling",
+      "date": "2026-03-07",
+      "duration": "1 hour 15 minutes",
+      "intensity": "Moderate",
+      "picture": "",
+      "notes": "15 miles along the river trail. Perfect weather for outdoor cardio!",
+      "createdAt": "2026-03-07T20:30:00",
+      "likes": [1, 3, 4],
+      "comments": [
+        { "id": 8, "userId": 1, "content": "That trail is beautiful!", "createdAt": "2026-03-07T20:35:00" }
+      ]
+    },
+    {
+      "id": 8,
+      "userId": 3,
+      "title": "Deadlift PR Day",
+      "type": "Weightlifting",
+      "date": "2026-03-07",
+      "duration": "50 minutes",
+      "intensity": "Extreme",
+      "picture": "",
+      "notes": "Hit 315lbs x 3 reps! New personal record. Consistency is key.",
+      "createdAt": "2026-03-07T14:00:00",
+      "likes": [2],
+      "comments": [
+        { "id": 9, "userId": 2, "content": "Incredible progress!", "createdAt": "2026-03-07T14:05:00" }
+      ]
+    },
+    {
+      "id": 9,
+      "userId": 1,
+      "title": "Pool Laps",
+      "type": "Swimming",
+      "date": "2026-03-06",
+      "duration": "35 minutes",
+      "intensity": "Moderate",
+      "picture": "",
+      "notes": "20 laps freestyle. Working on my breathing technique.",
+      "createdAt": "2026-03-06T10:00:00",
+      "likes": [2, 4],
+      "comments": [
+        { "id": 10, "userId": 3, "content": "Swimming is great for recovery!", "createdAt": "2026-03-06T10:30:00" }
+      ]
+    },
+    {
+      "id": 10,
+      "userId": 2,
+      "title": "Push-up Progress",
+      "type": "Weightlifting",
+      "date": "2026-03-05",
+      "duration": "15 minutes",
+      "intensity": "Moderate",
+      "picture": "",
+      "notes": "Completed 3 sets of 10 full push-ups! Small wins matter.",
+      "createdAt": "2026-03-05T17:45:00",
+      "likes": [1, 3, 4],
+      "comments": [
+        { "id": 11, "userId": 1, "content": "Progress is progress! Keep going!", "createdAt": "2026-03-05T18:00:00" },
+        { "id": 12, "userId": 4, "content": "You'll be doing 50 in no time", "createdAt": "2026-03-05T18:10:00" }
+      ]
+    }
+  ],
+  "total": 10,
+  "skip": 0,
+  "limit": 30
+}

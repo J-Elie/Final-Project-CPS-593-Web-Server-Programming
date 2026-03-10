@@ -13,8 +13,21 @@
 // ============================================================================
 // IMPORTS
 // ============================================================================
-import { ref, onMounted } from 'vue'
-import { RouterLink } from 'vue-router'
+import { ref, onMounted, computed } from 'vue'
+import { RouterLink, useRouter } from 'vue-router'
+import { useUsersStore } from '@/stores/usersStores'
+import { useAuthStore } from '@/stores/authStore'
+import type { User } from '@/types/users'
+
+// ============================================================================
+// STORE INITIALIZATION
+// ============================================================================
+// Get the users store instance for accessing user data
+const usersStore = useUsersStore()
+// Get the auth store instance for managing logged-in user
+const authStore = useAuthStore()
+// Get the router instance for navigation
+const router = useRouter()
 
 // ============================================================================
 // THEME TOGGLE FUNCTIONALITY
@@ -25,16 +38,21 @@ const isDarkMode = ref(false)
 // ============================================================================
 // TEST USER SELECTION (for development/testing)
 // ============================================================================
-// List of test users available for quick login simulation
-const testUsers = ['Clove', 'Skye', 'Sova']
-// Currently selected test user
-const selectedUser = ref('')
+// Get users from the store (computed to stay reactive)
+const testUsers = computed(() => usersStore.users)
+// Get selected user from auth store (computed to stay reactive)
+const selectedUser = computed(() => authStore.currentUser)
 // Track if user dropdown is open (for click-based dropdown)
 const isUserDropdownOpen = ref(false)
 
-// Function to select a test user
-function selectUser(user: string) {
-  selectedUser.value = user
+// Function to select a test user (login/logout)
+function selectUser(user: User | null) {
+  if (user) {
+    authStore.login(user)
+  } else {
+    authStore.logout()
+    router.push('/')
+  }
   isUserDropdownOpen.value = false
 }
 
@@ -158,33 +176,33 @@ document.addEventListener('DOMContentLoaded', () => {
           <RouterLink to="/about" active-class="is-active" class="navbar-item"> About </RouterLink>
 
           <!--
-            MY ACTIVITY LINK
+            MY ACTIVITY LINK (logged in only)
             ================
           -->
-          <RouterLink to="/User/MyActivity" active-class="is-active" class="navbar-item">
+          <RouterLink v-if="selectedUser" to="/User/MyActivity" active-class="is-active" class="navbar-item">
             My Activity
           </RouterLink>
           <!--
-            MY STATISTICS LINK
+            MY STATISTICS LINK (logged in only)
             =================
           -->
-          <RouterLink to="/User/MyStatistics" active-class="is-active" class="navbar-item">
+          <RouterLink v-if="selectedUser" to="/User/MyStatistics" active-class="is-active" class="navbar-item">
             My Statistics
           </RouterLink>
           <!--
-            FRIENDS ACTIVITY LINK
+            FRIENDS ACTIVITY LINK (logged in only)
             ====================
           -->
-          <RouterLink to="/User/FriendsActivity" active-class="is-active" class="navbar-item">
-            Friends Activity
+          <RouterLink v-if="selectedUser" to="/User/ActivityFeed" active-class="is-active" class="navbar-item">
+            Activity Feed
           </RouterLink>
 
           <!--
             ====================================================================
-            DROPDOWN MENU
+            DROPDOWN MENU (Admin only)
             ====================================================================
           -->
-          <div class="navbar-item has-dropdown is-hoverable">
+          <div v-if="selectedUser?.role === 'admin'" class="navbar-item has-dropdown is-hoverable">
             <!--
               DROPDOWN TRIGGER
               ================
@@ -229,20 +247,28 @@ document.addEventListener('DOMContentLoaded', () => {
             -->
             <div class="buttons">
               <!--
-                REGISTER BUTTON
+                REGISTER BUTTON (only visible when NOT signed in)
                 ===============
               -->
-              <RouterLink to="/register" active-class="is-active" class="button is-primary">
+              <RouterLink v-if="!selectedUser" to="/register" active-class="is-active" class="button is-primary">
                 <strong>Register</strong>
               </RouterLink>
 
               <!--
-                LOG IN BUTTON
+                LOG IN BUTTON (only visible when NOT signed in)
                 =============
               -->
-              <RouterLink to="/login" active-class="is-active" class="button is-light">
+              <RouterLink v-if="!selectedUser" to="/login" active-class="is-active" class="button is-light">
                 <strong>Log in</strong>
               </RouterLink>
+
+              <!--
+                LOG OUT BUTTON (only visible when signed in)
+                ==============
+              -->
+              <button v-if="selectedUser" class="button is-light" @click="selectUser(null)">
+                <strong>Log out</strong>
+              </button>
             </div>
           </div>
           <!--
@@ -270,22 +296,28 @@ document.addEventListener('DOMContentLoaded', () => {
           -->
           <div class="navbar-item has-dropdown" :class="{ 'is-active': isUserDropdownOpen }">
             <a class="navbar-link" @click="toggleUserDropdown">
-              <span class="icon is-small"><i class="fas fa-user"></i></span>
-              <span>{{ selectedUser || 'Test User' }}</span>
+              <figure v-if="selectedUser" class="image is-32x32 mr-2">
+                <img class="is-rounded" :src="selectedUser.image" :alt="selectedUser.firstName" />
+              </figure>
+              <span v-else class="icon is-small"><i class="fas fa-user"></i></span>
+              <span>{{ selectedUser?.firstName || 'Test User' }}</span>
             </a>
 
             <div class="navbar-dropdown is-right">
               <a
                 v-for="user in testUsers"
-                :key="user"
+                :key="user.id"
                 class="navbar-item"
-                :class="{ 'is-active': selectedUser === user }"
+                :class="{ 'is-active': selectedUser?.id === user.id }"
                 @click="selectUser(user)"
               >
-                {{ user }}
+                <figure class="image is-32x32 mr-2">
+                  <img class="is-rounded" :src="user.image" :alt="user.firstName" />
+                </figure>
+                {{ user.firstName }}
               </a>
               <hr class="navbar-divider" v-if="selectedUser" />
-              <a class="navbar-item" v-if="selectedUser" @click="selectUser('')">
+              <a class="navbar-item" v-if="selectedUser" @click="selectUser(null)">
                 <span class="icon is-small"><i class="fas fa-sign-out-alt"></i></span>
                 <span>Log out</span>
               </a>
@@ -302,4 +334,19 @@ document.addEventListener('DOMContentLoaded', () => {
   SCOPED STYLES
   ============================================================================
 -->
-<style scoped></style>
+<style scoped>
+/* Bulma doesn't have utilities for inline images in navbar or image borders */
+.navbar-link .image {
+  display: inline-flex;
+}
+
+.navbar-link .image img,
+.navbar-dropdown .navbar-item .image img {
+  border: 2px solid white;
+}
+
+:root[data-theme='dark'] .navbar-link .image img,
+:root[data-theme='dark'] .navbar-dropdown .navbar-item .image img {
+  border-color: black;
+}
+</style>

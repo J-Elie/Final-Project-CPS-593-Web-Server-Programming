@@ -62,7 +62,7 @@
     </section>
 
     <!-- Welcome Message -->
-    <section class="section has-background-light">
+    <section class="section welcome-section">
       <div class="container">
         <div class="columns is-centered">
           <div class="column is-8 has-text-centered">
@@ -104,6 +104,9 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  min-height: calc(100vh - 52px);
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
 }
 
 .has-text-shadow {
@@ -114,5 +117,10 @@
   background-color: rgba(0, 0, 0, 0.6);
   padding: 2rem 3rem;
   border-radius: 12px;
+}
+
+/* Theme-aware welcome section */
+.welcome-section {
+  background-color: var(--bulma-scheme-main-bis, #f5f5f5);
 }
 </style>
