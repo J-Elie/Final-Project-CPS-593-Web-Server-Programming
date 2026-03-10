@@ -44,7 +44,7 @@ const activityForm = ref({
   duration: '',
   intensity: '',
   picture: '',
-  notes: ''
+  notes: '',
 })
 
 // Available activity types (can be extended by user)
@@ -55,7 +55,7 @@ const activityTypes = ref([
   'Swimming',
   'Weightlifting',
   'Yoga',
-  'Other'
+  'Other',
 ])
 
 // For adding new activity type
@@ -90,7 +90,7 @@ function editActivity(activity: Post) {
     duration: activity.duration,
     intensity: activity.intensity,
     picture: activity.picture,
-    notes: activity.notes
+    notes: activity.notes,
   }
   isModalOpen.value = true
 }
@@ -111,7 +111,7 @@ function resetForm() {
     duration: '',
     intensity: '',
     picture: '',
-    notes: ''
+    notes: '',
   }
   showAddType.value = false
   newActivityType.value = ''
@@ -143,7 +143,7 @@ function submitActivity() {
       duration: activityForm.value.duration,
       intensity: activityForm.value.intensity,
       picture: activityForm.value.picture,
-      notes: activityForm.value.notes
+      notes: activityForm.value.notes,
     })
   } else {
     // Adding new activity - use store
@@ -155,7 +155,7 @@ function submitActivity() {
       duration: activityForm.value.duration,
       intensity: activityForm.value.intensity,
       picture: activityForm.value.picture,
-      notes: activityForm.value.notes
+      notes: activityForm.value.notes,
     })
   }
   closeModal()
@@ -196,25 +196,25 @@ function deleteActivity(id: number) {
     <!-- Activity Feed -->
     <div class="columns is-centered">
       <div class="column is-three-quarters">
-      <!-- Empty state -->
-      <div v-if="sortedActivities.length === 0" class="notification is-light">
-        <p class="has-text-centered">
-          <span class="icon is-large">
-            <i class="fas fa-running fa-2x"></i>
-          </span>
-        </p>
-        <p class="has-text-centered">No activities yet. Start tracking your fitness journey!</p>
-      </div>
+        <!-- Empty state -->
+        <div v-if="sortedActivities.length === 0" class="notification is-light">
+          <p class="has-text-centered">
+            <span class="icon is-large">
+              <i class="fas fa-running fa-2x"></i>
+            </span>
+          </p>
+          <p class="has-text-centered">No activities yet. Start tracking your fitness journey!</p>
+        </div>
 
-      <!-- Activity Cards -->
-      <PostCard
-        v-for="activity in sortedActivities"
-        :key="activity.id"
-        :post="activity"
-        :show-actions="true"
-        @edit="editActivity"
-        @delete="deleteActivity"
-      />
+        <!-- Activity Cards -->
+        <PostCard
+          v-for="activity in sortedActivities"
+          :key="activity.id"
+          :post="activity"
+          :show-actions="true"
+          @edit="editActivity"
+          @delete="deleteActivity"
+        />
       </div>
     </div>
 
@@ -283,12 +283,7 @@ function deleteActivity(id: number) {
               <div class="field">
                 <label class="label">Date</label>
                 <div class="control has-icons-left">
-                  <input
-                    class="input"
-                    type="date"
-                    v-model="activityForm.date"
-                    :max="today"
-                  />
+                  <input class="input" type="date" v-model="activityForm.date" :max="today" />
                   <span class="icon is-small is-left">
                     <i class="fas fa-calendar"></i>
                   </span>
@@ -326,8 +321,9 @@ function deleteActivity(id: number) {
                   :class="{
                     'is-success': activityForm.intensity === level && level === 'Easy',
                     'is-warning': activityForm.intensity === level && level === 'Moderate',
-                    'is-danger': activityForm.intensity === level && (level === 'Hard' || level === 'Extreme'),
-                    'is-selected': activityForm.intensity === level
+                    'is-danger':
+                      activityForm.intensity === level && (level === 'Hard' || level === 'Extreme'),
+                    'is-selected': activityForm.intensity === level,
                   }"
                   @click="activityForm.intensity = level"
                   type="button"
@@ -340,7 +336,9 @@ function deleteActivity(id: number) {
 
           <!-- Picture URL (optional) -->
           <div class="field">
-            <label class="label">Picture URL <span class="has-text-grey-light">(optional)</span></label>
+            <label class="label"
+              >Picture URL <span class="has-text-grey-light">(optional)</span></label
+            >
             <div class="control has-icons-left">
               <input
                 class="input"
@@ -386,7 +384,6 @@ function deleteActivity(id: number) {
       </div>
       <button class="modal-close is-large" aria-label="close" @click="closeModal"></button>
     </div>
-
   </main>
 </template>
 

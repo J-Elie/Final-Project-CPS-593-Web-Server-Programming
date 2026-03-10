@@ -34,8 +34,8 @@
               <p class="is-size-5 mt-4">
                 As someone with a disability, I know tracking activity can feel daunting, and
                 sometimes traditional exercise just isn't an option. For this graduate class
-                project, I wanted to create an inclusive fitness tracker that doesn't assume
-                what "exercise" should look like and celebrates every achievement, big or small.
+                project, I wanted to create an inclusive fitness tracker that doesn't assume what
+                "exercise" should look like and celebrates every achievement, big or small.
               </p>
             </div>
           </div>
@@ -193,9 +193,9 @@
 }
 
 /* Dark mode adjustments */
-:root[data-theme="dark"] .inclusivity-section,
-:root[data-theme="dark"] .features-section,
-:root[data-theme="dark"] .cta-section {
+:root[data-theme='dark'] .inclusivity-section,
+:root[data-theme='dark'] .features-section,
+:root[data-theme='dark'] .cta-section {
   background-color: var(--bulma-scheme-main-bis, #1a1a1a);
 }
 </style>

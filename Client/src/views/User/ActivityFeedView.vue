@@ -93,8 +93,9 @@ function getUserById(userId: number) {
 </template>
 
 <style scoped>
-
 .posts-feed .box:hover {
-  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.15), 0 0 0 1px rgba(10, 10, 10, 0.02);
+  box-shadow:
+    0 0.5em 1em -0.125em rgba(10, 10, 10, 0.15),
+    0 0 0 1px rgba(10, 10, 10, 0.02);
 }
 </style>

@@ -27,7 +27,7 @@ onMounted(() => {
 function deleteUser(userId: number) {
   // Don't allow deleting yourself
   if (userId === authStore.currentUser?.id) {
-    alert("You cannot delete yourself!")
+    alert('You cannot delete yourself!')
     return
   }
 
@@ -90,7 +90,11 @@ function deleteUser(userId: number) {
                     class="button is-danger is-small"
                     @click="deleteUser(user.id)"
                     :disabled="user.id === authStore.currentUser?.id"
-                    :title="user.id === authStore.currentUser?.id ? 'Cannot delete yourself' : 'Delete user'"
+                    :title="
+                      user.id === authStore.currentUser?.id
+                        ? 'Cannot delete yourself'
+                        : 'Delete user'
+                    "
                   >
                     <span class="icon">
                       <i class="fas fa-trash"></i>

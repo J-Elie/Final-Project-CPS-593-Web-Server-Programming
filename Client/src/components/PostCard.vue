@@ -48,7 +48,7 @@ function formatDate(dateString: string): string {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
   })
 }
 
@@ -57,11 +57,16 @@ function formatDate(dateString: string): string {
  */
 function getIntensityClass(intensity: string): string {
   switch (intensity) {
-    case 'Easy': return 'is-success'
-    case 'Moderate': return 'is-warning'
-    case 'Hard': return 'is-danger'
-    case 'Extreme': return 'is-danger'
-    default: return 'is-info'
+    case 'Easy':
+      return 'is-success'
+    case 'Moderate':
+      return 'is-warning'
+    case 'Hard':
+      return 'is-danger'
+    case 'Extreme':
+      return 'is-danger'
+    default:
+      return 'is-info'
   }
 }
 
@@ -70,14 +75,14 @@ function getIntensityClass(intensity: string): string {
  */
 function getActivityIcon(type: string): string {
   const icons: Record<string, string> = {
-    'Running': 'fa-running',
-    'Walking': 'fa-walking',
-    'Cycling': 'fa-biking',
-    'Swimming': 'fa-swimmer',
-    'Weightlifting': 'fa-dumbbell',
-    'Yoga': 'fa-spa',
-    'HIIT': 'fa-fire',
-    'Sports': 'fa-futbol'
+    Running: 'fa-running',
+    Walking: 'fa-walking',
+    Cycling: 'fa-biking',
+    Swimming: 'fa-swimmer',
+    Weightlifting: 'fa-dumbbell',
+    Yoga: 'fa-spa',
+    HIIT: 'fa-fire',
+    Sports: 'fa-futbol',
   }
   return icons[type] || 'fa-heartbeat'
 }
@@ -120,11 +125,7 @@ function getActivityIcon(type: string): string {
           <p class="title is-4 mb-2">{{ post.title }}</p>
           <p class="subtitle is-6">
             <span class="tag is-info is-light">{{ post.type }}</span>
-            <span
-              class="tag ml-2"
-              :class="getIntensityClass(post.intensity)"
-              v-if="post.intensity"
-            >
+            <span class="tag ml-2" :class="getIntensityClass(post.intensity)" v-if="post.intensity">
               {{ post.intensity }}
             </span>
           </p>
@@ -133,11 +134,7 @@ function getActivityIcon(type: string): string {
         <div class="media-right" v-if="showActions">
           <!-- Edit and Delete buttons -->
           <div class="buttons">
-            <button
-              class="button is-small is-warning"
-              @click="emit('edit', post)"
-              title="Edit"
-            >
+            <button class="button is-small is-warning" @click="emit('edit', post)" title="Edit">
               <span class="icon">
                 <i class="fas fa-edit"></i>
               </span>

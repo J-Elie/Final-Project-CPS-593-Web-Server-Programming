@@ -1,9 +1,8 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <main>
-     <h1>This is a login page</h1>
+    <h1>This is a login page</h1>
   </main>
 </template>
 

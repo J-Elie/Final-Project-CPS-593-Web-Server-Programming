@@ -179,21 +179,36 @@ document.addEventListener('DOMContentLoaded', () => {
             MY ACTIVITY LINK (logged in only)
             ================
           -->
-          <RouterLink v-if="selectedUser" to="/User/MyActivity" active-class="is-active" class="navbar-item">
+          <RouterLink
+            v-if="selectedUser"
+            to="/User/MyActivity"
+            active-class="is-active"
+            class="navbar-item"
+          >
             My Activity
           </RouterLink>
           <!--
             MY STATISTICS LINK (logged in only)
             =================
           -->
-          <RouterLink v-if="selectedUser" to="/User/MyStatistics" active-class="is-active" class="navbar-item">
+          <RouterLink
+            v-if="selectedUser"
+            to="/User/MyStatistics"
+            active-class="is-active"
+            class="navbar-item"
+          >
             My Statistics
           </RouterLink>
           <!--
             FRIENDS ACTIVITY LINK (logged in only)
             ====================
           -->
-          <RouterLink v-if="selectedUser" to="/User/ActivityFeed" active-class="is-active" class="navbar-item">
+          <RouterLink
+            v-if="selectedUser"
+            to="/User/ActivityFeed"
+            active-class="is-active"
+            class="navbar-item"
+          >
             Activity Feed
           </RouterLink>
 
@@ -250,7 +265,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 REGISTER BUTTON (only visible when NOT signed in)
                 ===============
               -->
-              <RouterLink v-if="!selectedUser" to="/register" active-class="is-active" class="button is-primary">
+              <RouterLink
+                v-if="!selectedUser"
+                to="/register"
+                active-class="is-active"
+                class="button is-primary"
+              >
                 <strong>Register</strong>
               </RouterLink>
 
@@ -258,7 +278,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 LOG IN BUTTON (only visible when NOT signed in)
                 =============
               -->
-              <RouterLink v-if="!selectedUser" to="/login" active-class="is-active" class="button is-light">
+              <RouterLink
+                v-if="!selectedUser"
+                to="/login"
+                active-class="is-active"
+                class="button is-light"
+              >
                 <strong>Log in</strong>
               </RouterLink>
 

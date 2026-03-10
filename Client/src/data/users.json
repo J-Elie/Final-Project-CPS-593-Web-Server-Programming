@@ -89,7 +89,7 @@
         "coordinates": { "lat": 55.7558, "lng": 37.6173 },
         "country": "Russia"
       },
-      
+
       "role": "admin",
       "following": [1],
       "followers": [4]
@@ -118,7 +118,7 @@
         "state": "Seoul",
         "stateCode": "SE",
         "postalCode": "04524",
-        "coordinates": { "lat": 37.5665, "lng": 126.9780 },
+        "coordinates": { "lat": 37.5665, "lng": 126.978 },
         "country": "South Korea"
       },
       "role": "user",

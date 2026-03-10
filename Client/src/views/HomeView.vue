@@ -7,7 +7,9 @@
       <div class="hero-body is-justify-content-center">
         <div class="banner-text-box">
           <h1 class="title is-1 has-text-white has-text-shadow">EveryMove</h1>
-          <p class="subtitle is-3 has-text-white has-text-shadow">Movement for every body, every ability</p>
+          <p class="subtitle is-3 has-text-white has-text-shadow">
+            Movement for every body, every ability
+          </p>
           <div class="buttons is-centered mt-5">
             <router-link to="/register" class="button is-primary is-large">
               <span class="icon"><i class="fas fa-user-plus"></i></span>
@@ -68,9 +70,9 @@
           <div class="column is-8 has-text-centered">
             <h2 class="title is-3">Your Fitness, Your Way</h2>
             <p class="is-size-5">
-              EveryMove is designed to celebrate all types of movement. Whether you're running
-              a marathon, doing physical therapy, or taking a short walk, every step counts.
-              No pressure, no judgment, just support for your personal journey.
+              EveryMove is designed to celebrate all types of movement. Whether you're running a
+              marathon, doing physical therapy, or taking a short walk, every step counts. No
+              pressure, no judgment, just support for your personal journey.
             </p>
             <div class="mt-5">
               <router-link to="/about" class="button is-info">
