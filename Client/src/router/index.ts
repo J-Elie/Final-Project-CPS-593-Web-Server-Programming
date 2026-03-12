@@ -1,8 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import AboutView from '../views/AboutView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior() {
+    // Always scroll to top when navigating to a new route
+    return { top: 0 }
+  },
   routes: [
     {
       path: '/',
@@ -12,67 +17,48 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
+      component: AboutView,
     },
     {
       path: '/register',
       name: 'register',
-      // route level code-splitting
-      // this generates a separate chunk (Register.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/RegisterView.vue'),
     },
     {
       path: '/login',
       name: 'login',
-      // route level code-splitting
-      // this generates a separate chunk (Login.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/LoginView.vue'),
     },
     {
       path: '/Admin/UserManagement',
       name: 'user-management',
-      // route level code-splitting
-      // this generates a separate chunk (UserManagement.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/Admin/UserManagementView.vue'),
     },
     {
       path: '/Admin/FlaggedPosts',
       name: 'flagged-posts',
-      // route level code-splitting
-      // this generates a separate chunk (FlaggedPosts.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/Admin/FlaggedPostsView.vue'),
     },
 
     {
       path: '/User/ActivityFeed',
       name: 'activity-feed',
-      // route level code-splitting
-      // this generates a separate chunk (ActivityFeed.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/User/ActivityFeedView.vue'),
     },
     {
       path: '/User/MyActivity',
       name: 'my-activity',
-      // route level code-splitting
-      // this generates a separate chunk (MyActivity.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/User/MyActivityView.vue'),
     },
     {
       path: '/User/MyStatistics',
       name: 'my-statistics',
-      // route level code-splitting
-      // this generates a separate chunk (MyStatistics.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/User/MyStatisticsView.vue'),
+    },
+    {
+      path: '/User/Profile',
+      name: 'profile',
+      component: () => import('../views/User/ProfileView.vue'),
     },
   ],
 })

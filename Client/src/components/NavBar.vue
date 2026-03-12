@@ -286,22 +286,15 @@ document.addEventListener('DOMContentLoaded', () => {
               >
                 <strong>Log in</strong>
               </RouterLink>
-
-              <!--
-                LOG OUT BUTTON (only visible when signed in)
-                ==============
-              -->
-              <button v-if="selectedUser" class="button is-light" @click="selectUser(null)">
-                <strong>Log out</strong>
-              </button>
             </div>
           </div>
+
           <!--
-            THEME TOGGLE BUTTON
+            THEME TOGGLE BUTTON (when NOT logged in)
             ===================
             Toggles between Bulma light and dark mode
           -->
-          <div class="navbar-item">
+          <div v-if="!selectedUser" class="navbar-item">
             <button
               class="button"
               @click="toggleTheme"
@@ -317,12 +310,17 @@ document.addEventListener('DOMContentLoaded', () => {
             TEST USER DROPDOWN
             ==================
             For development/testing: quickly switch between test users
-            Uses Bulma navbar dropdown styling with click-to-toggle behavior
+            Uses Bulma navbar dropdown styling with hover behavior
           -->
-          <div class="navbar-item has-dropdown" :class="{ 'is-active': isUserDropdownOpen }">
-            <a class="navbar-link" @click="toggleUserDropdown">
-              <figure v-if="selectedUser" class="image is-32x32 mr-2">
-                <img class="is-rounded" :src="selectedUser.image" :alt="selectedUser.firstName" />
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              <figure v-if="selectedUser && selectedUser.image" class="image mr-2">
+                <img :src="selectedUser.image" :alt="selectedUser.firstName" />
+              </figure>
+              <figure v-else-if="selectedUser" class="image mr-2">
+                <span class="default-avatar">
+                  <i class="fas fa-user"></i>
+                </span>
               </figure>
               <span v-else class="icon is-small"><i class="fas fa-user"></i></span>
               <span>{{ selectedUser?.firstName || 'Test User' }}</span>
@@ -336,8 +334,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 :class="{ 'is-active': selectedUser?.id === user.id }"
                 @click="selectUser(user)"
               >
-                <figure class="image is-32x32 mr-2">
-                  <img class="is-rounded" :src="user.image" :alt="user.firstName" />
+                <figure v-if="user.image" class="image mr-2">
+                  <img :src="user.image" :alt="user.firstName" />
+                </figure>
+                <figure v-else class="image mr-2">
+                  <span class="default-avatar">
+                    <i class="fas fa-user"></i>
+                  </span>
                 </figure>
                 {{ user.firstName }}
               </a>
@@ -345,6 +348,36 @@ document.addEventListener('DOMContentLoaded', () => {
               <a class="navbar-item" v-if="selectedUser" @click="selectUser(null)">
                 <span class="icon is-small"><i class="fas fa-sign-out-alt"></i></span>
                 <span>Log out</span>
+              </a>
+            </div>
+          </div>
+
+          <!--
+            SETTINGS DROPDOWN (logged in only)
+            ===================
+            Contains Profile link and theme toggle
+          -->
+          <div v-if="selectedUser" class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              <span class="icon"><i class="fas fa-cog"></i></span>
+              <span>Settings</span>
+            </a>
+            <div class="navbar-dropdown is-right">
+              <RouterLink to="/User/Profile" class="navbar-item">
+                <span class="icon"><i class="fas fa-user"></i></span>
+                <span>Profile</span>
+              </RouterLink>
+              <hr class="navbar-divider" />
+              <a class="navbar-item" @click="toggleTheme">
+                <span class="icon">
+                  <i :class="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
+                </span>
+                <span>{{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}</span>
+              </a>
+              <hr class="navbar-divider" />
+              <a class="navbar-item" @click="selectUser(null)">
+                <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+                <span>Log Out</span>
               </a>
             </div>
           </div>
@@ -365,13 +398,44 @@ document.addEventListener('DOMContentLoaded', () => {
   display: inline-flex;
 }
 
+/* Profile images in navbar - circular and properly sized */
+.navbar-link .image,
+.navbar-dropdown .navbar-item .image {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+}
+
 .navbar-link .image img,
 .navbar-dropdown .navbar-item .image img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
   border: 2px solid white;
 }
 
 :root[data-theme='dark'] .navbar-link .image img,
 :root[data-theme='dark'] .navbar-dropdown .navbar-item .image img {
   border-color: black;
+}
+
+/* Default avatar styling to match profile images */
+.default-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background-color: #dbdbdb;
+  border: 2px solid white;
+  color: #7a7a7a;
+  border-radius: 50%;
+}
+
+:root[data-theme='dark'] .default-avatar {
+  background-color: #4a4a4a;
+  border-color: black;
+  color: #b5b5b5;
 }
 </style>

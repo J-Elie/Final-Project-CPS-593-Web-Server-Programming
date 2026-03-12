@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { usePostsStore } from '@/stores/postsStore'
 import type { Post } from '@/types/posts'
 import PostCard from '@/components/PostCard.vue'
+import AddButton from '@/components/buttons/AddButton.vue'
 
 // ============================================================================
 // STORE INITIALIZATION
@@ -63,7 +64,7 @@ const newActivityType = ref('')
 const showAddType = ref(false)
 
 // Intensity levels
-const intensityLevels = ['Easy', 'Moderate', 'Hard', 'Extreme']
+const intensityLevels = ['Easy', 'Moderate', 'Hard']
 
 // Get today's date in YYYY-MM-DD format for date input max attribute
 const today = computed(() => {
@@ -168,53 +169,47 @@ function deleteActivity(id: number) {
 </script>
 
 <template>
-  <main>
-    <!-- Hero Section for Page Title -->
-    <section class="hero is-info is-small mt-5 mb-5">
-      <div class="hero-body has-text-centered">
-        <p class="title">
-          <span class="icon-text">
-            <span class="icon mr-4">
-              <i class="fas fa-heartbeat"></i>
-            </span>
-            <span>My Activities</span>
+  <main class="section">
+    <div class="container">
+      <!-- Page Header -->
+      <h1 class="title is-2 has-text-centered">
+        <span class="icon-text is-justify-content-center">
+          <span class="icon has-text-info mr-4">
+            <i class="fas fa-heartbeat"></i>
           </span>
-        </p>
-      </div>
-    </section>
-
-    <!-- Add Activity Button -->
-    <div class="has-text-centered mb-5">
-      <button class="button is-primary is-medium" @click="openModal">
-        <span class="icon">
-          <i class="fas fa-plus"></i>
+          <span>My Activities</span>
         </span>
-        <span>Add Activity</span>
-      </button>
-    </div>
+      </h1>
+      <p class="subtitle has-text-centered">Track and manage your fitness journey</p>
 
-    <!-- Activity Feed -->
-    <div class="columns is-centered">
-      <div class="column is-three-quarters">
-        <!-- Empty state -->
-        <div v-if="sortedActivities.length === 0" class="notification is-light">
-          <p class="has-text-centered">
-            <span class="icon is-large">
-              <i class="fas fa-running fa-2x"></i>
-            </span>
-          </p>
-          <p class="has-text-centered">No activities yet. Start tracking your fitness journey!</p>
+      <!-- Add Activity Button -->
+      <div class="has-text-centered mb-5">
+        <AddButton label="Add Activity" icon="fas fa-plus" @click="openModal" />
+      </div>
+
+      <!-- Activity Feed -->
+      <div class="columns is-centered">
+        <div class="column is-three-quarters">
+          <!-- Empty state -->
+          <div v-if="sortedActivities.length === 0" class="notification is-light">
+            <p class="has-text-centered">
+              <span class="icon is-large">
+                <i class="fas fa-running fa-2x"></i>
+              </span>
+            </p>
+            <p class="has-text-centered">No activities yet. Start tracking your fitness journey!</p>
+          </div>
+
+          <!-- Activity Cards -->
+          <PostCard
+            v-for="activity in sortedActivities"
+            :key="activity.id"
+            :post="activity"
+            :show-actions="true"
+            @edit="editActivity"
+            @delete="deleteActivity"
+          />
         </div>
-
-        <!-- Activity Cards -->
-        <PostCard
-          v-for="activity in sortedActivities"
-          :key="activity.id"
-          :post="activity"
-          :show-actions="true"
-          @edit="editActivity"
-          @delete="deleteActivity"
-        />
       </div>
     </div>
 
@@ -321,8 +316,7 @@ function deleteActivity(id: number) {
                   :class="{
                     'is-success': activityForm.intensity === level && level === 'Easy',
                     'is-warning': activityForm.intensity === level && level === 'Moderate',
-                    'is-danger':
-                      activityForm.intensity === level && (level === 'Hard' || level === 'Extreme'),
+                    'is-danger': activityForm.intensity === level && level === 'Hard',
                     'is-selected': activityForm.intensity === level,
                   }"
                   @click="activityForm.intensity = level"
@@ -371,10 +365,11 @@ function deleteActivity(id: number) {
           <!-- Submit and Cancel buttons -->
           <div class="field is-grouped">
             <div class="control">
-              <button class="button is-link" @click="submitActivity">
-                <span class="icon"><i class="fas fa-save"></i></span>
-                <span>{{ editingActivityId ? 'Update Activity' : 'Save Activity' }}</span>
-              </button>
+              <AddButton
+                :label="editingActivityId ? 'Update Activity' : 'Save Activity'"
+                icon="fas fa-save"
+                @click="submitActivity"
+              />
             </div>
             <div class="control">
               <button class="button is-link is-light" @click="closeModal">Cancel</button>

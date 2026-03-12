@@ -4,6 +4,9 @@
 // ============================================================================
 import type { Post } from '@/types/posts'
 import type { User } from '@/types/users'
+import EditButton from '@/components/buttons/EditButton.vue'
+import DeleteButton from '@/components/buttons/DeleteButton.vue'
+import StatusTag from '@/components/ui/StatusTag.vue'
 
 // ============================================================================
 // PROPS
@@ -53,24 +56,6 @@ function formatDate(dateString: string): string {
 }
 
 /**
- * getIntensityClass - Get Bulma color class based on intensity level
- */
-function getIntensityClass(intensity: string): string {
-  switch (intensity) {
-    case 'Easy':
-      return 'is-success'
-    case 'Moderate':
-      return 'is-warning'
-    case 'Hard':
-      return 'is-danger'
-    case 'Extreme':
-      return 'is-danger'
-    default:
-      return 'is-info'
-  }
-}
-
-/**
  * getActivityIcon - Get Font Awesome icon class based on activity type
  */
 function getActivityIcon(type: string): string {
@@ -93,7 +78,7 @@ function getActivityIcon(type: string): string {
     <!-- Card Image (if picture provided) -->
     <div class="card-image" v-if="post.picture">
       <figure class="image is-3by1">
-        <img :src="post.picture" :alt="post.title" />
+        <img :src="post.picture" :alt="post.title" class="post-card-img" />
       </figure>
     </div>
 
@@ -124,30 +109,28 @@ function getActivityIcon(type: string): string {
 
           <p class="title is-4 mb-2">{{ post.title }}</p>
           <p class="subtitle is-6">
-            <span class="tag is-info is-light">{{ post.type }}</span>
-            <span class="tag ml-2" :class="getIntensityClass(post.intensity)" v-if="post.intensity">
-              {{ post.intensity }}
-            </span>
+            <StatusTag :label="post.type" variant="info" size="small" />
+            <StatusTag
+              v-if="post.intensity"
+              :label="post.intensity"
+              :variant="
+                post.intensity === 'Easy'
+                  ? 'success'
+                  : post.intensity === 'Moderate'
+                    ? 'warning'
+                    : 'danger'
+              "
+              size="small"
+              class="ml-2"
+            />
           </p>
         </div>
 
         <div class="media-right" v-if="showActions">
           <!-- Edit and Delete buttons -->
           <div class="buttons">
-            <button class="button is-small is-warning" @click="emit('edit', post)" title="Edit">
-              <span class="icon">
-                <i class="fas fa-edit"></i>
-              </span>
-            </button>
-            <button
-              class="button is-small is-danger"
-              @click="emit('delete', post.id)"
-              title="Delete"
-            >
-              <span class="icon">
-                <i class="fas fa-trash"></i>
-              </span>
-            </button>
+            <EditButton small @click="emit('edit', post)" />
+            <DeleteButton small @click="emit('delete', post.id)" />
           </div>
         </div>
       </div>
@@ -193,4 +176,12 @@ function getActivityIcon(type: string): string {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.post-card-img {
+  height: 300px;
+  width: auto;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+}
+</style>

@@ -24,10 +24,35 @@ export const useUsersStore = defineStore('users', () => {
   // STATE
   // ============================================================================
   const users = ref<User[]>(data.users)
+  const nextId = ref(data.users.length + 1)
 
   // ============================================================================
   // ACTIONS
   // ============================================================================
+  /**
+   * addUser - Adds a new user to the store
+   */
+  function addUser(userData: Omit<User, 'id'>) {
+    const newUser: User = {
+      id: nextId.value++,
+      ...userData,
+    }
+    users.value.push(newUser)
+    return newUser
+  }
+
+  /**
+   * updateUser - Updates an existing user in the store
+   */
+  function updateUser(userId: number, userData: Partial<Omit<User, 'id'>>) {
+    const index = users.value.findIndex((u) => u.id === userId)
+    if (index !== -1) {
+      users.value[index] = { ...users.value[index], ...userData }
+      return users.value[index]
+    }
+    return null
+  }
+
   /**
    * deleteUser - Removes a user from the store
    */
@@ -38,8 +63,15 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
+  /**
+   * getUserById - Gets a user by ID
+   */
+  function getUserById(userId: number) {
+    return users.value.find((u) => u.id === userId) || null
+  }
+
   // ============================================================================
   // RETURN STORE PROPERTIES
   // ============================================================================
-  return { users, deleteUser }
+  return { users, addUser, updateUser, deleteUser, getUserById }
 })

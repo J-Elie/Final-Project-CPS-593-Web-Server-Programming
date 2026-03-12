@@ -12,12 +12,8 @@
           </p>
           <div class="buttons is-centered mt-5">
             <router-link to="/register" class="button is-primary is-large">
-              <span class="icon"><i class="fas fa-user-plus"></i></span>
-              <span>Get Started</span>
-            </router-link>
-            <router-link to="/my-activity" class="button is-light is-large">
-              <span class="icon"><i class="fas fa-running"></i></span>
-              <span>Track Activity</span>
+              <span class="icon"><i class="fas fa-heartbeat"></i></span>
+              <span>Start Your Journey</span>
             </router-link>
           </div>
         </div>
@@ -90,10 +86,7 @@
       <div class="container has-text-centered">
         <h2 class="title is-4">Ready to start tracking?</h2>
         <p class="subtitle">Join EveryMove and celebrate every achievement.</p>
-        <router-link to="/register" class="button is-primary is-medium">
-          <span class="icon"><i class="fas fa-rocket"></i></span>
-          <span>Sign Up Free</span>
-        </router-link>
+        <router-link to="/register" class="button is-primary is-medium"> Join Now </router-link>
       </div>
     </section>
   </main>
@@ -110,7 +103,16 @@
   width: 100vw;
   margin-left: calc(-50vw + 50%);
 }
+</style>
 
+<style>
+/* Dark mode banner swap - must be unscoped to access [data-theme] on html */
+[data-theme='dark'] .banner-hero {
+  background-image: url('/Banner_Dark.png');
+}
+</style>
+
+<style scoped>
 .has-text-shadow {
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
 }

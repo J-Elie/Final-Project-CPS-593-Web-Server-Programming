@@ -29,3 +29,21 @@ For this unit, I explored the Bulma CSS framework to create responsive and style
 
 The page includes a navigation bar with dropdown menus, buttons with Font Awesome icons, and various Bulma components. This assignment demonstrated how CSS frameworks like Bulma can speed up development by providing pre-built, responsive design patterns that work across different screen sizes.
 
+## Final project beyond this point
+
+### Midterm checkpoint
+
+For the midterm, I developed a Vue.js client-side fitness tracker application. At this stage, data is stored locally in JSON files within the `data` folder and loaded into in-memory arrays at runtime. This means any changes made during a session will be lost on page refresh. A database connection will be implemented in future iterations for persistent storage.
+
+**Key Features:**
+- **Multi-user authentication:** Multiple users can log in, each with their own personalized experience showing their name and activity data.
+- **Role-based access control:** Different users have different permissions based on their assigned roles.
+- **Admin area:** Administrators can list, add, edit, and delete users.
+- **Activity management:** Users can list, add, edit, and delete their own activities.
+- **Friends area:** Users can view their friends' activities in a read-only format.
+- **Statistics:** Basic statistics about user activity history are displayed.
+
+**Architecture:** The application follows the MVVM (Model-View-ViewModel) pattern. Views are the Vue components (`.vue` files) that handle the UI, ViewModels are the Pinia stores that manage state and business logic, and Models are the TypeScript interfaces and data structures. This separation of concerns makes the codebase maintainable and testable. The app also leverages Vue Router for navigation and TypeScript for type safety throughout.
+
+**Live Site:**
+- **Render:** [https://final-project-cps-593-web-server.onrender.com](https://final-project-cps-593-web-server.onrender.com)
