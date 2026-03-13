@@ -21,15 +21,17 @@ const props = defineProps<{
 // EMITS
 // ============================================================================
 const emit = defineEmits<{
-  submit: [formData: {
-    title: string
-    type: string
-    date: string
-    duration: string
-    intensity: string
-    picture: string
-    notes: string
-  }]
+  submit: [
+    formData: {
+      title: string
+      type: string
+      date: string
+      duration: string
+      intensity: string
+      picture: string
+      notes: string
+    },
+  ]
   cancel: []
 }>()
 
@@ -102,14 +104,11 @@ watch(
 )
 
 // Sync hours/minutes inputs back to the total duration string
-watch(
-  [durationHours, durationMinutes],
-  ([h, m]) => {
-    const hours = Math.max(0, h || 0)
-    const mins = Math.min(59, Math.max(0, m || 0))
-    activityForm.value.duration = String(hours * 60 + mins)
-  },
-)
+watch([durationHours, durationMinutes], ([h, m]) => {
+  const hours = Math.max(0, h || 0)
+  const mins = Math.min(59, Math.max(0, m || 0))
+  activityForm.value.duration = String(hours * 60 + mins)
+})
 
 // ============================================================================
 // FORM FUNCTIONS
@@ -145,14 +144,14 @@ function addNewType() {
 function handleSubmit() {
   // Auto-set date to today if not provided
   if (!activityForm.value.date) {
-    activityForm.value.date = today.value
+    activityForm.value.date = today.value ?? ''
   }
   emit('submit', { ...activityForm.value })
 }
 
 // Set the date to today
 function setToday() {
-  activityForm.value.date = today.value
+  activityForm.value.date = today.value ?? ''
 }
 
 // Handle cancel
@@ -298,9 +297,7 @@ function handleCancel() {
 
     <!-- Picture URL (optional) -->
     <div class="field">
-      <label class="label"
-        >Picture URL <span class="has-text-grey-light">(optional)</span></label
-      >
+      <label class="label">Picture URL <span class="has-text-grey-light">(optional)</span></label>
       <div class="control has-icons-left">
         <input
           class="input"
