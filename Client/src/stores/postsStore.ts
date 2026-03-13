@@ -106,6 +106,7 @@ export const usePostsStore = defineStore('posts', () => {
   function toggleLike(postId: number, userId: number) {
     const post = posts.value.find((p) => p.id === postId)
     if (post) {
+      if (!post.likes) post.likes = []
       const likeIndex = post.likes.indexOf(userId)
       if (likeIndex === -1) {
         post.likes.push(userId)
@@ -121,6 +122,7 @@ export const usePostsStore = defineStore('posts', () => {
   function addComment(postId: number, userId: number, content: string) {
     const post = posts.value.find((p) => p.id === postId)
     if (post) {
+      if (!post.comments) post.comments = []
       const newComment: Comment = {
         id: nextCommentId.value++,
         userId,
@@ -137,7 +139,7 @@ export const usePostsStore = defineStore('posts', () => {
    */
   function deleteComment(postId: number, commentId: number) {
     const post = posts.value.find((p) => p.id === postId)
-    if (post) {
+    if (post && post.comments) {
       const commentIndex = post.comments.findIndex((c) => c.id === commentId)
       if (commentIndex !== -1) {
         post.comments.splice(commentIndex, 1)
