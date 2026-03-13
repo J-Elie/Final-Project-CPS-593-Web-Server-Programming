@@ -2,11 +2,20 @@
 // ============================================================================
 // IMPORTS
 // ============================================================================
+import { computed } from 'vue'
 import type { Post } from '@/types/posts'
 import type { User } from '@/types/users'
-import EditButton from '@/components/buttons/EditButton.vue'
-import DeleteButton from '@/components/buttons/DeleteButton.vue'
+import { useAuthStore } from '@/stores/authStore'
+import { usePostsStore } from '@/stores/postsStore'
+import EditButton from '@/components/ui/buttons/EditButton.vue'
+import DeleteButton from '@/components/ui/buttons/DeleteButton.vue'
 import StatusTag from '@/components/ui/StatusTag.vue'
+
+// ============================================================================
+// STORES
+// ============================================================================
+const authStore = useAuthStore()
+const postsStore = usePostsStore()
 
 // ============================================================================
 // PROPS
@@ -18,7 +27,7 @@ import StatusTag from '@/components/ui/StatusTag.vue'
  * - showAuthor: Whether to display author info (default: false)
  * - showActions: Whether to show edit/delete buttons (default: false)
  */
-defineProps<{
+const props = defineProps<{
   post: Post
   author?: User | null
   showAuthor?: boolean
@@ -37,6 +46,28 @@ const emit = defineEmits<{
   edit: [post: Post]
   delete: [postId: number]
 }>()
+
+// ============================================================================
+// COMPUTED
+// ============================================================================
+/**
+ * hasLiked - Check if the current logged-in user has liked this post
+ */
+const hasLiked = computed(() => {
+  if (!authStore.currentUser) return false
+  return props.post.likes?.includes(authStore.currentUser.id) ?? false
+})
+
+// ============================================================================
+// ACTIONS
+// ============================================================================
+/**
+ * handleLike - Toggle like on this post for the current user
+ */
+function handleLike() {
+  if (!authStore.currentUser) return
+  postsStore.toggleLike(props.post.id, authStore.currentUser.id)
+}
 
 // ============================================================================
 // HELPER FUNCTIONS
@@ -70,6 +101,18 @@ function getActivityIcon(type: string): string {
     Sports: 'fa-futbol',
   }
   return icons[type] || 'fa-heartbeat'
+}
+
+/**
+ * formatDuration - Format total minutes into a readable hh:mm string
+ */
+function formatDuration(duration: string): string {
+  const totalMins = parseInt(duration) || 0
+  const hours = Math.floor(totalMins / 60)
+  const mins = totalMins % 60
+  if (hours > 0 && mins > 0) return `${hours}h ${mins}min`
+  if (hours > 0) return `${hours}h`
+  return `${mins}min`
 }
 </script>
 
@@ -140,7 +183,7 @@ function getActivityIcon(type: string): string {
         <div class="mb-3">
           <span class="icon-text" v-if="post.duration">
             <span class="icon"><i class="fas fa-clock"></i></span>
-            <span>{{ post.duration }} minutes</span>
+            <span>{{ formatDuration(post.duration) }}</span>
           </span>
         </div>
 
@@ -157,8 +200,8 @@ function getActivityIcon(type: string): string {
         <!-- Likes and Comments (for feed view) -->
         <nav class="level is-mobile mt-3" v-if="showAuthor">
           <div class="level-left">
-            <a class="level-item">
-              <span class="icon is-small has-text-danger">
+            <a class="level-item like-button" @click="handleLike">
+              <span class="icon is-small" :class="hasLiked ? 'has-text-danger' : 'has-text-info'">
                 <i class="fas fa-heart"></i>
               </span>
               <span class="ml-1">{{ post.likes?.length || 0 }}</span>
@@ -183,5 +226,14 @@ function getActivityIcon(type: string): string {
   object-fit: cover;
   display: block;
   margin: 0 auto;
+}
+
+.like-button {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.like-button:hover {
+  transform: scale(1.2);
 }
 </style>

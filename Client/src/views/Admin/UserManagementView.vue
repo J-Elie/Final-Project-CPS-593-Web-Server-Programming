@@ -4,9 +4,9 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useUsersStore } from '@/stores/usersStores'
 import type { User } from '@/types/users'
-import EditButton from '@/components/buttons/EditButton.vue'
-import DeleteButton from '@/components/buttons/DeleteButton.vue'
-import AddButton from '@/components/buttons/AddButton.vue'
+import EditButton from '@/components/ui/buttons/EditButton.vue'
+import DeleteButton from '@/components/ui/buttons/DeleteButton.vue'
+import AddButton from '@/components/ui/buttons/AddButton.vue'
 import StatusTag from '@/components/ui/StatusTag.vue'
 
 // ============================================================================

@@ -16,7 +16,7 @@ defineProps<{
 </script>
 
 <template>
-  <button class="button is-success is-outlined add-btn" @click="$emit('click')">
+  <button class="button is-info is-outlined add-btn" @click="$emit('click')">
     <span class="icon"><i :class="icon || 'fas fa-plus'"></i></span>
     <span>{{ label || 'Add' }}</span>
   </button>
@@ -28,18 +28,18 @@ defineProps<{
 }
 
 .add-btn:hover {
-  background-color: #48c78e !important;
+  background-color: #3e8ed0 !important;
   color: #fff !important;
 }
 
 [data-theme='dark'] .add-btn {
   background-color: #4a4a4a !important;
-  border-color: #48c78e !important;
-  color: #48c78e !important;
+  border-color: #3e8ed0 !important;
+  color: #3e8ed0 !important;
 }
 
 [data-theme='dark'] .add-btn:hover {
-  background-color: #48c78e !important;
+  background-color: #3e8ed0 !important;
   color: #fff !important;
 }
 </style>
