@@ -9,6 +9,7 @@
 import { ref, computed, watch } from 'vue'
 import type { Post } from '@/types/posts'
 import AddButton from '@/components/ui/buttons/AddButton.vue'
+import DeleteButton from '@/components/ui/buttons/DeleteButton.vue'
 
 // ============================================================================
 // PROPS
@@ -176,7 +177,7 @@ function handleCancel() {
           v-model="activityForm.title"
         />
         <span class="icon is-small is-left">
-          <i class="fas fa-heading"></i>
+          <i class="fa-solid fa-pen has-text-info"></i>
         </span>
       </div>
     </div>
@@ -223,11 +224,8 @@ function handleCancel() {
         <div class="field">
           <label class="label">Date</label>
           <div class="field has-addons">
-            <div class="control has-icons-left is-expanded">
+            <div class="control is-expanded">
               <input class="input" type="date" v-model="activityForm.date" :max="today" />
-              <span class="icon is-small is-left">
-                <i class="fas fa-calendar"></i>
-              </span>
             </div>
             <div class="control">
               <AddButton label="Today" icon="fas fa-calendar-day" @click="setToday" />
@@ -337,7 +335,7 @@ function handleCancel() {
         />
       </div>
       <div class="control">
-        <button class="button is-link is-light" @click="handleCancel">Cancel</button>
+        <DeleteButton :label="'Close'" :showIcon="false" @click="handleCancel" />
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { usePostsStore } from '@/stores/postsStore'
 import type { Post } from '@/types/posts'
@@ -16,13 +16,11 @@ const postsStore = usePostsStore()
 // ============================================================================
 // COMPUTED PROPERTIES
 // ============================================================================
-// Get only the current user's posts
 const myPosts = computed(() => {
   if (!authStore.currentUser) return []
   return postsStore.getPostsByUserId(authStore.currentUser.id)
 })
 
-// Sort posts by date (newest first)
 const sortedActivities = computed(() => {
   return [...myPosts.value].sort((a, b) => {
     return new Date(b.date).getTime() - new Date(a.date).getTime()
@@ -30,39 +28,72 @@ const sortedActivities = computed(() => {
 })
 
 // ============================================================================
+// PAGINATION
+// ============================================================================
+const PAGE_SIZE = 20
+const visibleCount = ref(PAGE_SIZE)
+
+// Only the slice currently shown
+const visibleActivities = computed(() => sortedActivities.value.slice(0, visibleCount.value))
+
+const hasMore = computed(() => visibleCount.value < sortedActivities.value.length)
+
+function loadMore() {
+  visibleCount.value = Math.min(visibleCount.value + PAGE_SIZE, sortedActivities.value.length)
+}
+
+// Reset pagination when the list changes (e.g. after add/delete)
+// so we don't accidentally hide newly added posts at the top
+function resetPagination() {
+  visibleCount.value = PAGE_SIZE
+}
+
+// ============================================================================
+// INFINITE SCROLL — sentinel element at the bottom
+// ============================================================================
+const sentinel = ref<HTMLElement | null>(null)
+let observer: IntersectionObserver | null = null
+
+onMounted(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0]?.isIntersecting && hasMore.value) {
+        loadMore()
+      }
+    },
+    { threshold: 0.1 },
+  )
+  if (sentinel.value) observer.observe(sentinel.value)
+})
+
+onUnmounted(() => {
+  observer?.disconnect()
+})
+
+// ============================================================================
 // MODAL STATE
 // ============================================================================
-// Track modal open/closed state
 const isModalOpen = ref(false)
-
-// Track the activity being edited (null = adding new)
 const editingActivity = ref<Post | null>(null)
 
-// ============================================================================
-// MODAL FUNCTIONS
-// ============================================================================
-// Open the modal for adding new activity
 function openModal() {
   editingActivity.value = null
   isModalOpen.value = true
 }
 
-// Open the modal for editing an existing activity
 function editActivity(activity: Post) {
   editingActivity.value = activity
   isModalOpen.value = true
 }
 
-// Close the modal
 function closeModal() {
   isModalOpen.value = false
   editingActivity.value = null
 }
 
 // ============================================================================
-// CRUD OPERATIONS (using store)
+// CRUD OPERATIONS
 // ============================================================================
-// Handle form submission (add or edit)
 function handleFormSubmit(formData: {
   title: string
   type: string
@@ -75,19 +106,18 @@ function handleFormSubmit(formData: {
   if (!authStore.currentUser) return
 
   if (editingActivity.value) {
-    // Editing existing activity - use store
     postsStore.updatePost(editingActivity.value.id, formData)
   } else {
-    // Adding new activity - use store
     postsStore.addPost({
       userId: authStore.currentUser.id,
       ...formData,
     })
+    // Reset so the new post at the top is always visible
+    resetPagination()
   }
   closeModal()
 }
 
-// Delete an activity - use store
 function deleteActivity(id: number) {
   postsStore.deletePost(id)
 }
@@ -127,13 +157,32 @@ function deleteActivity(id: number) {
 
           <!-- Activity Cards -->
           <PostCard
-            v-for="activity in sortedActivities"
+            v-for="activity in visibleActivities"
             :key="activity.id"
             :post="activity"
             :show-actions="true"
             @edit="editActivity"
             @delete="deleteActivity"
           />
+
+          <!-- Sentinel: IntersectionObserver watches this to trigger load more -->
+          <div ref="sentinel" class="sentinel" />
+
+          <!-- Load more indicator -->
+          <div v-if="hasMore" class="has-text-centered py-4">
+            <span class="icon has-text-grey">
+              <i class="fas fa-spinner fa-pulse"></i>
+            </span>
+            <p class="has-text-grey is-size-7 mt-1">Loading more activities…</p>
+          </div>
+
+          <!-- All loaded message -->
+          <div v-else-if="sortedActivities.length > PAGE_SIZE" class="has-text-centered py-4">
+            <p class="has-text-grey is-size-7">
+              <span class="icon is-small"><i class="fas fa-check-circle"></i></span>
+              All {{ sortedActivities.length }} activities loaded
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -153,4 +202,8 @@ function deleteActivity(id: number) {
   </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+.sentinel {
+  height: 1px;
+}
+</style>

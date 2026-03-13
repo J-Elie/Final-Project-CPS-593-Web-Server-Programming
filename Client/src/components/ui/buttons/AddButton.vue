@@ -28,18 +28,18 @@ defineProps<{
 }
 
 .add-btn:hover {
-  background-color: #3e8ed0 !important;
+  background-color: hsl(var(--bulma-info-h), var(--bulma-info-s), var(--bulma-info-l)) !important;
   color: #fff !important;
 }
 
 [data-theme='dark'] .add-btn {
   background-color: #4a4a4a !important;
-  border-color: #3e8ed0 !important;
-  color: #3e8ed0 !important;
+  border-color: hsl(var(--bulma-info-h), var(--bulma-info-s), var(--bulma-info-l)) !important;
+  color: hsl(var(--bulma-info-h), var(--bulma-info-s), var(--bulma-info-l)) !important;
 }
 
 [data-theme='dark'] .add-btn:hover {
-  background-color: #3e8ed0 !important;
+  background-color: hsl(var(--bulma-info-h), var(--bulma-info-s), var(--bulma-info-l)) !important;
   color: #fff !important;
 }
 </style>

@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { onMounted, ref, reactive } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useUsersStore } from '@/stores/usersStores'
 import type { User } from '@/types/users'
-import EditButton from '@/components/ui/buttons/EditButton.vue'
-import DeleteButton from '@/components/ui/buttons/DeleteButton.vue'
 import AddButton from '@/components/ui/buttons/AddButton.vue'
+import DeleteButton from '@/components/ui/buttons/DeleteButton.vue'
 import StatusTag from '@/components/ui/StatusTag.vue'
+import EditProfileForm from '@/components/EditProfileForm.vue'
 
 // ============================================================================
 // STORE & ROUTER INITIALIZATION
@@ -19,7 +19,6 @@ const router = useRouter()
 // ============================================================================
 // ACCESS CONTROL
 // ============================================================================
-// Redirect non-admin users to home on mount
 onMounted(() => {
   if (!authStore.isLoggedIn || !authStore.isAdmin) {
     router.push('/')
@@ -31,25 +30,26 @@ onMounted(() => {
 // ============================================================================
 const isAddModalOpen = ref(false)
 const isEditModalOpen = ref(false)
-const editingUserId = ref<number | null>(null)
+const editingUser = ref<User | null>(null)
 
-// Form data for add/edit
-const formData = reactive({
+// ============================================================================
+// ADD MODAL
+// ============================================================================
+// Blank user shell for the add form
+const blankUser: User = {
+  id: -1,
   firstName: '',
   username: '',
   image: '',
   role: 'user',
-})
+  following: [],
+  followers: [],
+}
 
-// ============================================================================
-// MODAL FUNCTIONS
-// ============================================================================
+const addUserShell = ref<User>({ ...blankUser })
+
 function openAddModal() {
-  // Reset form
-  formData.firstName = ''
-  formData.username = ''
-  formData.image = ''
-  formData.role = 'user'
+  addUserShell.value = { ...blankUser }
   isAddModalOpen.value = true
 }
 
@@ -57,29 +57,12 @@ function closeAddModal() {
   isAddModalOpen.value = false
 }
 
-function openEditModal(user: User) {
-  editingUserId.value = user.id
-  formData.firstName = user.firstName
-  formData.username = user.username
-  formData.image = user.image
-  formData.role = user.role
-  isEditModalOpen.value = true
-}
-
-function closeEditModal() {
-  isEditModalOpen.value = false
-  editingUserId.value = null
-}
-
-// ============================================================================
-// CRUD ACTIONS
-// ============================================================================
-function addUser() {
-  if (!formData.firstName || !formData.username) {
-    alert('Please fill in all required fields')
-    return
-  }
-
+function handleAddSubmit(formData: {
+  firstName: string
+  username: string
+  image: string
+  role: string
+}) {
   usersStore.addUser({
     firstName: formData.firstName,
     username: formData.username,
@@ -88,35 +71,41 @@ function addUser() {
     following: [],
     followers: [],
   })
-
   closeAddModal()
 }
 
-function updateUser() {
-  if (!editingUserId.value) return
+// ============================================================================
+// EDIT MODAL
+// ============================================================================
+function openEditModal(user: User) {
+  editingUser.value = user
+  isEditModalOpen.value = true
+}
 
-  if (!formData.firstName || !formData.username) {
-    alert('Please fill in all required fields')
-    return
-  }
+function closeEditModal() {
+  isEditModalOpen.value = false
+  editingUser.value = null
+}
 
-  usersStore.updateUser(editingUserId.value, {
-    firstName: formData.firstName,
-    username: formData.username,
-    image: formData.image,
-    role: formData.role,
-  })
-
+function handleEditSubmit(formData: {
+  firstName: string
+  username: string
+  image: string
+  role: string
+}) {
+  if (!editingUser.value) return
+  usersStore.updateUser(editingUser.value.id, formData)
   closeEditModal()
 }
 
+// ============================================================================
+// DELETE
+// ============================================================================
 function deleteUser(userId: number) {
-  // Don't allow deleting yourself
   if (userId === authStore.currentUser?.id) {
     alert('You cannot delete yourself!')
     return
   }
-
   if (confirm('Are you sure you want to delete this user?')) {
     usersStore.deleteUser(userId)
   }
@@ -126,7 +115,7 @@ function deleteUser(userId: number) {
 <template>
   <main class="section">
     <div class="container">
-      <!-- Access Denied (shown briefly before redirect) -->
+      <!-- Access Denied -->
       <div v-if="!authStore.isLoggedIn || !authStore.isAdmin" class="notification is-danger">
         <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>
         Access denied. Admin privileges required.
@@ -187,7 +176,13 @@ function deleteUser(userId: number) {
                 </td>
                 <td>
                   <div class="buttons">
-                    <EditButton small @click="openEditModal(user)" />
+                    <button
+                      class="button is-info is-outlined is-small"
+                      @click="openEditModal(user)"
+                    >
+                      <span class="icon"><i class="fas fa-edit"></i></span>
+                      <span>Edit</span>
+                    </button>
                     <DeleteButton
                       small
                       :disabled="user.id === authStore.currentUser?.id"
@@ -210,147 +205,30 @@ function deleteUser(userId: number) {
     <!-- Add User Modal -->
     <div class="modal" :class="{ 'is-active': isAddModalOpen }">
       <div class="modal-background" @click="closeAddModal"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">
-            <span class="icon"><i class="fas fa-user-plus"></i></span>
-            Add New User
-          </p>
-          <button class="delete" aria-label="close" @click="closeAddModal"></button>
-        </header>
-        <section class="modal-card-body">
-          <div class="field">
-            <label class="label">Name *</label>
-            <div class="control has-icons-left">
-              <input
-                class="input"
-                type="text"
-                placeholder="Enter name"
-                v-model="formData.firstName"
-              />
-              <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">Username *</label>
-            <div class="control has-icons-left">
-              <input
-                class="input"
-                type="text"
-                placeholder="Enter username"
-                v-model="formData.username"
-              />
-              <span class="icon is-small is-left"><i class="fas fa-at"></i></span>
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">Profile Image URL</label>
-            <div class="control has-icons-left">
-              <input
-                class="input"
-                type="text"
-                placeholder="Enter image URL"
-                v-model="formData.image"
-              />
-              <span class="icon is-small is-left"><i class="fas fa-image"></i></span>
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">Role</label>
-            <div class="control">
-              <div class="select is-fullwidth">
-                <select v-model="formData.role">
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </section>
-        <footer class="modal-card-foot">
-          <button class="button is-success" @click="addUser">
-            <span class="icon"><i class="fas fa-check"></i></span>
-            <span>Add User</span>
-          </button>
-          <button class="button" @click="closeAddModal">Cancel</button>
-        </footer>
+      <div class="modal-content">
+        <EditProfileForm
+          :user="addUserShell"
+          :show-role="true"
+          @submit="handleAddSubmit"
+          @cancel="closeAddModal"
+        />
       </div>
+      <button class="modal-close is-large" aria-label="close" @click="closeAddModal"></button>
     </div>
 
     <!-- Edit User Modal -->
     <div class="modal" :class="{ 'is-active': isEditModalOpen }">
       <div class="modal-background" @click="closeEditModal"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">
-            <span class="icon"><i class="fas fa-user-edit"></i></span>
-            Edit User
-          </p>
-          <button class="delete" aria-label="close" @click="closeEditModal"></button>
-        </header>
-        <section class="modal-card-body">
-          <div class="field">
-            <label class="label">Name *</label>
-            <div class="control has-icons-left">
-              <input
-                class="input"
-                type="text"
-                placeholder="Enter name"
-                v-model="formData.firstName"
-              />
-              <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">Username *</label>
-            <div class="control has-icons-left">
-              <input
-                class="input"
-                type="text"
-                placeholder="Enter username"
-                v-model="formData.username"
-              />
-              <span class="icon is-small is-left"><i class="fas fa-at"></i></span>
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">Profile Image URL</label>
-            <div class="control has-icons-left">
-              <input
-                class="input"
-                type="text"
-                placeholder="Enter image URL"
-                v-model="formData.image"
-              />
-              <span class="icon is-small is-left"><i class="fas fa-image"></i></span>
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">Role</label>
-            <div class="control">
-              <div class="select is-fullwidth">
-                <select v-model="formData.role">
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </section>
-        <footer class="modal-card-foot">
-          <button class="button is-info" @click="updateUser">
-            <span class="icon"><i class="fas fa-save"></i></span>
-            <span>Save Changes</span>
-          </button>
-          <button class="button" @click="closeEditModal">Cancel</button>
-        </footer>
+      <div class="modal-content">
+        <EditProfileForm
+          v-if="editingUser"
+          :user="editingUser"
+          :show-role="true"
+          @submit="handleEditSubmit"
+          @cancel="closeEditModal"
+        />
       </div>
+      <button class="modal-close is-large" aria-label="close" @click="closeEditModal"></button>
     </div>
   </main>
 </template>
