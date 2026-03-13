@@ -47,7 +47,7 @@ export const useUsersStore = defineStore('users', () => {
   function updateUser(userId: number, userData: Partial<Omit<User, 'id'>>) {
     const index = users.value.findIndex((u) => u.id === userId)
     if (index !== -1) {
-      users.value[index] = { ...users.value[index], ...userData }
+      users.value[index] = { ...users.value[index], ...userData } as User
       return users.value[index]
     }
     return null

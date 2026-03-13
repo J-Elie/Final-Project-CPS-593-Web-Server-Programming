@@ -23,9 +23,9 @@ export type Post = {
   type: string
   date: string
   duration: string
-  intensity?: string
-  picture?: string
-  notes?: string
+  intensity: string
+  picture: string
+  notes: string
   createdAt: string
   likes?: number[]
   comments?: Comment[]
