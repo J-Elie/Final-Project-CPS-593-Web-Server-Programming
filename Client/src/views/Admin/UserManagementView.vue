@@ -42,6 +42,7 @@ const blankUser: User = {
   username: '',
   image: '',
   role: 'user',
+  bio: '',
   following: [],
   followers: [],
 }
@@ -68,6 +69,7 @@ function handleAddSubmit(formData: {
     username: formData.username,
     image: formData.image,
     role: formData.role,
+    bio: '',
     following: [],
     followers: [],
   })
