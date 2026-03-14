@@ -20,65 +20,46 @@ const postsStore = usePostsStore()
 // ============================================================================
 // PROPS
 // ============================================================================
-/**
- * Props interface for PostCard component
- * - post: The post data to display
- * - author: Optional user info for the post author (shown in feeds)
- * - showAuthor: Whether to display author info (default: false)
- * - showActions: Whether to show edit/delete buttons (default: false)
- */
 const props = defineProps<{
   post: Post
   author?: User | null
   showAuthor?: boolean
   showActions?: boolean
+  showStats?: boolean // show likes/comments/share row (My Activities)
+  copied?: boolean // true = show "Copied!" on share button
 }>()
 
 // ============================================================================
 // EMITS
 // ============================================================================
-/**
- * Events emitted by the component
- * - edit: Emitted when edit button is clicked, passes the post
- * - delete: Emitted when delete button is clicked, passes the post id
- */
 const emit = defineEmits<{
   edit: [post: Post]
   delete: [postId: number]
+  share: []
+  openComments: [post: Post]
 }>()
 
 // ============================================================================
 // COMPUTED
 // ============================================================================
-/**
- * hasLiked - Check if the current logged-in user has liked this post
- */
-const hasLiked = computed(() => {
-  if (!authStore.currentUser) return false
-  return props.post.likes?.includes(authStore.currentUser.id) ?? false
-})
+const hasLiked = computed(() =>
+  authStore.currentUser ? (props.post.likes?.includes(authStore.currentUser.id) ?? false) : false,
+)
 
 // ============================================================================
 // ACTIONS
 // ============================================================================
-/**
- * handleLike - Toggle like on this post for the current user
- */
 function handleLike() {
   if (!authStore.currentUser) return
   postsStore.toggleLike(props.post.id, authStore.currentUser.id)
 }
 
 // ============================================================================
-// HELPER FUNCTIONS
+// HELPERS
 // ============================================================================
-/**
- * formatDate - Format ISO date string for display
- */
 function formatDate(dateString: string): string {
   if (!dateString) return ''
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', {
+  return new Date(dateString).toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
@@ -86,9 +67,6 @@ function formatDate(dateString: string): string {
   })
 }
 
-/**
- * getActivityIcon - Get Font Awesome icon class based on activity type
- */
 function getActivityIcon(type: string): string {
   const icons: Record<string, string> = {
     Running: 'fa-running',
@@ -103,9 +81,6 @@ function getActivityIcon(type: string): string {
   return icons[type] || 'fa-heartbeat'
 }
 
-/**
- * formatDuration - Format total minutes into a readable hh:mm string
- */
 function formatDuration(duration: string): string {
   const totalMins = parseInt(duration) || 0
   const hours = Math.floor(totalMins / 60)
@@ -118,7 +93,7 @@ function formatDuration(duration: string): string {
 
 <template>
   <div class="card mb-4">
-    <!-- Card Image (if picture provided) -->
+    <!-- Card Image -->
     <div class="card-image" v-if="post.picture">
       <figure class="image is-3by1">
         <img :src="post.picture" :alt="post.title" class="post-card-img" />
@@ -128,7 +103,6 @@ function formatDuration(duration: string): string {
     <div class="card-content">
       <div class="media">
         <div class="media-left">
-          <!-- Author avatar (if showAuthor) or activity type icon -->
           <figure class="image is-48x48" v-if="showAuthor && author">
             <img
               class="is-rounded"
@@ -144,7 +118,6 @@ function formatDuration(duration: string): string {
         </div>
 
         <div class="media-content">
-          <!-- Author info (if showAuthor) -->
           <div v-if="showAuthor && author" class="mb-2">
             <strong>{{ author.firstName }}</strong>
             <small class="has-text-grey ml-2">@{{ author.username }}</small>
@@ -160,8 +133,8 @@ function formatDuration(duration: string): string {
                 post.intensity === 'Easy'
                   ? 'success'
                   : post.intensity === 'Moderate'
-                    ? 'warning'
-                    : 'danger'
+                    ? 'info'
+                    : 'info'
               "
               size="small"
               class="ml-2"
@@ -170,8 +143,7 @@ function formatDuration(duration: string): string {
         </div>
 
         <div class="media-right" v-if="showActions">
-          <!-- Edit and Delete buttons -->
-          <div class="buttons">
+          <div class="buttons" @click="(e: MouseEvent) => e.stopPropagation()">
             <EditButton small @click="emit('edit', post)" />
             <DeleteButton small @click="emit('delete', post.id)" />
           </div>
@@ -179,7 +151,6 @@ function formatDuration(duration: string): string {
       </div>
 
       <div class="content">
-        <!-- Activity details -->
         <div class="mb-3">
           <span class="icon-text" v-if="post.duration">
             <span class="icon"><i class="fas fa-clock"></i></span>
@@ -187,26 +158,30 @@ function formatDuration(duration: string): string {
           </span>
         </div>
 
-        <!-- Notes -->
         <p v-if="post.notes">{{ post.notes }}</p>
 
-        <!-- Date -->
         <br />
         <time :datetime="post.date">
           <span class="icon"><i class="fas fa-calendar"></i></span>
           {{ formatDate(post.date) }}
         </time>
 
-        <!-- Likes and Comments (for feed view) -->
-        <nav class="level is-mobile mt-3" v-if="showAuthor">
+        <!-- Feed view: likes + comments with like button -->
+        <nav
+          class="level is-mobile mt-3"
+          v-if="showAuthor"
+          @click="(e: MouseEvent) => e.stopPropagation()"
+        >
           <div class="level-left">
             <a class="level-item like-button" @click="handleLike">
-              <span class="icon is-small" :class="hasLiked ? 'has-text-danger' : 'has-text-info'">
+              <span class="icon is-small" :class="hasLiked ? 'has-text-success' : 'has-text-info'">
                 <i class="fas fa-heart"></i>
               </span>
-              <span class="ml-1">{{ post.likes?.length || 0 }}</span>
+              <span class="ml-1" :class="hasLiked ? 'has-text-success' : 'has-text-info'">{{
+                post.likes?.length || 0
+              }}</span>
             </a>
-            <a class="level-item">
+            <a class="level-item like-button" @click="emit('openComments', post)">
               <span class="icon is-small has-text-info">
                 <i class="fas fa-comment"></i>
               </span>
@@ -214,6 +189,41 @@ function formatDuration(duration: string): string {
             </a>
           </div>
         </nav>
+
+        <!-- My Activities view: likes + comments + share inside the card -->
+        <div v-if="showStats" @click="(e: MouseEvent) => e.stopPropagation()">
+          <nav class="level is-mobile mt-3 stats-row">
+            <div class="level-left">
+              <span class="level-item has-text-grey">
+                <span class="icon is-small has-text-info"><i class="fas fa-heart"></i></span>
+                <span class="ml-1 is-size-7">{{ post.likes?.length || 0 }}</span>
+              </span>
+              <span class="level-item has-text-grey">
+                <span class="icon is-small has-text-info"><i class="fas fa-comment"></i></span>
+                <span class="ml-1 is-size-7">{{ post.comments?.length || 0 }}</span>
+              </span>
+            </div>
+            <div class="level-right">
+              <a class="level-item share-btn" @click="emit('share')">
+                <span class="icon is-small">
+                  <i
+                    :class="
+                      copied
+                        ? 'fas fa-check has-text-success'
+                        : 'fas fa-share-alt has-text-grey-light'
+                    "
+                  ></i>
+                </span>
+                <span
+                  class="is-size-7 ml-1"
+                  :class="copied ? 'has-text-success' : 'has-text-grey-light'"
+                >
+                  {{ copied ? 'Copied!' : 'Share' }}
+                </span>
+              </a>
+            </div>
+          </nav>
+        </div>
       </div>
     </div>
   </div>
@@ -232,8 +242,21 @@ function formatDuration(duration: string): string {
   cursor: pointer;
   transition: transform 0.2s ease;
 }
-
 .like-button:hover {
   transform: scale(1.2);
+}
+
+.stats-row {
+  border-top: 1px solid hsl(0, 0%, 95%);
+  padding-top: 0.5rem;
+}
+
+.share-btn {
+  opacity: 0.5;
+  transition: opacity 0.15s;
+  cursor: pointer;
+}
+.share-btn:hover {
+  opacity: 1;
 }
 </style>

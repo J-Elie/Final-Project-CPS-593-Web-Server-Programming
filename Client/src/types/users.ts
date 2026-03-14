@@ -6,4 +6,5 @@ export type User = {
   role: string
   following: number[]
   followers: number[]
+  bio: string
 }

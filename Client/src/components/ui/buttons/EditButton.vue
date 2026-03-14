@@ -11,6 +11,8 @@ defineEmits<{
 
 defineProps<{
   small?: boolean
+  label?: string
+  icon?: string
 }>()
 </script>
 
@@ -20,8 +22,8 @@ defineProps<{
     :class="{ 'is-small': small }"
     @click="$emit('click')"
   >
-    <span class="icon"><i class="fas fa-edit"></i></span>
-    <span>Edit</span>
+    <span class="icon"><i :class="icon || 'fas fa-edit'"></i></span>
+    <span>{{ label || 'Edit' }}</span>
   </button>
 </template>
 

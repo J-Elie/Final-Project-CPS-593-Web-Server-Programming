@@ -4,10 +4,10 @@ import AboutView from '../views/AboutView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  scrollBehavior() {
-    // Always scroll to top when navigating to a new route
-    return { top: 0 }
-  },
+  // scrollBehavior() {
+  //   // Always scroll to top when navigating to a new route
+  //   return { top: 0 }
+  // },
   routes: [
     {
       path: '/',
@@ -59,6 +59,11 @@ const router = createRouter({
       path: '/User/Profile',
       name: 'profile',
       component: () => import('../views/User/ProfileView.vue'),
+    },
+    {
+      path: '/User/Profile/:id',
+      name: 'user-profile',
+      component: () => import('../views/User/Userprofileview.vue'),
     },
   ],
 })

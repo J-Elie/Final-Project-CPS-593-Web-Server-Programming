@@ -48,7 +48,7 @@
       <div class="container">
         <div class="columns is-centered">
           <div class="column is-8 has-text-centered">
-            <span class="icon is-large has-text-primary">
+            <span class="icon is-large has-text-success">
               <i class="fas fa-3x fa-universal-access"></i>
             </span>
             <h2 class="title is-3 mt-4">Built for Everyone</h2>
@@ -103,7 +103,7 @@
           <div class="column is-4">
             <div class="card">
               <div class="card-content has-text-centered">
-                <span class="icon is-large has-text-warning">
+                <span class="icon is-large has-text-info">
                   <i class="fas fa-3x fa-users"></i>
                 </span>
                 <p class="title is-4 mt-4">Social Features</p>
@@ -133,15 +133,15 @@
                 <span class="icon"><i class="fab fa-css3-alt"></i></span>
                 <span>Bulma CSS</span>
               </span>
-              <span class="tag is-primary is-light">
+              <span class="tag is-info is-light">
                 <span class="icon"><i class="fab fa-js"></i></span>
                 <span>TypeScript</span>
               </span>
-              <span class="tag is-warning is-light">
+              <span class="tag is-success is-light">
                 <span class="icon"><i class="fas fa-bolt"></i></span>
                 <span>Vite</span>
               </span>
-              <span class="tag is-danger is-light">
+              <span class="tag is-info is-light">
                 <span class="icon"><i class="fas fa-route"></i></span>
                 <span>Vue Router</span>
               </span>
@@ -157,7 +157,7 @@
         <h2 class="title is-3">Ready to Start?</h2>
         <p class="subtitle">Your movement journey begins here at your own pace.</p>
         <div class="buttons is-centered">
-          <router-link to="/register" class="button is-primary is-medium">
+          <router-link to="/register" class="button is-info is-medium">
             <span class="icon"><i class="fas fa-user-plus"></i></span>
             <span>Sign Up Now</span>
           </router-link>
@@ -171,7 +171,7 @@
         <p class="has-text-grey">
           <span class="icon"><i class="fas fa-code"></i></span>
           CPS-593 Final Project | Built with
-          <span class="has-text-danger"><i class="fas fa-heart"></i></span> for every body
+          <span class="has-text-info"><i class="fas fa-heart"></i></span> for every body
         </p>
       </div>
     </section>
@@ -179,9 +179,8 @@
 </template>
 
 <style scoped>
-/* Theme-aware section backgrounds */
 .inclusivity-section {
-  background-color: var(--bulma-primary-light, hsl(171, 100%, 96%));
+  background-color: var(--bulma-success-light, hsl(141, 53%, 96%));
 }
 
 .features-section {
@@ -192,7 +191,6 @@
   background-color: var(--bulma-info-light, hsl(207, 61%, 93%));
 }
 
-/* Dark mode adjustments */
 :root[data-theme='dark'] .inclusivity-section,
 :root[data-theme='dark'] .features-section,
 :root[data-theme='dark'] .cta-section {

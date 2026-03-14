@@ -5,9 +5,6 @@ import { usePostsStore } from '@/stores/postsStore'
 import type { Post } from '@/types/posts'
 import StatusTag from '@/components/ui/StatusTag.vue'
 
-// ============================================================================
-// STORE INITIALIZATION
-// ============================================================================
 const authStore = useAuthStore()
 const postsStore = usePostsStore()
 
@@ -50,7 +47,6 @@ const allPosts = computed(() => myPosts.value)
 // ============================================================================
 // STAT CALCULATORS
 // ============================================================================
-
 function parseDuration(duration: string | number): number {
   if (!duration) return 0
   const str = String(duration)
@@ -102,15 +98,13 @@ function mostPopular(posts: Post[]): { type: string; count: number } | null {
   if (posts.length === 0) return null
   const counts: Record<string, number> = {}
   posts.forEach((p) => {
-    const t = p.type || 'Unknown'
-    counts[t] = (counts[t] || 0) + 1
+    counts[p.type || 'Unknown'] = (counts[p.type || 'Unknown'] || 0) + 1
   })
   const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]
   if (!top) return null
   return { type: top[0], count: top[1] }
 }
 
-// Longest single session in a set of posts
 function longestSession(posts: Post[]): { title: string; duration: string } | null {
   if (posts.length === 0) return null
   const top = [...posts].sort((a, b) => parseDuration(b.duration) - parseDuration(a.duration))[0]
@@ -118,31 +112,25 @@ function longestSession(posts: Post[]): { title: string; duration: string } | nu
   return { title: top.title, duration: formatDuration(parseDuration(top.duration)) }
 }
 
-// Current streak: consecutive days up to today that have at least one activity
 const currentStreak = computed(() => {
   const dates = new Set(allPosts.value.map((p) => p.date.slice(0, 10)))
   let streak = 0
-  const today = new Date()
-  const d = new Date(today)
+  const d = new Date()
   d.setHours(0, 0, 0, 0)
   while (true) {
     const key = d.toISOString().slice(0, 10)
     if (dates.has(key)) {
       streak++
       d.setDate(d.getDate() - 1)
-    } else {
-      break
-    }
+    } else break
   }
   return streak
 })
 
-// Type breakdown for all time — sorted by count descending
 const typeBreakdown = computed(() => {
   const counts: Record<string, number> = {}
   allPosts.value.forEach((p) => {
-    const t = p.type || 'Unknown'
-    counts[t] = (counts[t] || 0) + 1
+    counts[p.type || 'Unknown'] = (counts[p.type || 'Unknown'] || 0) + 1
   })
   const total = allPosts.value.length
   return Object.entries(counts)
@@ -154,7 +142,6 @@ const typeBreakdown = computed(() => {
     }))
 })
 
-// Icon per activity type
 function typeIcon(type: string): string {
   const icons: Record<string, string> = {
     Running: 'fa-running',
@@ -168,9 +155,6 @@ function typeIcon(type: string): string {
   return icons[type] ?? 'fa-star'
 }
 
-// ============================================================================
-// COMPUTED STATS OBJECTS
-// ============================================================================
 const weekStats = computed(() => ({
   posts: weekPosts.value.length,
   duration: formatDuration(weekPosts.value.reduce((s, p) => s + parseDuration(p.duration), 0)),
@@ -225,15 +209,15 @@ const allTimeStats = computed(() => ({
       </div>
 
       <div v-else>
-        <!-- ── Streak Banner ── -->
+        <!-- Streak Banner -->
         <div class="columns is-centered mb-5">
           <div class="column is-half">
             <div class="box streak-box has-text-centered">
               <p class="heading has-text-grey">
-                <span class="icon has-text-warning"><i class="fas fa-fire"></i></span>
+                <span class="icon has-text-info"><i class="fas fa-fire"></i></span>
                 Current Streak
               </p>
-              <p class="title is-2 has-text-warning">
+              <p class="title is-2 has-text-info">
                 {{ currentStreak }} day{{ currentStreak !== 1 ? 's' : '' }}
               </p>
               <p class="heading">consecutive days active</p>
@@ -241,7 +225,7 @@ const allTimeStats = computed(() => ({
           </div>
         </div>
 
-        <!-- ── 3 Period Columns ── -->
+        <!-- 3 Period Columns -->
         <div class="columns is-multiline">
           <!-- This Week -->
           <div class="column is-one-third">
@@ -254,8 +238,7 @@ const allTimeStats = computed(() => ({
 
               <div class="stat-row has-text-centered">
                 <p class="heading has-text-grey">
-                  <span class="icon has-text-info"><i class="fas fa-dumbbell"></i></span>
-                  Activities
+                  <span class="icon has-text-info"><i class="fas fa-dumbbell"></i></span> Activities
                 </p>
                 <p class="title is-3 has-text-info">{{ weekStats.posts }}</p>
                 <p class="heading">sessions</p>
@@ -263,19 +246,18 @@ const allTimeStats = computed(() => ({
 
               <div class="stat-row has-text-centered">
                 <p class="heading has-text-grey">
-                  <span class="icon has-text-success"><i class="fas fa-clock"></i></span>
-                  Time Active
+                  <span class="icon has-text-success"><i class="fas fa-clock"></i></span> Time
+                  Active
                 </p>
                 <p class="title is-3 has-text-success">{{ weekStats.duration }}</p>
               </div>
 
               <div class="stat-row has-text-centered">
                 <p class="heading has-text-grey">
-                  <span class="icon has-text-link"><i class="fas fa-star"></i></span>
-                  Most Popular
+                  <span class="icon has-text-info"><i class="fas fa-star"></i></span> Most Popular
                 </p>
                 <template v-if="weekStats.popular">
-                  <p class="title is-4 has-text-link">{{ weekStats.popular.type }}</p>
+                  <p class="title is-4 has-text-info">{{ weekStats.popular.type }}</p>
                   <p class="heading">
                     {{ weekStats.popular.count }} session{{
                       weekStats.popular.count !== 1 ? 's' : ''
@@ -287,8 +269,8 @@ const allTimeStats = computed(() => ({
 
               <div class="stat-row has-text-centered">
                 <p class="heading has-text-grey">
-                  <span class="icon has-text-danger"><i class="fas fa-fire"></i></span>
-                  Avg Intensity
+                  <span class="icon has-text-success"><i class="fas fa-fire"></i></span> Avg
+                  Intensity
                 </p>
                 <StatusTag
                   v-if="weekStats.intensity !== '—'"
@@ -301,11 +283,11 @@ const allTimeStats = computed(() => ({
 
               <div class="stat-row has-text-centered">
                 <p class="heading has-text-grey">
-                  <span class="icon has-text-primary"><i class="fas fa-trophy"></i></span>
-                  Longest Session
+                  <span class="icon has-text-info"><i class="fas fa-trophy"></i></span> Longest
+                  Session
                 </p>
                 <template v-if="weekStats.longest">
-                  <p class="title is-4 has-text-primary">{{ weekStats.longest.duration }}</p>
+                  <p class="title is-4 has-text-info">{{ weekStats.longest.duration }}</p>
                   <p class="heading">{{ weekStats.longest.title }}</p>
                 </template>
                 <p v-else class="title is-4 has-text-grey-light">—</p>
@@ -324,8 +306,7 @@ const allTimeStats = computed(() => ({
 
               <div class="stat-row has-text-centered">
                 <p class="heading has-text-grey">
-                  <span class="icon has-text-info"><i class="fas fa-dumbbell"></i></span>
-                  Activities
+                  <span class="icon has-text-info"><i class="fas fa-dumbbell"></i></span> Activities
                 </p>
                 <p class="title is-3 has-text-info">{{ monthStats.posts }}</p>
                 <p class="heading">sessions</p>
@@ -333,19 +314,18 @@ const allTimeStats = computed(() => ({
 
               <div class="stat-row has-text-centered">
                 <p class="heading has-text-grey">
-                  <span class="icon has-text-success"><i class="fas fa-clock"></i></span>
-                  Time Active
+                  <span class="icon has-text-success"><i class="fas fa-clock"></i></span> Time
+                  Active
                 </p>
                 <p class="title is-3 has-text-success">{{ monthStats.duration }}</p>
               </div>
 
               <div class="stat-row has-text-centered">
                 <p class="heading has-text-grey">
-                  <span class="icon has-text-link"><i class="fas fa-star"></i></span>
-                  Most Popular
+                  <span class="icon has-text-info"><i class="fas fa-star"></i></span> Most Popular
                 </p>
                 <template v-if="monthStats.popular">
-                  <p class="title is-4 has-text-link">{{ monthStats.popular.type }}</p>
+                  <p class="title is-4 has-text-info">{{ monthStats.popular.type }}</p>
                   <p class="heading">
                     {{ monthStats.popular.count }} session{{
                       monthStats.popular.count !== 1 ? 's' : ''
@@ -357,8 +337,8 @@ const allTimeStats = computed(() => ({
 
               <div class="stat-row has-text-centered">
                 <p class="heading has-text-grey">
-                  <span class="icon has-text-danger"><i class="fas fa-fire"></i></span>
-                  Avg Intensity
+                  <span class="icon has-text-success"><i class="fas fa-fire"></i></span> Avg
+                  Intensity
                 </p>
                 <StatusTag
                   v-if="monthStats.intensity !== '—'"
@@ -371,11 +351,11 @@ const allTimeStats = computed(() => ({
 
               <div class="stat-row has-text-centered">
                 <p class="heading has-text-grey">
-                  <span class="icon has-text-primary"><i class="fas fa-trophy"></i></span>
-                  Longest Session
+                  <span class="icon has-text-info"><i class="fas fa-trophy"></i></span> Longest
+                  Session
                 </p>
                 <template v-if="monthStats.longest">
-                  <p class="title is-4 has-text-primary">{{ monthStats.longest.duration }}</p>
+                  <p class="title is-4 has-text-info">{{ monthStats.longest.duration }}</p>
                   <p class="heading">{{ monthStats.longest.title }}</p>
                 </template>
                 <p v-else class="title is-4 has-text-grey-light">—</p>
@@ -394,8 +374,7 @@ const allTimeStats = computed(() => ({
 
               <div class="stat-row has-text-centered">
                 <p class="heading has-text-grey">
-                  <span class="icon has-text-info"><i class="fas fa-dumbbell"></i></span>
-                  Activities
+                  <span class="icon has-text-info"><i class="fas fa-dumbbell"></i></span> Activities
                 </p>
                 <p class="title is-3 has-text-info">{{ allTimeStats.posts }}</p>
                 <p class="heading">sessions</p>
@@ -403,19 +382,18 @@ const allTimeStats = computed(() => ({
 
               <div class="stat-row has-text-centered">
                 <p class="heading has-text-grey">
-                  <span class="icon has-text-success"><i class="fas fa-clock"></i></span>
-                  Time Active
+                  <span class="icon has-text-success"><i class="fas fa-clock"></i></span> Time
+                  Active
                 </p>
                 <p class="title is-3 has-text-success">{{ allTimeStats.duration }}</p>
               </div>
 
               <div class="stat-row has-text-centered">
                 <p class="heading has-text-grey">
-                  <span class="icon has-text-link"><i class="fas fa-star"></i></span>
-                  Most Popular
+                  <span class="icon has-text-info"><i class="fas fa-star"></i></span> Most Popular
                 </p>
                 <template v-if="allTimeStats.popular">
-                  <p class="title is-4 has-text-link">{{ allTimeStats.popular.type }}</p>
+                  <p class="title is-4 has-text-info">{{ allTimeStats.popular.type }}</p>
                   <p class="heading">
                     {{ allTimeStats.popular.count }} session{{
                       allTimeStats.popular.count !== 1 ? 's' : ''
@@ -427,8 +405,8 @@ const allTimeStats = computed(() => ({
 
               <div class="stat-row has-text-centered">
                 <p class="heading has-text-grey">
-                  <span class="icon has-text-danger"><i class="fas fa-fire"></i></span>
-                  Avg Intensity
+                  <span class="icon has-text-success"><i class="fas fa-fire"></i></span> Avg
+                  Intensity
                 </p>
                 <StatusTag
                   v-if="allTimeStats.intensity !== '—'"
@@ -441,11 +419,11 @@ const allTimeStats = computed(() => ({
 
               <div class="stat-row has-text-centered">
                 <p class="heading has-text-grey">
-                  <span class="icon has-text-primary"><i class="fas fa-trophy"></i></span>
-                  Longest Session
+                  <span class="icon has-text-info"><i class="fas fa-trophy"></i></span> Longest
+                  Session
                 </p>
                 <template v-if="allTimeStats.longest">
-                  <p class="title is-4 has-text-primary">{{ allTimeStats.longest.duration }}</p>
+                  <p class="title is-4 has-text-info">{{ allTimeStats.longest.duration }}</p>
                   <p class="heading">{{ allTimeStats.longest.title }}</p>
                 </template>
                 <p v-else class="title is-4 has-text-grey-light">—</p>
@@ -454,7 +432,7 @@ const allTimeStats = computed(() => ({
           </div>
         </div>
 
-        <!-- ── Activity Type Breakdown ── -->
+        <!-- Activity Type Breakdown -->
         <div class="columns is-centered mt-2">
           <div class="column is-three-quarters">
             <div class="box">
@@ -470,10 +448,10 @@ const allTimeStats = computed(() => ({
                     ></span>
                     {{ item.type }}
                   </span>
-                  <span class="has-text-grey"
-                    >{{ item.count }} session{{ item.count !== 1 ? 's' : '' }} &nbsp;
-                    <strong>{{ item.pct }}%</strong></span
-                  >
+                  <span class="has-text-grey">
+                    {{ item.count }} session{{ item.count !== 1 ? 's' : '' }} &nbsp;
+                    <strong>{{ item.pct }}%</strong>
+                  </span>
                 </div>
                 <progress class="progress is-info is-small" :value="item.pct" max="100">
                   {{ item.pct }}%
@@ -507,6 +485,12 @@ const allTimeStats = computed(() => ({
   border-bottom: none;
 }
 .streak-box {
-  border-top: 4px solid hsl(48, 100%, 67%);
+  border-top: 4px solid hsl(204, 86%, 53%);
+}
+.box {
+  transition: box-shadow 0.2s;
+}
+.box:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 </style>

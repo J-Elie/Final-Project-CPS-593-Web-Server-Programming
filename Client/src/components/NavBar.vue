@@ -57,9 +57,9 @@ function selectUser(user: User | null) {
 }
 
 // Toggle the user dropdown open/closed
-function toggleUserDropdown() {
-  isUserDropdownOpen.value = !isUserDropdownOpen.value
-}
+// function toggleUserDropdown() {
+//   isUserDropdownOpen.value = !isUserDropdownOpen.value
+// }
 
 // Function to toggle between light and dark themes
 function toggleTheme() {

@@ -23,6 +23,7 @@ const emit = defineEmits<{
       username: string
       image: string
       role: string
+      bio: string
     },
   ]
   cancel: []
@@ -33,6 +34,7 @@ const formData = reactive({
   username: props.user.username,
   image: props.user.image ?? '',
   role: props.user.role,
+  bio: props.user.bio ?? '',
 })
 
 // Keep form in sync if the user prop changes
@@ -43,6 +45,7 @@ watch(
     formData.username = u.username
     formData.image = u.image ?? ''
     formData.role = u.role
+    formData.bio = u.bio ?? ''
   },
 )
 
@@ -86,6 +89,19 @@ function handleSubmit() {
       <div class="control has-icons-left">
         <input class="input" type="text" placeholder="Enter image URL" v-model="formData.image" />
         <span class="icon is-small is-left"><i class="fas fa-image"></i></span>
+      </div>
+    </div>
+
+    <!-- Bio -->
+    <div class="field">
+      <label class="label">About Me</label>
+      <div class="control">
+        <textarea
+          class="textarea"
+          placeholder="Tell people a little about yourself…"
+          v-model="formData.bio"
+          rows="3"
+        ></textarea>
       </div>
     </div>
 

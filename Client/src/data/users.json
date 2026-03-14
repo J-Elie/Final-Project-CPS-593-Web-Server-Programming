@@ -17,17 +17,24 @@
       "height": 165.0,
       "weight": 54.0,
       "eyeColor": "Purple",
-      "hair": { "color": "Purple", "type": "Short" },
+      "hair": {
+        "color": "Purple",
+        "type": "Short"
+      },
       "address": {
         "address": "42 Radiant Lane",
         "city": "Edinburgh",
         "state": "Scotland",
         "stateCode": "SCT",
         "postalCode": "EH1 1AA",
-        "coordinates": { "lat": 55.9533, "lng": -3.1883 },
+        "coordinates": {
+          "lat": 55.9533,
+          "lng": -3.1883
+        },
         "country": "United Kingdom"
       },
       "role": "admin",
+      "bio": "Radiant agent and part-time chaos gremlin. I run on spite and post-match adrenaline. Always training, never peaking.",
       "following": [2],
       "followers": [2, 3, 4]
     },
@@ -48,17 +55,24 @@
       "height": 172.0,
       "weight": 63.0,
       "eyeColor": "Green",
-      "hair": { "color": "Brown", "type": "Long" },
+      "hair": {
+        "color": "Brown",
+        "type": "Long"
+      },
       "address": {
         "address": "88 Outback Road",
         "city": "Nimbin",
         "state": "New South Wales",
         "stateCode": "NSW",
         "postalCode": "2480",
-        "coordinates": { "lat": -28.5965, "lng": 153.2235 },
+        "coordinates": {
+          "lat": -28.5965,
+          "lng": 153.2235
+        },
         "country": "Australia"
       },
       "role": "user",
+      "bio": "Nature lover, healer, and certified golden retriever energy. Hiking and swimming keep me sane between ops.",
       "following": [1, 4],
       "followers": [1, 4]
     },
@@ -79,18 +93,24 @@
       "height": 188.0,
       "weight": 85.0,
       "eyeColor": "Blue",
-      "hair": { "color": "Blonde", "type": "Short" },
+      "hair": {
+        "color": "Blonde",
+        "type": "Short"
+      },
       "address": {
         "address": "12 Arrow Lane",
         "city": "Moscow",
         "state": "Moscow Oblast",
         "stateCode": "MOW",
         "postalCode": "101000",
-        "coordinates": { "lat": 55.7558, "lng": 37.6173 },
+        "coordinates": {
+          "lat": 55.7558,
+          "lng": 37.6173
+        },
         "country": "Russia"
       },
-
       "role": "admin",
+      "bio": "Precision is everything. Russian archer, scientist, and reluctant team player. I train so the mission never fails.",
       "following": [1],
       "followers": [4]
     },
@@ -111,17 +131,24 @@
       "height": 165.5,
       "weight": 52.3,
       "eyeColor": "Blue",
-      "hair": { "color": "White", "type": "Straight" },
+      "hair": {
+        "color": "White",
+        "type": "Straight"
+      },
       "address": {
         "address": "123 Wind Street",
         "city": "Seoul",
         "state": "Seoul",
         "stateCode": "SE",
         "postalCode": "04524",
-        "coordinates": { "lat": 37.5665, "lng": 126.978 },
+        "coordinates": {
+          "lat": 37.5665,
+          "lng": 126.978
+        },
         "country": "South Korea"
       },
       "role": "user",
+      "bio": "Wind doesn't wait and neither do I. Seoul born, sky bound. Sprinting and cycling are basically meditation for me.",
       "following": [1, 2, 3],
       "followers": [2]
     }
