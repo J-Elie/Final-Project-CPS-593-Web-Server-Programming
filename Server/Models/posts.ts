@@ -39,6 +39,10 @@ export function get(id: number): Post {
   return post as Post;
 }
 
+export function getByUserId(userId: number): Post[] {
+  return data.posts.filter((post) => post.userId === userId) as Post[];
+}
+
 export function create(post: Post) {
   const newPost = {
     ...post,

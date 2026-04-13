@@ -1,5 +1,12 @@
 import { Router } from "express";
-import { getAll, get, create, update, remove } from "../Models/posts.ts";
+import {
+  getAll,
+  get,
+  getByUserId,
+  create,
+  update,
+  remove,
+} from "../Models/posts.ts";
 import { Post, DataEnvelope, DataListEnvelope } from "../Types/posts.ts";
 
 const app = Router();
@@ -19,6 +26,16 @@ app
     const response: DataEnvelope<{ count: number }> = {
       data: { count },
       isSuccess: true,
+    };
+    res.send(response);
+  })
+  .get("/user/:userId", (req, res) => {
+    const { userId } = req.params;
+    const posts = getByUserId(Number(userId));
+    const response: DataListEnvelope<Post> = {
+      data: posts,
+      isSuccess: true,
+      total: posts.length,
     };
     res.send(response);
   })

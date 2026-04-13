@@ -1,0 +1,43 @@
+###
+# Test Posts API
+
+### Get all posts
+GET http://localhost:3000/api/v1/posts
+
+### Get posts with pagination and search
+GET http://localhost:3000/api/v1/posts?search=&page=1&pageSize=5
+
+### Get total count of posts
+GET http://localhost:3000/api/v1/posts/count
+
+### Get post by post ID
+GET http://localhost:3000/api/v1/posts/1
+
+### Get posts by user ID
+GET http://localhost:3000/api/v1/posts/user/1
+
+### Create a new post
+POST http://localhost:3000/api/v1/posts
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "title": "Evening Yoga",
+  "type": "Yoga",
+  "date": "2026-04-13",
+  "duration": "45",
+  "intensity": "Medium",
+  "picture": "https://example.com/yoga.jpg",
+  "notes": "Relaxing session before bed."
+}
+
+### Update a post
+PATCH http://localhost:3000/api/v1/posts/1
+Content-Type: application/json
+
+{
+  "notes": "Updated: Felt even more relaxed!"
+}
+
+### Delete a post
+DELETE http://localhost:3000/api/v1/posts/1
