@@ -7,14 +7,15 @@
 // ============================================================================
 // IMPORTS
 // ============================================================================
-// Import post data from local JSON file
-import data from '../data/posts.json'
 // Pinia's defineStore function to create a new store
 import { defineStore } from 'pinia'
 // TypeScript types for Post and Comment objects
-import type { Post, Comment } from '../types/posts'
+import type { Post, Comment } from '../../../Server/Types/posts'
+import type { DataListEnvelope } from '../../../Server/Types/dataEnvelopes'
 // Vue's ref and computed for reactive data
 import { ref, computed } from 'vue'
+
+import { api } from '../Services/myFetch'
 
 // ============================================================================
 // POSTS STORE DEFINITION
@@ -23,16 +24,11 @@ export const usePostsStore = defineStore('posts', () => {
   // ============================================================================
   // STATE
   // ============================================================================
-  /**
-   * posts - Reactive array containing all post objects
-   * Initialized with data loaded from the posts.json file
-   */
-  const posts = ref<Post[]>(data.posts as Post[])
+  const posts = ref<Post[]>([])
 
-  /**
-   * nextId - Counter for generating unique post IDs
-   */
-  const nextId = ref(data.posts.length + 1)
+  api<DataListEnvelope<Post>>('posts').then((data) => {
+    posts.value = data.data
+  })
 
   /**
    * nextCommentId - Counter for generating unique comment IDs
@@ -64,7 +60,7 @@ export const usePostsStore = defineStore('posts', () => {
   function addPost(post: Omit<Post, 'id' | 'createdAt' | 'likes' | 'comments'>) {
     const newPost: Post = {
       ...post,
-      id: nextId.value++,
+      id: posts.value.length + 1,
       createdAt: new Date().toISOString(),
       likes: [],
       comments: [],

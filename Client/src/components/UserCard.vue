@@ -8,7 +8,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
-import type { User } from '@/types/users'
+import type { User } from '../../../Server/Types/users'
 
 const props = defineProps<{
   user: User

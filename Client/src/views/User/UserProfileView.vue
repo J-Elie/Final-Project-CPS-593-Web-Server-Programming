@@ -5,7 +5,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { useUsersStore } from '@/stores/usersStores'
 import { usePostsStore } from '@/stores/postsStore'
 import PostDetailModal from '@/components/modal/PostDetailModal.vue'
-import type { Post } from '@/types/posts'
+import type { Post } from '../../../../Server/Types/posts'
 
 const route = useRoute()
 const router = useRouter()

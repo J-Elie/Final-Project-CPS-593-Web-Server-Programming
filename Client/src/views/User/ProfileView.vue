@@ -8,7 +8,7 @@ import EditProfileForm from '@/components/EditProfileForm.vue'
 import EditButton from '@/components/ui/buttons/EditButton.vue'
 import DeleteButton from '@/components/ui/buttons/DeleteButton.vue'
 import PeopleManagerModal from '@/components/modal/PeopleManagerModal.vue'
-import type { Post } from '@/types/posts'
+import type { Post } from '../../../../Server/Types/posts'
 
 const authStore = useAuthStore()
 const postsStore = usePostsStore()

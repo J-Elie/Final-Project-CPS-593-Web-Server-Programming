@@ -7,7 +7,7 @@
  */
 
 import { reactive, watch } from 'vue'
-import type { User } from '@/types/users'
+import type { User } from '../../../Server/Types/users'
 import AddButton from '@/components/ui/buttons/AddButton.vue'
 import DeleteButton from '@/components/ui/buttons/DeleteButton.vue'
 

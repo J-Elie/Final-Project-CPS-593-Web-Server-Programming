@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { usePostsStore } from '@/stores/postsStore'
-import type { Post } from '@/types/posts'
+import type { Post } from '../../../../Server/Types/posts'
 import StatusTag from '@/components/ui/StatusTag.vue'
 
 const authStore = useAuthStore()

@@ -17,7 +17,7 @@ import { ref, onMounted, computed } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { useUsersStore } from '@/stores/usersStores'
 import { useAuthStore } from '@/stores/authStore'
-import type { User } from '@/types/users'
+import type { User } from '../../../Server/Types/users'
 
 // ============================================================================
 // STORE INITIALIZATION

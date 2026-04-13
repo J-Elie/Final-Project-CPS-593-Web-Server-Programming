@@ -11,7 +11,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { usePostsStore } from '@/stores/postsStore'
 import { useUsersStore } from '@/stores/usersStores'
 import StatusTag from '@/components/ui/StatusTag.vue'
-import type { Post } from '@/types/posts'
+import type { Post } from '../../../../Server/Types/posts'
 
 const props = defineProps<{
   post: Post | null

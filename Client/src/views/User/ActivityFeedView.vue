@@ -5,7 +5,7 @@ import { usePostsStore } from '@/stores/postsStore'
 import { useUsersStore } from '@/stores/usersStores'
 import PostCard from '@/components/PostCard.vue'
 import PostDetailModal from '@/components/modal/PostDetailModal.vue'
-import type { Post } from '@/types/posts'
+import type { Post } from '../../../../Server/Types/posts'
 
 const authStore = useAuthStore()
 const postsStore = usePostsStore()

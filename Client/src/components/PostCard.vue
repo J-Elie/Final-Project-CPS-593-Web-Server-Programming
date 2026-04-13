@@ -3,8 +3,8 @@
 // IMPORTS
 // ============================================================================
 import { computed } from 'vue'
-import type { Post } from '@/types/posts'
-import type { User } from '@/types/users'
+import type { Post } from '../../../Server/Types/posts'
+import type { User } from '../../../Server/Types/users'
 import { useAuthStore } from '@/stores/authStore'
 import { usePostsStore } from '@/stores/postsStore'
 import EditButton from '@/components/ui/buttons/EditButton.vue'

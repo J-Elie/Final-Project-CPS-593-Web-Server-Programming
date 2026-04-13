@@ -7,7 +7,7 @@
  * Emits 'submit' with form data and 'cancel' when dismissed.
  */
 import { ref, computed, watch } from 'vue'
-import type { Post } from '@/types/posts'
+import type { Post } from '../../../Server/Types/posts'
 import AddButton from '@/components/ui/buttons/AddButton.vue'
 import DeleteButton from '@/components/ui/buttons/DeleteButton.vue'
 

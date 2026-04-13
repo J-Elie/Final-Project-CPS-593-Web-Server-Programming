@@ -7,14 +7,15 @@
 // ============================================================================
 // IMPORTS
 // ============================================================================
-// Import user data from local JSON file
-import data from '../data/users.json'
 // Pinia's defineStore function to create a new store
 import { defineStore } from 'pinia'
-// TypeScript type for User objects (ensures type safety)
-import type { User } from '../types/users.ts'
+// TypeScript types
+import type { User } from '../../../Server/Types/users.ts'
+import type { DataListEnvelope } from '../../../Server/Types/dataEnvelopes.ts'
 // Vue's ref function for creating reactive data
 import { ref } from 'vue'
+
+import { api } from '../Services/myFetch'
 
 // ============================================================================
 // USERS STORE DEFINITION
@@ -23,8 +24,11 @@ export const useUsersStore = defineStore('users', () => {
   // ============================================================================
   // STATE
   // ============================================================================
-  const users = ref<User[]>(data.users)
-  const nextId = ref(data.users.length + 1)
+  const users = ref<User[]>([])
+
+  api<DataListEnvelope<User>>('users').then((data) => {
+    users.value = data.data
+  })
 
   // ============================================================================
   // ACTIONS
@@ -34,7 +38,7 @@ export const useUsersStore = defineStore('users', () => {
    */
   function addUser(userData: Omit<User, 'id'>) {
     const newUser: User = {
-      id: nextId.value++,
+      id: users.value.length + 1,
       ...userData,
     }
     users.value.push(newUser)
