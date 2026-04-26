@@ -11,7 +11,7 @@ GET http://localhost:3000/api/v1/posts?search=&page=1&pageSize=5
 GET http://localhost:3000/api/v1/posts/count
 
 ### Get post by post ID
-GET http://localhost:3000/api/v1/posts/1
+GET http://localhost:3000/api/v1/posts/4
 
 ### Get posts by user ID
 GET http://localhost:3000/api/v1/posts/user/1
@@ -31,13 +31,13 @@ Content-Type: application/json
   "notes": "Relaxing session before bed."
 }
 
-### Update a post
-PATCH http://localhost:3000/api/v1/posts/1
+### Update a post by post ID
+PATCH http://localhost:3000/api/v1/posts/5
 Content-Type: application/json
 
 {
   "notes": "Updated: Felt even more relaxed!"
 }
 
-### Delete a post
-DELETE http://localhost:3000/api/v1/posts/1
+### Delete a post by post ID
+DELETE http://localhost:3000/api/v1/posts/5

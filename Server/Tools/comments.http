@@ -5,7 +5,7 @@
 GET http://localhost:3000/api/v1/comments/post/1
 
 ### Get all comments for a post (post ID 2)
-GET http://localhost:3000/api/v1/comments/post/2
+GET http://localhost:3000/api/v1/comments/post/1
 
 ### Add a comment to a post (post ID 1)
 POST http://localhost:3000/api/v1/comments/post/1
@@ -35,7 +35,7 @@ Content-Type: application/json
 }
 
 ### Edit a comment (post ID 1, comment ID 5)
-PATCH http://localhost:3000/api/v1/comments/post/1/3
+PATCH http://localhost:3000/api/v1/comments/post/1/315
 Content-Type: application/json
 
 {
@@ -43,7 +43,7 @@ Content-Type: application/json
 }
 
 ### Delete a comment from a post (post ID 1, comment ID 1)
-DELETE http://localhost:3000/api/v1/comments/post/1/1
+DELETE http://localhost:3000/api/v1/comments/post/1/315
 
 ### Delete a comment from a post (post ID 1, comment ID 2)
 DELETE http://localhost:3000/api/v1/comments/post/1/2

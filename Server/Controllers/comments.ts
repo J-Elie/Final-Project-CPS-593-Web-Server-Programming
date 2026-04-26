@@ -11,9 +11,9 @@ import { DataEnvelope } from "../Types/dataEnvelopes";
 const app = Router();
 
 // Get all comments for a post
-app.get("/post/:postId", (req, res) => {
+app.get("/post/:postId", async (req, res) => {
   const { postId } = req.params;
-  const comments = getCommentsByPostId(Number(postId));
+  const comments = await getCommentsByPostId(Number(postId));
   const response: DataEnvelope<Comment[]> = {
     data: comments,
     isSuccess: true,
@@ -22,9 +22,9 @@ app.get("/post/:postId", (req, res) => {
 });
 
 // Add a comment to a post
-app.post("/post/:postId", (req, res) => {
+app.post("/post/:postId", async (req, res) => {
   const { postId } = req.params;
-  const comment = addComment(Number(postId), req.body);
+  const comment = await addComment(Number(postId), req.body);
   const response: DataEnvelope<Comment> = {
     data: comment,
     isSuccess: true,
@@ -33,24 +33,28 @@ app.post("/post/:postId", (req, res) => {
 });
 
 // Edit a comment on a post
-app.patch("/post/:postId/:commentId", (req, res) => {
+app.patch("/post/:postId/:commentId", async (req, res) => {
   const { postId, commentId } = req.params;
   const { content } = req.body;
-  const updated = updateComment(Number(postId), Number(commentId), content);
-  const response: DataEnvelope<Comment | null> = {
+  const updated = await updateComment(
+    Number(postId),
+    Number(commentId),
+    content,
+  );
+  const response: DataEnvelope<Comment> = {
     data: updated,
-    isSuccess: !!updated,
+    isSuccess: true,
   };
   res.send(response);
 });
 
 // Remove a comment from a post
-app.delete("/post/:postId/:commentId", (req, res) => {
+app.delete("/post/:postId/:commentId", async (req, res) => {
   const { postId, commentId } = req.params;
-  const removed = removeComment(Number(postId), Number(commentId));
-  const response: DataEnvelope<Comment | null> = {
+  const removed = await removeComment(Number(postId), Number(commentId));
+  const response: DataEnvelope<Comment> = {
     data: removed,
-    isSuccess: !!removed,
+    isSuccess: true,
   };
   res.send(response);
 });

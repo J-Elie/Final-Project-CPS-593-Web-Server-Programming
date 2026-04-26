@@ -1,18 +1,10 @@
-<!-- <script setup lang="ts">
+<script setup lang="ts">
 import useSessionStore from '@/stores/session'
 const sessionStore = useSessionStore()
 </script>
 
 <template>
   <div>
-    <div class="left">
-      <button class="button is-primary" @click="sessionStore.api('non-existent-endpoint')">
-        404 Api
-      </button>
-      <button class="button is-primary" @click="sessionStore.api('products/7000')">
-        Error Api
-      </button>
-    </div>
     <div class="message-list">
       <div
         v-for="(message, index) in sessionStore.messages"
@@ -32,4 +24,4 @@ const sessionStore = useSessionStore()
 .delete {
   float: right;
 }
-</style> -->
+</style>

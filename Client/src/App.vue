@@ -10,7 +10,7 @@ const sessionStore = useSessionStore()
   <NavBar />
   <div class="container">
     <progress class="progress is-primary" v-if="sessionStore.isLoading"></progress>
-    <!-- <MessageList /> -->
+    <MessageList />
     <RouterView />
   </div>
 </template>

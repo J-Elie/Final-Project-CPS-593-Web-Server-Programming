@@ -1,11 +1,11 @@
+import { config } from "dotenv";
+config();
+
 import express from "express";
 import usersController from "./Controllers/users";
 import postsController from "./Controllers/posts";
 import commentsController from "./Controllers/comments";
 import { DataEnvelope } from "./Types/dataEnvelopes";
-import { config } from "dotenv";
-
-config();
 
 const PORT = process.env.PORT ?? 3000;
 const SERVER = process.env.SERVER ?? "localhost";

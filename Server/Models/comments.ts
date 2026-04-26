@@ -1,54 +1,79 @@
 import type { Comment } from "../Types/comments";
-import postsData from "../Data/posts.json";
+import { connect, toCamelCase, toSnakeCase } from "./supabase";
 
-// Get all comments for a specific post
-export function getCommentsByPostId(postId: number): Comment[] {
-  const post = postsData.posts.find((p: any) => p.id === postId);
-  return post?.comments || [];
+export const TABLE_NAME = "comments";
+
+export async function getCommentsByPostId(postId: number): Promise<Comment[]> {
+  const db = connect();
+
+  const result = await db.from(TABLE_NAME).select("*").eq("post_id", postId);
+  if (result.error) {
+    throw result.error;
+  }
+  return (result.data as Record<string, unknown>[]).map(
+    (row) => toCamelCase(row) as unknown as Comment,
+  );
 }
 
-// Add a comment to a post
-export function addComment(
+export async function addComment(
   postId: number,
-  comment: Omit<Comment, "id">,
-): Comment {
-  const post = postsData.posts.find((p: any) => p.id === postId);
-  if (!post) throw { status: 404, message: "Post not found" };
-  const newComment: Comment = {
-    ...comment,
-    id: post.comments?.length
-      ? Math.max(...post.comments.map((c: any) => c.id)) + 1
-      : 1,
-    createdAt: new Date().toISOString(),
-  };
-  post.comments = post.comments || [];
-  post.comments.push(newComment);
-  return newComment;
+  comment: Omit<Comment, "id" | "createdAt">,
+): Promise<Comment> {
+  const db = connect();
+
+  const payload = toSnakeCase({
+    ...(comment as unknown as Record<string, unknown>),
+    post_id: postId,
+  });
+
+  const result = await db.from(TABLE_NAME).insert(payload).select().single();
+  if (result.error) {
+    throw result.error;
+  }
+  return toCamelCase(
+    result.data as Record<string, unknown>,
+  ) as unknown as Comment;
 }
 
-// Update the content of a comment on a post
-export function updateComment(
+export async function updateComment(
   postId: number,
   commentId: number,
   content: string,
-): Comment | null {
-  const post = postsData.posts.find((p: any) => p.id === postId);
-  if (!post || !post.comments) return null;
-  const comment = post.comments.find((c: any) => c.id === commentId);
-  if (!comment) return null;
-  (comment as any).content = content;
-  return comment as unknown as Comment;
+): Promise<Comment> {
+  const db = connect();
+
+  const result = await db
+    .from(TABLE_NAME)
+    .update({ content })
+    .eq("id", commentId)
+    .eq("post_id", postId)
+    .select()
+    .single();
+  if (result.error) {
+    throw result.error;
+  }
+  return toCamelCase(
+    result.data as Record<string, unknown>,
+  ) as unknown as Comment;
 }
 
-// Remove a comment from a post
-export function removeComment(
+export async function removeComment(
   postId: number,
   commentId: number,
-): Comment | null {
-  const post = postsData.posts.find((p: any) => p.id === postId);
-  if (!post || !post.comments) return null;
-  const index = post.comments.findIndex((c: any) => c.id === commentId);
-  if (index === -1) return null;
-  const removed = post.comments.splice(index, 1)[0];
-  return removed;
+): Promise<Comment> {
+  const db = connect();
+
+  const result = await db
+    .from(TABLE_NAME)
+    .delete()
+    .eq("id", commentId)
+    .eq("post_id", postId)
+    .select()
+    .single();
+  if (result.error) {
+    throw result.error;
+  }
+  return toCamelCase(
+    result.data as Record<string, unknown>,
+  ) as unknown as Comment;
 }
