@@ -36,11 +36,9 @@ export const useUsersStore = defineStore('users', () => {
   /**
    * addUser - Adds a new user to the store
    */
-  function addUser(userData: Omit<User, 'id'>) {
-    const newUser: User = {
-      id: users.value.length + 1,
-      ...userData,
-    }
+  async function addUser(userData: Omit<User, 'id'>) {
+    const response = await api<{ data: User }>('users', userData)
+    const newUser = response.data
     users.value.push(newUser)
     return newUser
   }
@@ -48,19 +46,21 @@ export const useUsersStore = defineStore('users', () => {
   /**
    * updateUser - Updates an existing user in the store
    */
-  function updateUser(userId: number, userData: Partial<Omit<User, 'id'>>) {
+  async function updateUser(userId: number, userData: Partial<Omit<User, 'id'>>) {
+    const response = await api<{ data: User }>(`users/${userId}`, userData, { method: 'PATCH' })
+    const updatedUser = response.data
     const index = users.value.findIndex((u) => u.id === userId)
     if (index !== -1) {
-      users.value[index] = { ...users.value[index], ...userData } as User
-      return users.value[index]
+      users.value[index] = updatedUser
     }
-    return null
+    return updatedUser
   }
 
   /**
    * deleteUser - Removes a user from the store
    */
-  function deleteUser(userId: number) {
+  async function deleteUser(userId: number) {
+    await api(`users/${userId}`, undefined, { method: 'DELETE' })
     const index = users.value.findIndex((u) => u.id === userId)
     if (index !== -1) {
       users.value.splice(index, 1)

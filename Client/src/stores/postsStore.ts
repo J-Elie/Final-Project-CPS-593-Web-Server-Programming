@@ -30,11 +30,6 @@ export const usePostsStore = defineStore('posts', () => {
     posts.value = data.data
   })
 
-  /**
-   * nextCommentId - Counter for generating unique comment IDs
-   */
-  const nextCommentId = ref(100)
-
   // ============================================================================
   // GETTERS
   // ============================================================================
@@ -57,14 +52,9 @@ export const usePostsStore = defineStore('posts', () => {
   // ACTIONS
   // ============================================================================
 
-  function addPost(post: Omit<Post, 'id' | 'createdAt' | 'likes' | 'comments'>) {
-    const newPost: Post = {
-      ...post,
-      id: posts.value.length + 1,
-      createdAt: new Date().toISOString(),
-      likes: [],
-      comments: [],
-    }
+  async function addPost(post: Omit<Post, 'id' | 'createdAt' | 'likes' | 'comments'>) {
+    const response = await api<{ data: Post }>('posts', post)
+    const newPost = response.data
     posts.value.unshift(newPost)
     return newPost
   }
@@ -73,23 +63,20 @@ export const usePostsStore = defineStore('posts', () => {
    * updatePost - Updates an existing post
    * Note: id and userId cannot be changed
    */
-  function updatePost(postId: number, updates: Partial<Omit<Post, 'id' | 'userId'>>) {
+  async function updatePost(postId: number, updates: Partial<Omit<Post, 'id' | 'userId'>>) {
+    const response = await api<{ data: Post }>(`posts/${postId}`, updates, { method: 'PATCH' })
+    const updatedPost = response.data
     const index = posts.value.findIndex((p) => p.id === postId)
-    const existingPost = posts.value[index]
-    if (index !== -1 && existingPost) {
-      posts.value[index] = {
-        ...existingPost,
-        ...updates,
-        id: existingPost.id,
-        userId: existingPost.userId,
-      } as Post
+    if (index !== -1) {
+      posts.value[index] = updatedPost
     }
   }
 
   /**
    * deletePost - Removes a post from the store
    */
-  function deletePost(postId: number) {
+  async function deletePost(postId: number) {
+    await api(`posts/${postId}`, undefined, { method: 'DELETE' })
     const index = posts.value.findIndex((p) => p.id === postId)
     if (index !== -1) {
       posts.value.splice(index, 1)
@@ -115,25 +102,22 @@ export const usePostsStore = defineStore('posts', () => {
   /**
    * addComment - Adds a comment to a post
    */
-  function addComment(postId: number, userId: number, content: string) {
+  async function addComment(postId: number, userId: number, content: string) {
+    const response = await api<{ data: Comment }>(`comments/post/${postId}`, { userId, content })
+    const newComment = response.data
     const post = posts.value.find((p) => p.id === postId)
     if (post) {
       if (!post.comments) post.comments = []
-      const newComment: Comment = {
-        id: nextCommentId.value++,
-        userId,
-        content,
-        createdAt: new Date().toISOString(),
-      }
       post.comments.push(newComment)
-      return newComment
     }
+    return newComment
   }
 
   /**
    * deleteComment - Removes a comment from a post
    */
-  function deleteComment(postId: number, commentId: number) {
+  async function deleteComment(postId: number, commentId: number) {
+    await api(`comments/post/${postId}/${commentId}`, undefined, { method: 'DELETE' })
     const post = posts.value.find((p) => p.id === postId)
     if (post && post.comments) {
       const commentIndex = post.comments.findIndex((c) => c.id === commentId)
