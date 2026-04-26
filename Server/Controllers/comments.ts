@@ -5,7 +5,7 @@ import {
   updateComment,
   removeComment,
 } from "../Models/comments";
-import { Comment } from "../Types/posts";
+import type { Comment } from "../Types/comments";
 import { DataEnvelope } from "../Types/dataEnvelopes";
 
 const app = Router();

@@ -1,4 +1,5 @@
-import type { Post, Comment } from "../Types/posts";
+import type { Post } from "../Types/posts";
+import type { Comment } from "../Types/comments";
 import data from "../Data/posts.json";
 import usersData from "../Data/users.json";
 import { PagingRequest } from "../Types/dataEnvelopes";

@@ -1,7 +1,7 @@
 import type { User } from "../Types/users";
 import data1 from "../Data/users.json";
 import { PagingRequest } from "../Types/dataEnvelopes";
-import "./Array.js";
+import "./Array";
 
 type ItemType = User;
 const data = {
@@ -21,13 +21,7 @@ export function getAll(params: PagingRequest) {
   }
   if (params?.sortBy) {
     const { sortBy, descending } = params;
-    list = list.sort((a, b) => {
-      if (a[sortBy as keyof ItemType]! < b[sortBy as keyof ItemType]!)
-        return descending ? 1 : -1;
-      if (a[sortBy as keyof ItemType]! > b[sortBy as keyof ItemType]!)
-        return descending ? -1 : 1;
-      return 0;
-    });
+    list = list.sortBy(sortBy as keyof ItemType, descending);
   }
   const page = params?.page || 1;
   const pageSize = params?.pageSize || 10;
