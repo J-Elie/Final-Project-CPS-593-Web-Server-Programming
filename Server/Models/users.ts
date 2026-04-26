@@ -1,7 +1,7 @@
-import type { User } from "../Types/users.ts";
+import type { User } from "../Types/users";
 import data1 from "../Data/users.json";
 import { PagingRequest } from "../Types/dataEnvelopes";
-import "./Array.ts";
+import "./Array.js";
 
 type ItemType = User;
 const data = {

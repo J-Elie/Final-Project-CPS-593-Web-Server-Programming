@@ -6,8 +6,8 @@ import {
   create,
   update,
   remove,
-} from "../Models/posts.ts";
-import { Post, DataEnvelope, DataListEnvelope } from "../Types/posts.ts";
+} from "../Models/posts";
+import { Post, DataEnvelope, DataListEnvelope } from "../Types/posts";
 
 const app = Router();
 

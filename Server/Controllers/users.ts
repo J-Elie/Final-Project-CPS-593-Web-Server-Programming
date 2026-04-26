@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { getAll, get, create, update, remove } from "../Models/users.ts";
-import { User, DataEnvelope, DataListEnvelope } from "../Types/users.ts";
+import { getAll, get, create, update, remove } from "../Models/users";
+import { User, DataEnvelope, DataListEnvelope } from "../Types/users";
 
 const app = Router();
 

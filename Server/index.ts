@@ -1,8 +1,8 @@
 import express from "express";
-import usersController from "./Controllers/users.ts";
-import postsController from "./Controllers/posts.ts";
-import commentsController from "./Controllers/comments.ts";
-import { DataEnvelope } from "./Types/dataEnvelopes.ts";
+import usersController from "./Controllers/users";
+import postsController from "./Controllers/posts";
+import commentsController from "./Controllers/comments";
+import { DataEnvelope } from "./Types/dataEnvelopes";
 import { config } from "dotenv";
 
 config();

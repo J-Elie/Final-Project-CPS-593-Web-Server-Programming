@@ -1,7 +1,7 @@
-import type { Post, Comment } from "../Types/posts.ts";
+import type { Post, Comment } from "../Types/posts";
 import data from "../Data/posts.json";
 import usersData from "../Data/users.json";
-import { PagingRequest } from "../Types/dataEnvelopes.ts";
+import { PagingRequest } from "../Types/dataEnvelopes";
 // Helper to get user details by userId
 function getUserDetails(userId: number) {
   const user = usersData.users.find((u: any) => u.id === userId);

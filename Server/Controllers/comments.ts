@@ -4,9 +4,9 @@ import {
   addComment,
   updateComment,
   removeComment,
-} from "../Models/comments.ts";
-import { Comment } from "../Types/posts.ts";
-import { DataEnvelope } from "../Types/dataEnvelopes.ts";
+} from "../Models/comments";
+import { Comment } from "../Types/posts";
+import { DataEnvelope } from "../Types/dataEnvelopes";
 
 const app = Router();
 

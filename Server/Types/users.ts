@@ -1,4 +1,4 @@
-export type { DataEnvelope, DataListEnvelope } from "./dataEnvelopes.ts";
+export type { DataEnvelope, DataListEnvelope } from "./dataEnvelopes";
 // ============================================================================
 // USER TYPE
 // ============================================================================

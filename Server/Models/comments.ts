@@ -1,4 +1,4 @@
-import type { Comment } from "../Types/posts.ts";
+import type { Comment } from "../Types/posts";
 import postsData from "../Data/posts.json";
 
 // Get all comments for a specific post
