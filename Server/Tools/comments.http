@@ -1,0 +1,49 @@
+###
+# Test Comments API
+
+### Get all comments for a post (post ID 1)
+GET http://localhost:3000/api/v1/comments/post/1
+
+### Get all comments for a post (post ID 2)
+GET http://localhost:3000/api/v1/comments/post/2
+
+### Add a comment to a post (post ID 1)
+POST http://localhost:3000/api/v1/comments/post/1
+Content-Type: application/json
+
+{
+  "userId": 2,
+  "content": "Great workout! Keep it up!"
+}
+
+### Add another comment to a post (post ID 1)
+POST http://localhost:3000/api/v1/comments/post/1
+Content-Type: application/json
+
+{
+  "userId": 3,
+  "content": "Inspiring stuff, I need to try this!"
+}
+
+### Add a comment to a different post (post ID 2)
+POST http://localhost:3000/api/v1/comments/post/2
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "content": "Yoga is the best way to start the day!"
+}
+
+### Edit a comment (post ID 1, comment ID 5)
+PATCH http://localhost:3000/api/v1/comments/post/1/3
+Content-Type: application/json
+
+{
+  "content": "Updated: This was an amazing workout!"
+}
+
+### Delete a comment from a post (post ID 1, comment ID 1)
+DELETE http://localhost:3000/api/v1/comments/post/1/1
+
+### Delete a comment from a post (post ID 1, comment ID 2)
+DELETE http://localhost:3000/api/v1/comments/post/1/2

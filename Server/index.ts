@@ -1,10 +1,15 @@
 import express from "express";
 import usersController from "./Controllers/users.ts";
 import postsController from "./Controllers/posts.ts";
+import commentsController from "./Controllers/comments.ts";
 import { DataEnvelope } from "./Types/dataEnvelopes.ts";
+import { config } from "dotenv";
 
-const PORT = 3000;
-const SERVER = "localhost";
+config();
+
+const PORT = process.env.PORT ?? 3000;
+const SERVER = process.env.SERVER ?? "localhost";
+const STATIC_DIR = process.env.STATIC_DIR ?? "client/dist";
 
 const app = express();
 
@@ -20,15 +25,10 @@ app
 
 ///////// Routes
 app
-  .get("/", (_req, res) => {
-    res.send("Hello World!");
-  })
-  .get("/suny", (_req, res) => {
-    res.send("The best plan of my life!");
-  })
+  .use(express.static(STATIC_DIR))
   .use("/api/v1/users", usersController)
-  .use("/api/v1/posts", postsController);
-
+  .use("/api/v1/posts", postsController)
+  .use("/api/v1/comments", commentsController);
 //////// Error handling
 app.use(
   (

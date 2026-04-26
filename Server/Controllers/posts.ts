@@ -29,16 +29,6 @@ app
     };
     res.send(response);
   })
-  .get("/user/:userId", (req, res) => {
-    const { userId } = req.params;
-    const posts = getByUserId(Number(userId));
-    const response: DataListEnvelope<Post> = {
-      data: posts,
-      isSuccess: true,
-      total: posts.length,
-    };
-    res.send(response);
-  })
   .get("/:id", (req, res) => {
     const { id } = req.params;
     const response: DataEnvelope<Post> = {
@@ -47,7 +37,6 @@ app
     };
     res.send(response);
   })
-
   .post("/", (req, res) => {
     const newPost = create(req.body);
     const response: DataEnvelope<Post> = {

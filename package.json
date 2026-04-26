@@ -9,7 +9,8 @@
   "license": "ISC",
   "author": "J-Elie",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run build:client",
+    "build:client": "cd Client && npm install && npm run build",
     "start": "node dist/index.js",
     "dev": "tsx watch server/index.ts"
   },
