@@ -1,5 +1,5 @@
 import type { User } from "../Types/users.ts";
-import data1 from "../data/users.json";
+import data1 from "../Data/users.json";
 import { PagingRequest } from "../Types/dataEnvelopes";
 import "./Array.ts";
 
@@ -38,7 +38,7 @@ export function getAll(params: PagingRequest) {
 }
 
 export function get(id: number): ItemType {
-  const item = data.items.find((item) => item.id === id);
+  const item = data.items.find((item: ItemType) => item.id === id);
   if (!item) {
     const error = { status: 404, message: "ItemType not found" };
     throw error;
@@ -56,7 +56,7 @@ export function create(user: ItemType) {
 }
 
 export function update(id: number, user: Partial<ItemType>) {
-  const index = data.items.findIndex((u) => u.id === id);
+  const index = data.items.findIndex((u: ItemType) => u.id === id);
   if (index === -1) {
     const error = { status: 404, message: "ItemType not found" };
     throw error;
@@ -70,7 +70,7 @@ export function update(id: number, user: Partial<ItemType>) {
 }
 
 export function remove(id: number) {
-  const index = data.items.findIndex((u) => u.id === id);
+  const index = data.items.findIndex((u: ItemType) => u.id === id);
   if (index === -1) {
     const error = { status: 404, message: "ItemType not found" };
     throw error;

@@ -1,6 +1,6 @@
 import type { Post, Comment } from "../Types/posts.ts";
 import data from "../Data/posts.json";
-import usersData from "../data/users.json";
+import usersData from "../Data/users.json";
 import { PagingRequest } from "../Types/dataEnvelopes.ts";
 // Helper to get user details by userId
 function getUserDetails(userId: number) {
