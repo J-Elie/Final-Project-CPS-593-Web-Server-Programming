@@ -26,7 +26,7 @@ export const usePostsStore = defineStore('posts', () => {
   // ============================================================================
   const posts = ref<Post[]>([])
 
-  api<DataListEnvelope<Post>>('posts').then((data) => {
+  api<DataListEnvelope<Post>>('posts?pageSize=1000').then((data) => {
     posts.value = data.data
   })
 
