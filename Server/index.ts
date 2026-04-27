@@ -24,15 +24,11 @@ app
   .use(express.json()); // Middleware to parse JSON request bodies
 
 ///////// Routes
-import path from "path";
 app
   .use(express.static(STATIC_DIR))
   .use("/api/v1/users", usersController)
   .use("/api/v1/posts", postsController)
-  .use("/api/v1/comments", commentsController)
-  .get("*", (_req, res) => {
-    res.sendFile(path.resolve(STATIC_DIR, "index.html"));
-  });
+  .use("/api/v1/comments", commentsController);
 //////// Error handling
 app.use(
   (

@@ -14,7 +14,7 @@ GET http://localhost:3000/api/v1/posts/count
 GET http://localhost:3000/api/v1/posts/4
 
 ### Get posts by user ID
-GET http://localhost:3000/api/v1/posts/user/1
+GET http://localhost:3000/api/v1/posts/user/2
 
 ### Create a new post
 POST http://localhost:3000/api/v1/posts

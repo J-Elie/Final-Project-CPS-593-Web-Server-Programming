@@ -8,6 +8,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
+import { useUsersStore } from '@/stores/usersStores'
 import type { User } from '../../../Server/Types/users'
 
 const props = defineProps<{
@@ -15,22 +16,23 @@ const props = defineProps<{
 }>()
 
 const authStore = useAuthStore()
+const usersStore = useUsersStore()
 const router = useRouter()
 
 const isFollowing = computed(
   () => authStore.currentUser?.following?.includes(props.user.id) ?? false,
 )
 
-function toggleFollow() {
+async function toggleFollow() {
   if (!authStore.currentUser) return
-  const following = [...(authStore.currentUser.following ?? [])]
-  const idx = following.indexOf(props.user.id)
-  if (idx === -1) {
-    following.push(props.user.id)
+  if (isFollowing.value) {
+    await usersStore.unfollowUser(authStore.currentUser.id, props.user.id)
   } else {
-    following.splice(idx, 1)
+    await usersStore.followUser(authStore.currentUser.id, props.user.id)
   }
-  authStore.currentUser = { ...authStore.currentUser, following }
+  // Keep authStore.currentUser in sync with the updated store entry
+  const updated = usersStore.getUserById(authStore.currentUser.id)
+  if (updated) authStore.currentUser = updated
 }
 
 // function viewProfile() {

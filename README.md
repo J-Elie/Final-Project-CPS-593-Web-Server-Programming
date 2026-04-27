@@ -20,6 +20,7 @@ For this unit, I created the base of a Fitness App website with multiple pages i
 **Hosting:** The site is deployed on both **GitHub Pages** and **Render**, providing two hosting options with automatic deployments from the repository.
 
 **Live Sites:**
+
 - **Render:** [https://final-project-cps-593-web-server.onrender.com/no-framework/index.html](https://final-project-cps-593-web-server.onrender.com/no-framework/index.html)
 - **GitHub Pages:** [https://j-elie.github.io/Final-Project-CPS-593-Web-Server-Programming/no-framework/index.html](https://j-elie.github.io/Final-Project-CPS-593-Web-Server-Programming/no-framework/index.html)
 
@@ -36,6 +37,7 @@ The page includes a navigation bar with dropdown menus, buttons with Font Awesom
 For the midterm, I developed a Vue.js client-side fitness tracker application. At this stage, data is stored locally in JSON files within the `data` folder and loaded into in-memory arrays at runtime. This means any changes made during a session will be lost on page refresh. A database connection will be implemented in future iterations for persistent storage.
 
 **Key Features:**
+
 - **Multi-user authentication:** Multiple users can log in, each with their own personalized experience showing their name and activity data.
 - **Role-based access control:** Different users have different permissions based on their assigned roles.
 - **Admin area:** Administrators can list, add, edit, and delete users.
@@ -46,4 +48,106 @@ For the midterm, I developed a Vue.js client-side fitness tracker application. A
 **Architecture:** The application follows the MVVM (Model-View-ViewModel) pattern. Views are the Vue components (`.vue` files) that handle the UI, ViewModels are the Pinia stores that manage state and business logic, and Models are the TypeScript interfaces and data structures. This separation of concerns makes the codebase maintainable and testable. The app also leverages Vue Router for navigation and TypeScript for type safety throughout.
 
 **Live Site:**
+
 - **Render:** [https://final-project-cps-593-web-server.onrender.com](https://final-project-cps-593-web-server.onrender.com)
+
+### Final Project
+
+For the final project, I converted the midterm Vue.js client-side fitness tracker into a full-stack application by building out the server, database, and API layers, and wiring the client to communicate with them.
+
+**Architecture:**
+The app follows a three-tier architecture: a Vue.js + Pinia front end, an Express + TypeScript REST API, and a PostgreSQL database hosted on Supabase. The client communicates with the server exclusively through a centralized `api()` utility in `myFetch.ts`, which is the single place for request handling, error propagation, and auth headers.
+
+**Backend — Controllers & Models:**
+Three controllers with matching models cover all core data:
+
+- **Users** (`/api/v1/users`) — full CRUD plus follow, unfollow, remove-a-follower, get-following, and get-followers endpoints
+- **Posts** (`/api/v1/posts`) — full CRUD plus like/unlike and feed-by-user endpoints
+- **Comments** (`/api/v1/comments`) — full CRUD scoped to posts
+
+Each model is the only place that talks to the database (Supabase client). Controllers only handle routing and response shaping — no SQL lives there.
+
+**Database:**
+All important data lives in Supabase PostgreSQL. The schema (`db/schema.sql`) defines:
+
+- `users` — profile data
+- `user_follows` — many-to-many self-join for the follow graph
+- `posts` — activity entries
+- `post_likes` — many-to-many for likes
+- `comments` — threaded on posts
+
+Seed data is in `db/seed.sql`.
+
+**Links:**
+
+- **GitHub:** _(add link)_
+- **Render:** _(add link)_
+
+---
+
+#### Final Project Checklist
+
+**Code quality & file hygiene**
+
+- [ ] Remove leftover unused files: `Server/Data/posts.json`, `Server/Data/users.json`, `Server/Models/Array.ts`
+- [ ] Confirm no remaining example/template names that don't match the fitness app domain
+
+**Controllers & Models**
+
+- [x] At least three controllers exist: `users`, `posts`, `comments`
+- [x] Each controller has a matching model file
+- [x] Every model covers Create, Read, Update, and Delete
+
+**Custom / unique functionality**
+
+- [x] Model/controller functions beyond basic CRUD — follow graph endpoints, get-following, get-followers, remove-a-follower, like/unlike, ranked follower suggestions
+
+**Data storage**
+
+- [x] All important data is stored in the database, not hardcoded in the client
+- [x] No significant app state is lost on page refresh
+
+**Separation of concerns**
+
+- [x] Database queries only live in model files
+- [x] Controllers only handle routing and response shaping
+- [x] Database connection logic lives only in `Models/supabase.ts`
+
+**Authorization (JWT)**
+
+- [ ] JWT middleware is implemented on the server
+- [ ] All write routes verify ownership from the JWT user object (a user can only edit/delete their own posts, etc.)
+- [ ] User-tailored data (own activity feed, friends' feed) is derived from the verified JWT user, not a client-supplied ID
+
+**Centralized client communication**
+
+- [x] All API calls go through the single `api()` function in `myFetch.ts`
+- [ ] Auth headers (JWT) are attached in `myFetch.ts`
+
+**Client-side MVC**
+
+- [x] Views are Vue components that only handle UI
+- [x] Pinia stores act as ViewModels (state + business logic)
+- [x] TypeScript types/interfaces serve as Models
+
+**UI completeness**
+
+- [ ] Users: create — `RegisterView.vue` is currently a stub, needs a real registration form
+- [x] Users: read (profile page), update (edit profile), delete (delete account)
+- [x] Posts/Activity: create, read, update, delete
+- [x] Comments: create, read, delete
+- [x] Follow/Unfollow/Remove-follower visible and working in the UI
+
+**Environment & deployment**
+
+- [x] Sensitive values (Supabase URL, keys) are in `.env` and never committed
+- [x] `.env` is in `.gitignore`
+- [ ] `VITE_API_ROOT` in `Client/.env` points to localhost — set this to the Render URL as an environment variable in the Render dashboard for the client build
+- [ ] All environment variables are configured in Render (not hardcoded)
+- [ ] App verified working on Render with no local-only config
+
+**Submission**
+
+- [ ] GitHub repo link added to this README
+- [ ] Render live link added to this README
+- [ ] Both links posted in the course submission

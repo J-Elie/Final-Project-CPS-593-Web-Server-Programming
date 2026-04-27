@@ -151,20 +151,23 @@ const emptyMessage = computed(() => {
 // ============================================================================
 // ACTIONS
 // ============================================================================
-function toggleFollow(userId: number) {
+async function toggleFollow(userId: number) {
   if (!authStore.currentUser) return
-  const following = [...(authStore.currentUser.following ?? [])]
-  const idx = following.indexOf(userId)
-  if (idx === -1) following.push(userId)
-  else following.splice(idx, 1)
-  authStore.currentUser = { ...authStore.currentUser, following }
+  if (isFollowing(userId)) {
+    await usersStore.unfollowUser(authStore.currentUser.id, userId)
+  } else {
+    await usersStore.followUser(authStore.currentUser.id, userId)
+  }
+  const updated = usersStore.getUserById(authStore.currentUser.id)
+  if (updated) authStore.currentUser = updated
   openDropdownId.value = null
 }
 
-function removeFollower(userId: number) {
+async function removeFollower(userId: number) {
   if (!authStore.currentUser) return
-  const followers = (authStore.currentUser.followers ?? []).filter((id) => id !== userId)
-  authStore.currentUser = { ...authStore.currentUser, followers }
+  await usersStore.removeFollower(authStore.currentUser.id, userId)
+  const updated = usersStore.getUserById(authStore.currentUser.id)
+  if (updated) authStore.currentUser = updated
   openDropdownId.value = null
 }
 

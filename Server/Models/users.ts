@@ -30,9 +30,33 @@ export async function getAll(params: PagingRequest) {
     throw result.error;
   }
 
-  const list = (result.data as Record<string, unknown>[]).map(
-    (row) => toCamelCase(row) as unknown as ItemType,
+  const userIds = (result.data as Record<string, unknown>[]).map(
+    (row) => row.id as number,
   );
+
+  // Fetch all follow relationships for these users in one query
+  const followsResult = await db
+    .from("user_follows")
+    .select("follower_id, following_id")
+    .or(
+      `follower_id.in.(${userIds.join(",")}),following_id.in.(${userIds.join(",")})`,
+    );
+
+  const followRows = (followsResult.data ?? []) as {
+    follower_id: number;
+    following_id: number;
+  }[];
+
+  const list = (result.data as Record<string, unknown>[]).map((row) => {
+    const user = toCamelCase(row) as unknown as ItemType;
+    user.following = followRows
+      .filter((f) => f.follower_id === row.id)
+      .map((f) => f.following_id);
+    user.followers = followRows
+      .filter((f) => f.following_id === row.id)
+      .map((f) => f.follower_id);
+    return user;
+  });
   const count = result.count ?? 0;
 
   return { list, count };
@@ -49,9 +73,23 @@ export async function get(id: number): Promise<ItemType> {
   if (!result.data) {
     throw { status: 404, message: "User not found" };
   }
-  return toCamelCase(
+  const user = toCamelCase(
     result.data as Record<string, unknown>,
   ) as unknown as ItemType;
+
+  // Populate following / followers from user_follows table
+  const [followingResult, followersResult] = await Promise.all([
+    db.from("user_follows").select("following_id").eq("follower_id", id),
+    db.from("user_follows").select("follower_id").eq("following_id", id),
+  ]);
+  user.following = (
+    (followingResult.data ?? []) as { following_id: number }[]
+  ).map((r) => r.following_id);
+  user.followers = (
+    (followersResult.data ?? []) as { follower_id: number }[]
+  ).map((r) => r.follower_id);
+
+  return user;
 }
 
 export async function create(item: Exclude<ItemType, "id">) {
@@ -87,6 +125,64 @@ export async function update(id: number, item: Partial<ItemType>) {
   return toCamelCase(
     result.data as Record<string, unknown>,
   ) as unknown as ItemType;
+}
+
+export async function follow(followerId: number, followingId: number) {
+  const db = connect();
+  const result = await db
+    .from("user_follows")
+    .insert({ follower_id: followerId, following_id: followingId });
+  if (result.error) {
+    throw result.error;
+  }
+}
+
+export async function unfollow(followerId: number, followingId: number) {
+  const db = connect();
+  const result = await db
+    .from("user_follows")
+    .delete()
+    .eq("follower_id", followerId)
+    .eq("following_id", followingId);
+  if (result.error) {
+    throw result.error;
+  }
+}
+
+export async function getFollowing(userId: number): Promise<ItemType[]> {
+  const db = connect();
+  const result = await db
+    .from("user_follows")
+    .select("following_id")
+    .eq("follower_id", userId);
+  if (result.error) throw result.error;
+  const ids = ((result.data ?? []) as { following_id: number }[]).map(
+    (r) => r.following_id,
+  );
+  if (ids.length === 0) return [];
+  const usersResult = await db.from(TABLE_NAME).select("*").in("id", ids);
+  if (usersResult.error) throw usersResult.error;
+  return ((usersResult.data ?? []) as Record<string, unknown>[]).map(
+    (row) => toCamelCase(row) as unknown as ItemType,
+  );
+}
+
+export async function getFollowers(userId: number): Promise<ItemType[]> {
+  const db = connect();
+  const result = await db
+    .from("user_follows")
+    .select("follower_id")
+    .eq("following_id", userId);
+  if (result.error) throw result.error;
+  const ids = ((result.data ?? []) as { follower_id: number }[]).map(
+    (r) => r.follower_id,
+  );
+  if (ids.length === 0) return [];
+  const usersResult = await db.from(TABLE_NAME).select("*").in("id", ids);
+  if (usersResult.error) throw usersResult.error;
+  return ((usersResult.data ?? []) as Record<string, unknown>[]).map(
+    (row) => toCamelCase(row) as unknown as ItemType,
+  );
 }
 
 export async function remove(id: number) {
