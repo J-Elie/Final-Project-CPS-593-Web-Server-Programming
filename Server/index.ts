@@ -5,6 +5,7 @@ import express from "express";
 import usersController from "./Controllers/users";
 import postsController from "./Controllers/posts";
 import commentsController from "./Controllers/comments";
+import likesController from "./Controllers/likes";
 import { DataEnvelope } from "./Types/dataEnvelopes";
 
 const PORT = process.env.PORT ?? 3000;
@@ -28,7 +29,8 @@ app
   .use(express.static(STATIC_DIR))
   .use("/api/v1/users", usersController)
   .use("/api/v1/posts", postsController)
-  .use("/api/v1/comments", commentsController);
+  .use("/api/v1/comments", commentsController)
+  .use("/api/v1/likes", likesController);
 //////// Error handling
 app.use(
   (

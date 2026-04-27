@@ -84,9 +84,10 @@ export const usePostsStore = defineStore('posts', () => {
   }
 
   /**
-   * toggleLike - Adds or removes a like from a post
+   * toggleLike - Adds or removes a like from a post, persisted to the DB
    */
-  function toggleLike(postId: number, userId: number) {
+  async function toggleLike(postId: number, userId: number) {
+    // Optimistic local update
     const post = posts.value.find((p) => p.id === postId)
     if (post) {
       if (!post.likes) post.likes = []
@@ -97,6 +98,27 @@ export const usePostsStore = defineStore('posts', () => {
         post.likes.splice(likeIndex, 1)
       }
     }
+    // Persist and sync with server response
+    const response = await api<{ data: number[] }>(
+      `likes/post/${postId}`,
+      { userId },
+      { method: 'PATCH' },
+    )
+    if (post) {
+      post.likes = response.data
+    }
+  }
+
+  /**
+   * fetchComments - Loads comments from the server into a post
+   */
+  async function fetchComments(postId: number) {
+    const response = await api<{ data: Comment[] }>(`comments/post/${postId}`)
+    const post = posts.value.find((p) => p.id === postId)
+    if (post) {
+      post.comments = response.data
+    }
+    return response.data
   }
 
   /**
@@ -142,6 +164,7 @@ export const usePostsStore = defineStore('posts', () => {
     updatePost,
     deletePost,
     toggleLike,
+    fetchComments,
     addComment,
     deleteComment,
   }

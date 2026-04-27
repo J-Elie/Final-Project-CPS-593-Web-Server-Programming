@@ -6,6 +6,7 @@ import { useUsersStore } from '@/stores/usersStores'
 import { usePostsStore } from '@/stores/postsStore'
 import PostDetailModal from '@/components/modal/PostDetailModal.vue'
 import type { Post } from '../../../../Server/Types/posts'
+import { getActivityIcon } from '@/Services/activityHelpers'
 
 const route = useRoute()
 const router = useRouter()
@@ -60,20 +61,8 @@ const totalLikes = computed(() =>
 // ============================================================================
 // HELPERS
 // ============================================================================
-const activityIcons: Record<string, string> = {
-  Running: 'fa-running',
-  Walking: 'fa-walking',
-  Cycling: 'fa-biking',
-  Swimming: 'fa-swimmer',
-  Weightlifting: 'fa-dumbbell',
-  Yoga: 'fa-spa',
-  HIIT: 'fa-fire',
-  Sports: 'fa-futbol',
-  Other: 'fa-heartbeat',
-}
-
 function typeIcon(type: string) {
-  return activityIcons[type] ?? 'fa-heartbeat'
+  return getActivityIcon(type)
 }
 
 // ============================================================================
@@ -117,14 +106,10 @@ const detailPost = ref<Post | null>(null)
             <div class="profile-avatar-wrap">
               <figure class="image is-128x128">
                 <img
-                  v-if="user.image"
                   class="is-rounded profile-avatar"
-                  :src="user.image"
+                  :src="user.image || 'https://placehold.co/128x128?text=No+Photo'"
                   :alt="user.firstName"
                 />
-                <span v-else class="icon has-text-grey-light" style="font-size: 8rem">
-                  <i class="fas fa-user-circle"></i>
-                </span>
               </figure>
             </div>
 

@@ -12,6 +12,7 @@ import { usePostsStore } from '@/stores/postsStore'
 import { useUsersStore } from '@/stores/usersStores'
 import StatusTag from '@/components/ui/StatusTag.vue'
 import type { Post } from '../../../../Server/Types/posts'
+import { formatDate, formatDuration, formatCommentDate } from '@/Services/activityHelpers'
 
 const props = defineProps<{
   post: Post | null
@@ -44,32 +45,6 @@ const activityIcons: Record<string, string> = {
 
 function typeIcon(type: string) {
   return activityIcons[type] ?? 'fa-heartbeat'
-}
-
-function formatDate(d: string) {
-  return new Date(d).toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}
-
-function formatDuration(dur: string) {
-  const m = parseInt(dur) || 0
-  const h = Math.floor(m / 60)
-  const mins = m % 60
-  if (h > 0 && mins > 0) return `${h}h ${mins}min`
-  if (h > 0) return `${h}h`
-  return `${mins}min`
-}
-
-function formatCommentDate(d: string) {
-  return new Date(d).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
 }
 
 function getUser(userId: number) {
@@ -126,12 +101,13 @@ const showCommentBox = ref(false)
 
 watch(
   () => props.post?.id,
-  () => {
+  (id) => {
     newComment.value = ''
     showCommentBox.value = props.openCommentBox ?? false
     editingCommentId.value = null
     editingCommentText.value = ''
     commentMenuId.value = null
+    if (id) postsStore.fetchComments(id)
   },
 )
 

@@ -6,6 +6,7 @@ import { useUsersStore } from '@/stores/usersStores'
 import StatusTag from '@/components/ui/StatusTag.vue'
 import DeleteButton from '@/components/ui/buttons/DeleteButton.vue'
 import type { Post } from '../../../../Server/Types/posts'
+import { formatDate } from '@/Services/activityHelpers'
 
 const authStore = useAuthStore()
 const postsStore = usePostsStore()
@@ -80,14 +81,6 @@ const flaggedPosts = computed(() => {
 // ============================================================================
 function getUser(userId: number) {
   return usersStore.users.find((u) => u.id === userId)
-}
-
-function formatDate(d: string) {
-  return new Date(d).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
 }
 
 function deletePost(postId: number) {

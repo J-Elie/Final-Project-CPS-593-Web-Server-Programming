@@ -8,6 +8,7 @@ import PostCard from '@/components/PostCard.vue'
 import PostDetailModal from '@/components/modal/PostDetailModal.vue'
 import AddButton from '@/components/ui/buttons/AddButton.vue'
 import AddActivityForm from '@/components/AddActivityForm.vue'
+import { getActivityIcon, formatDuration } from '@/Services/activityHelpers'
 
 const authStore = useAuthStore()
 const postsStore = usePostsStore()
@@ -101,12 +102,20 @@ async function scrollToPost(postId: number) {
 // POST DETAIL MODAL
 // ============================================================================
 const detailPost = ref<Post | null>(null)
+const openCommentBox = ref(false)
 
 function openDetail(post: Post) {
+  openCommentBox.value = false
+  detailPost.value = post
+}
+
+function openDetailWithComments(post: Post) {
+  openCommentBox.value = true
   detailPost.value = post
 }
 
 function closeDetail() {
+  openCommentBox.value = false
   detailPost.value = null
 }
 
@@ -169,28 +178,8 @@ function sharePost(postId: number) {
 // ============================================================================
 // ACTIVITY ICON (for grid/condensed tiles)
 // ============================================================================
-const activityIcons: Record<string, string> = {
-  Running: 'fa-running',
-  Walking: 'fa-walking',
-  Cycling: 'fa-biking',
-  Swimming: 'fa-swimmer',
-  Weightlifting: 'fa-dumbbell',
-  Yoga: 'fa-spa',
-  HIIT: 'fa-fire',
-  Sports: 'fa-futbol',
-}
-
 function typeIcon(type: string) {
-  return activityIcons[type] ?? 'fa-heartbeat'
-}
-
-function formatDuration(dur: string) {
-  const m = parseInt(dur) || 0
-  const h = Math.floor(m / 60)
-  const mins = m % 60
-  if (h > 0 && mins > 0) return `${h}h ${mins}m`
-  if (h > 0) return `${h}h`
-  return `${mins}m`
+  return getActivityIcon(type)
 }
 </script>
 
@@ -270,6 +259,7 @@ function formatDuration(dur: string) {
                   @edit="editActivity(activity)"
                   @delete="deleteActivity(activity.id)"
                   @share="sharePost(activity.id)"
+                  @open-comments="openDetailWithComments(activity)"
                 />
               </div>
             </div>
@@ -452,6 +442,7 @@ function formatDuration(dur: string) {
       :post="detailPost"
       :is-open="detailPost !== null"
       :is-owner="true"
+      :open-comment-box="openCommentBox"
       @close="closeDetail"
     />
 

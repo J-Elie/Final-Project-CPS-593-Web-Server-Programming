@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { usePostsStore } from '@/stores/postsStore'
 import type { Post } from '../../../../Server/Types/posts'
 import StatusTag from '@/components/ui/StatusTag.vue'
+import { parseDuration, formatDuration } from '@/Services/activityHelpers'
 
 const authStore = useAuthStore()
 const postsStore = usePostsStore()
@@ -47,23 +48,6 @@ const allPosts = computed(() => myPosts.value)
 // ============================================================================
 // STAT CALCULATORS
 // ============================================================================
-function parseDuration(duration: string | number): number {
-  if (!duration) return 0
-  const str = String(duration)
-  if (str.includes(':')) {
-    const [h, m] = str.split(':').map(Number)
-    return (h || 0) * 60 + (m || 0)
-  }
-  return parseInt(str) || 0
-}
-
-function formatDuration(totalMinutes: number): string {
-  const h = Math.floor(totalMinutes / 60)
-  const m = totalMinutes % 60
-  if (h === 0) return `${m}m`
-  return `${h}h ${String(m).padStart(2, '0')}m`
-}
-
 const intensityMap: Record<string, number> = {
   low: 1,
   easy: 1,

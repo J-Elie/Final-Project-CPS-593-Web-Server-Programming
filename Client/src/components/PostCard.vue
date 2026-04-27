@@ -7,15 +7,20 @@ import type { Post } from '../../../Server/Types/posts'
 import type { User } from '../../../Server/Types/users'
 import { useAuthStore } from '@/stores/authStore'
 import { usePostsStore } from '@/stores/postsStore'
+import { useUsersStore } from '@/stores/usersStores'
 import EditButton from '@/components/ui/buttons/EditButton.vue'
 import DeleteButton from '@/components/ui/buttons/DeleteButton.vue'
+import LikeButton from '@/components/ui/buttons/LikeButton.vue'
+import CommentButton from '@/components/ui/buttons/CommentButton.vue'
 import StatusTag from '@/components/ui/StatusTag.vue'
+import { formatDate, formatDuration, getActivityIcon } from '@/Services/activityHelpers'
 
 // ============================================================================
 // STORES
 // ============================================================================
 const authStore = useAuthStore()
 const postsStore = usePostsStore()
+const usersStore = useUsersStore()
 
 // ============================================================================
 // PROPS
@@ -46,6 +51,16 @@ const hasLiked = computed(() =>
   authStore.currentUser ? (props.post.likes?.includes(authStore.currentUser.id) ?? false) : false,
 )
 
+const hasCommented = computed(() =>
+  authStore.currentUser
+    ? (props.post.comments?.some((c) => c.userId === authStore.currentUser!.id) ?? false)
+    : false,
+)
+
+const likedByUsers = computed(() =>
+  (props.post.likes ?? []).map((id) => usersStore.users.find((u) => u.id === id) ?? null),
+)
+
 // ============================================================================
 // ACTIONS
 // ============================================================================
@@ -57,38 +72,6 @@ function handleLike() {
 // ============================================================================
 // HELPERS
 // ============================================================================
-function formatDate(dateString: string): string {
-  if (!dateString) return ''
-  return new Date(dateString).toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}
-
-function getActivityIcon(type: string): string {
-  const icons: Record<string, string> = {
-    Running: 'fa-running',
-    Walking: 'fa-walking',
-    Cycling: 'fa-biking',
-    Swimming: 'fa-swimmer',
-    Weightlifting: 'fa-dumbbell',
-    Yoga: 'fa-spa',
-    HIIT: 'fa-fire',
-    Sports: 'fa-futbol',
-  }
-  return icons[type] || 'fa-heartbeat'
-}
-
-function formatDuration(duration: string): string {
-  const totalMins = parseInt(duration) || 0
-  const hours = Math.floor(totalMins / 60)
-  const mins = totalMins % 60
-  if (hours > 0 && mins > 0) return `${hours}h ${mins}min`
-  if (hours > 0) return `${hours}h`
-  return `${mins}min`
-}
 </script>
 
 <template>
@@ -96,7 +79,16 @@ function formatDuration(duration: string): string {
     <!-- Card Image -->
     <div class="card-image" v-if="post.picture">
       <figure class="image is-3by1">
-        <img :src="post.picture" :alt="post.title" class="post-card-img" />
+        <img
+          :src="post.picture"
+          :alt="post.title"
+          class="post-card-img"
+          @error="
+            (e: Event) =>
+              ((e.target as HTMLImageElement).src =
+                'https://placehold.co/800x267?text=Image+Not+Found')
+          "
+        />
       </figure>
     </div>
 
@@ -173,20 +165,17 @@ function formatDuration(duration: string): string {
           @click="(e: MouseEvent) => e.stopPropagation()"
         >
           <div class="level-left">
-            <a class="level-item like-button" @click="handleLike">
-              <span class="icon is-small" :class="hasLiked ? 'has-text-success' : 'has-text-info'">
-                <i class="fas fa-heart"></i>
-              </span>
-              <span class="ml-1" :class="hasLiked ? 'has-text-success' : 'has-text-info'">{{
-                post.likes?.length || 0
-              }}</span>
-            </a>
-            <a class="level-item like-button" @click="emit('openComments', post)">
-              <span class="icon is-small has-text-info">
-                <i class="fas fa-comment"></i>
-              </span>
-              <span class="ml-1">{{ post.comments?.length || 0 }}</span>
-            </a>
+            <LikeButton
+              :count="post.likes?.length || 0"
+              :has-liked="hasLiked"
+              :liked-by-users="likedByUsers"
+              @click="handleLike"
+            />
+            <CommentButton
+              :count="post.comments?.length || 0"
+              :has-commented="hasCommented"
+              @click="emit('openComments', post)"
+            />
           </div>
         </nav>
 
@@ -194,14 +183,17 @@ function formatDuration(duration: string): string {
         <div v-if="showStats" @click="(e: MouseEvent) => e.stopPropagation()">
           <nav class="level is-mobile mt-3 stats-row">
             <div class="level-left">
-              <span class="level-item has-text-grey">
-                <span class="icon is-small has-text-info"><i class="fas fa-heart"></i></span>
-                <span class="ml-1 is-size-7">{{ post.likes?.length || 0 }}</span>
-              </span>
-              <span class="level-item has-text-grey">
-                <span class="icon is-small has-text-info"><i class="fas fa-comment"></i></span>
-                <span class="ml-1 is-size-7">{{ post.comments?.length || 0 }}</span>
-              </span>
+              <LikeButton
+                :count="post.likes?.length || 0"
+                :has-liked="hasLiked"
+                :liked-by-users="likedByUsers"
+                @click="handleLike"
+              />
+              <CommentButton
+                :count="post.comments?.length || 0"
+                :has-commented="hasCommented"
+                @click="emit('openComments', post)"
+              />
             </div>
             <div class="level-right">
               <a class="level-item share-btn" @click="emit('share')">

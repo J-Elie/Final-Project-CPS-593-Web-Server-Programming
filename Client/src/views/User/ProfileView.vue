@@ -9,6 +9,7 @@ import EditButton from '@/components/ui/buttons/EditButton.vue'
 import DeleteButton from '@/components/ui/buttons/DeleteButton.vue'
 import PeopleManagerModal from '@/components/modal/PeopleManagerModal.vue'
 import type { Post } from '../../../../Server/Types/posts'
+import { getActivityIcon } from '@/Services/activityHelpers'
 
 const authStore = useAuthStore()
 const postsStore = usePostsStore()
@@ -66,18 +67,8 @@ const recentPosts = computed(() =>
     .slice(0, 3),
 )
 
-const activityTypeIcon: Record<string, string> = {
-  Running: 'fa-running',
-  Cycling: 'fa-biking',
-  Swimming: 'fa-swimmer',
-  Yoga: 'fa-spa',
-  Weightlifting: 'fa-dumbbell',
-  Hiking: 'fa-hiking',
-  Other: 'fa-heartbeat',
-}
-
 function typeIcon(type: string) {
-  return activityTypeIcon[type] ?? 'fa-heartbeat'
+  return getActivityIcon(type)
 }
 
 function goToPost(postId: number) {
@@ -172,14 +163,12 @@ function deleteAccount() {
               <div class="media-left">
                 <figure class="image is-128x128">
                   <img
-                    v-if="authStore.currentUser?.image"
                     class="is-rounded profile-avatar"
-                    :src="authStore.currentUser?.image"
+                    :src="
+                      authStore.currentUser?.image || 'https://placehold.co/128x128?text=No+Photo'
+                    "
                     :alt="authStore.currentUser?.firstName"
                   />
-                  <span v-else class="icon has-text-grey-light" style="font-size: 8rem">
-                    <i class="fas fa-user-circle"></i>
-                  </span>
                 </figure>
               </div>
               <div class="media-content">

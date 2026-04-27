@@ -39,5 +39,29 @@ Content-Type: application/json
   "notes": "Updated: Felt even more relaxed!"
 }
 
+### Toggle like on a post — like post 1 as user 2
+PATCH http://localhost:3000/api/v1/posts/117/like
+Content-Type: application/json
+
+{
+  "userId": 1
+}
+
+### Toggle like again — unlike post 1 as user 2 (run twice to toggle off)
+PATCH http://localhost:3000/api/v1/posts/1/like
+Content-Type: application/json
+
+{
+  "userId": 2
+}
+
+### Like post 1 as a different user (user 3)
+PATCH http://localhost:3000/api/v1/posts/1/like
+Content-Type: application/json
+
+{
+  "userId": 3
+}
+
 ### Delete a post by post ID
 DELETE http://localhost:3000/api/v1/posts/5

@@ -129,7 +129,12 @@ document.addEventListener('DOMContentLoaded', () => {
           =================
         -->
         <a class="navbar-item" href="/">
-          <img alt="Vue logo" width="30" height="30" src="@/assets/logo.svg" />
+          <img
+            alt="EveryMove"
+            height="36"
+            src="@/assets/everymove.png"
+            style="max-height: 36px; width: auto"
+          />
         </a>
 
         <!--

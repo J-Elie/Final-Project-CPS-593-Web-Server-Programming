@@ -159,7 +159,7 @@ function deleteUser(userId: number) {
                   <figure class="image is-48x48">
                     <img
                       v-if="user.image"
-                      class="is-rounded"
+                      class="avatar-img"
                       :src="user.image"
                       :alt="user.firstName"
                     />
@@ -235,4 +235,12 @@ function deleteUser(userId: number) {
   </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+.avatar-img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+</style>
