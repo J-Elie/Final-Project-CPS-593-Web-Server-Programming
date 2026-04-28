@@ -98,7 +98,7 @@ function handleLike() {
           <figure class="image is-48x48" v-if="showAuthor && author">
             <img
               class="is-rounded"
-              :src="author.image || 'https://via.placeholder.com/48'"
+              :src="author.image || 'https://placehold.co/48x48?text=' + (author.firstName?.[0] ?? '?')"
               :alt="author.firstName"
             />
           </figure>

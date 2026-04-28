@@ -17,6 +17,7 @@ import { ref, watch } from 'vue'
 
 import { api } from '../Services/myFetch'
 import { useSessionStore } from './session'
+import { useAuthStore } from './authStore'
 
 // ============================================================================
 // USERS STORE DEFINITION
@@ -39,6 +40,12 @@ export const useUsersStore = defineStore('users', () => {
   async function fetchUsers() {
     const data = await api<DataListEnvelope<User>>('users?pageSize=1000')
     users.value = data.data
+    // Sync authStore.currentUser with fresh DB data (has correct following/followers)
+    const authStore = useAuthStore()
+    if (authStore.currentUser) {
+      const freshUser = users.value.find((u) => u.id === authStore.currentUser!.id)
+      if (freshUser) authStore.login(freshUser)
+    }
   }
 
   // Re-fetch after login so following/followers arrays are populated from JWT
@@ -47,6 +54,7 @@ export const useUsersStore = defineStore('users', () => {
     (newToken) => {
       if (newToken) fetchUsers()
     },
+    { immediate: true },
   )
 
   // ============================================================================

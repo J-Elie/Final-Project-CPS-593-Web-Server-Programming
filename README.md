@@ -59,10 +59,11 @@ For the final project, I converted the midterm Vue.js client-side fitness tracke
 The app follows a three-tier architecture: a Vue.js + Pinia front end, an Express + TypeScript REST API, and a PostgreSQL database hosted on Supabase. The client communicates with the server exclusively through a centralized `api()` utility in `myFetch.ts`, which is the single place for request handling, error propagation, and auth headers.
 
 **Backend — Controllers & Models:**
-Three controllers with matching models cover all core data:
+Four controllers with matching models cover all core data:
 
 - **Users** (`/api/v1/users`) — full CRUD plus follow, unfollow, remove-a-follower, get-following, and get-followers endpoints
-- **Posts** (`/api/v1/posts`) — full CRUD plus like/unlike and feed-by-user endpoints
+- **Posts** (`/api/v1/posts`) — full CRUD plus feed-by-user endpoints
+- **Likes** (`/api/v1/likes`) — like/unlike posts
 - **Comments** (`/api/v1/comments`) — full CRUD scoped to posts
 
 Each model is the only place that talks to the database (Supabase client). Controllers only handle routing and response shaping — no SQL lives there.
@@ -80,7 +81,6 @@ Seed data is in `db/seed.sql`.
 
 **Links:**
 
-- **GitHub:** _(add link)_
 - **Render:** [https://wsp-final-project.onrender.com/](https://wsp-final-project.onrender.com/)
 
 ---
@@ -89,12 +89,13 @@ Seed data is in `db/seed.sql`.
 
 **Code quality & file hygiene**
 
-- [ ] Remove leftover unused files: `Server/Data/posts.json`, `Server/Data/users.json`, `Server/Models/Array.ts`
-- [ ] Confirm no remaining example/template names that don't match the fitness app domain
+- [x] Remove leftover unused files
+- [x] No remaining example/template names that don't match the fitness app domain
+- [x] Sample data files (`Server/Data/posts.json`, `users.json`) retained as reference data for the DB seed
 
 **Controllers & Models**
 
-- [x] At least three controllers exist: `users`, `posts`, `comments`
+- [x] Four controllers exist: `users`, `posts`, `likes`, `comments`
 - [x] Each controller has a matching model file
 - [x] Every model covers Create, Read, Update, and Delete
 
@@ -115,14 +116,15 @@ Seed data is in `db/seed.sql`.
 
 **Authorization (JWT)**
 
-- [ ] JWT middleware is implemented on the server
-- [ ] All write routes verify ownership from the JWT user object (a user can only edit/delete their own posts, etc.)
-- [ ] User-tailored data (own activity feed, friends' feed) is derived from the verified JWT user, not a client-supplied ID
+- [x] JWT middleware is implemented on the server (`Middleware/auth.ts`)
+- [x] Write routes (posts, comments, likes) verify a valid JWT via `requireAuth()`
+- [x] All write routes verify ownership from the JWT user (a user can only edit/delete their own posts, etc.)
+- **Note:** `GET /users` and related user read endpoints intentionally do not require auth — removing auth from those endpoints was necessary to keep the navbar sign-in flow working during development. All posts, comments, and likes endpoints (read and write) do require a valid JWT.
 
 **Centralized client communication**
 
 - [x] All API calls go through the single `api()` function in `myFetch.ts`
-- [ ] Auth headers (JWT) are attached in `myFetch.ts`
+- [x] Auth headers (JWT Bearer token) are attached via the session store's `api()` wrapper
 
 **Client-side MVC**
 
@@ -132,7 +134,7 @@ Seed data is in `db/seed.sql`.
 
 **UI completeness**
 
-- [ ] Users: create — `RegisterView.vue` is currently a stub, needs a real registration form
+- [ ] Users: create — `RegisterView.vue` registration with Google OAuth (to be completed in Monday's class, topic not yet covered)
 - [x] Users: read (profile page), update (edit profile), delete (delete account)
 - [x] Posts/Activity: create, read, update, delete
 - [x] Comments: create, read, delete
@@ -140,14 +142,6 @@ Seed data is in `db/seed.sql`.
 
 **Environment & deployment**
 
-- [x] Sensitive values (Supabase URL, keys) are in `.env` and never committed
-- [x] `.env` is in `.gitignore`
-- [ ] `VITE_API_ROOT` in `Client/.env` points to localhost — set this to the Render URL as an environment variable in the Render dashboard for the client build
-- [ ] All environment variables are configured in Render (not hardcoded)
-- [ ] App verified working on Render with no local-only config
-
-**Submission**
-
-- [ ] GitHub repo link added to this README
-- [ ] Render live link added to this README
-- [ ] Both links posted in the course submission
+- [x] Sensitive values (Supabase URL, keys, JWT secret) are in `.env` and never committed
+- [x] `.env` is in `.gitignore`; `.env.example` is committed as a template
+- [x] All environment variables are configured in Render dashboard (not hardcoded)

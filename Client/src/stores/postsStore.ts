@@ -40,6 +40,7 @@ export const usePostsStore = defineStore('posts', () => {
     (newToken) => {
       if (newToken) fetchPosts()
     },
+    { immediate: true },
   )
 
   // ============================================================================
