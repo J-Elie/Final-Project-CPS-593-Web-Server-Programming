@@ -1,5 +1,7 @@
 # Course CPS-593 Web Server Programming
 
+➡️ [Jump to Final Project](#final-project)
+
 ## About this Repository
 
 This repository holds all of my assignments and final project for CPS-593 Web Server Programming.  
