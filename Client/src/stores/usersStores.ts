@@ -13,9 +13,10 @@ import { defineStore } from 'pinia'
 import type { User } from '../../../Server/Types/users.ts'
 import type { DataListEnvelope } from '../../../Server/Types/dataEnvelopes.ts'
 // Vue's ref function for creating reactive data
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 import { api } from '../Services/myFetch'
+import { useSessionStore } from './session'
 
 // ============================================================================
 // USERS STORE DEFINITION
@@ -26,9 +27,27 @@ export const useUsersStore = defineStore('users', () => {
   // ============================================================================
   const users = ref<User[]>([])
 
-  api<DataListEnvelope<User>>('users').then((data) => {
+  // GET /users is public — load immediately with full list
+  api<DataListEnvelope<User>>('users?pageSize=1000').then((data) => {
     users.value = data.data
   })
+
+  function sessionApi() {
+    return useSessionStore().api
+  }
+
+  async function fetchUsers() {
+    const data = await api<DataListEnvelope<User>>('users?pageSize=1000')
+    users.value = data.data
+  }
+
+  // Re-fetch after login so following/followers arrays are populated from JWT
+  watch(
+    () => useSessionStore().token,
+    (newToken) => {
+      if (newToken) fetchUsers()
+    },
+  )
 
   // ============================================================================
   // ACTIONS
@@ -37,7 +56,7 @@ export const useUsersStore = defineStore('users', () => {
    * addUser - Adds a new user to the store
    */
   async function addUser(userData: Omit<User, 'id'>) {
-    const response = await api<{ data: User }>('users', userData)
+    const response = await sessionApi()<{ data: User }>('users', userData)
     const newUser = response.data
     users.value.push(newUser)
     return newUser
@@ -47,7 +66,7 @@ export const useUsersStore = defineStore('users', () => {
    * updateUser - Updates an existing user in the store
    */
   async function updateUser(userId: number, userData: Partial<Omit<User, 'id'>>) {
-    const response = await api<{ data: User }>(`users/${userId}`, userData, { method: 'PATCH' })
+    const response = await sessionApi()<{ data: User }>(`users/${userId}`, userData, { method: 'PATCH' })
     const updatedUser = response.data
     const index = users.value.findIndex((u) => u.id === userId)
     if (index !== -1) {
@@ -60,7 +79,7 @@ export const useUsersStore = defineStore('users', () => {
    * deleteUser - Removes a user from the store
    */
   async function deleteUser(userId: number) {
-    await api(`users/${userId}`, undefined, { method: 'DELETE' })
+    await sessionApi()(`users/${userId}`, undefined, { method: 'DELETE' })
     const index = users.value.findIndex((u) => u.id === userId)
     if (index !== -1) {
       users.value.splice(index, 1)
@@ -71,7 +90,7 @@ export const useUsersStore = defineStore('users', () => {
    * followUser - Follow a user and persist to the database
    */
   async function followUser(followerId: number, followingId: number) {
-    await api(`users/${followingId}/follow`, { followerId }, { method: 'POST' })
+    await sessionApi()(`users/${followingId}/follow`, { followerId }, { method: 'POST' })
     const follower = users.value.find((u) => u.id === followerId)
     const following = users.value.find((u) => u.id === followingId)
     if (follower && !follower.following?.includes(followingId)) {
@@ -86,7 +105,7 @@ export const useUsersStore = defineStore('users', () => {
    * unfollowUser - Unfollow a user and persist to the database
    */
   async function unfollowUser(followerId: number, followingId: number) {
-    await api(`users/${followingId}/follow`, { followerId }, { method: 'DELETE' })
+    await sessionApi()(`users/${followingId}/follow`, { followerId }, { method: 'DELETE' })
     const follower = users.value.find((u) => u.id === followerId)
     const following = users.value.find((u) => u.id === followingId)
     if (follower) {
@@ -101,7 +120,7 @@ export const useUsersStore = defineStore('users', () => {
    * removeFollower - Remove a follower from your followers list (they stop following you)
    */
   async function removeFollower(userId: number, followerId: number) {
-    await api(`users/${userId}/followers/${followerId}`, undefined, { method: 'DELETE' })
+    await sessionApi()(`users/${userId}/followers/${followerId}`, undefined, { method: 'DELETE' })
     const user = users.value.find((u) => u.id === userId)
     const follower = users.value.find((u) => u.id === followerId)
     if (user) {
@@ -124,6 +143,7 @@ export const useUsersStore = defineStore('users', () => {
   // ============================================================================
   return {
     users,
+    fetchUsers,
     addUser,
     updateUser,
     deleteUser,

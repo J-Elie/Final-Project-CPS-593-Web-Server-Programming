@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia'
-import type { User } from '../../../Server/Types/users.ts'
+import { type DataEnvelope } from '../../../Server/Types/dataEnvelopes'
+import { type User } from '../../../Server/Types/users'
 import { computed, ref } from 'vue'
 
 import { api as myApi } from '../Services/myFetch'
+import { useAuthStore } from './authStore'
 
 export type FeedbackMessage = {
   type: 'success' | 'danger' | 'info'
@@ -11,6 +13,35 @@ export type FeedbackMessage = {
 
 export const useSessionStore = defineStore('session', () => {
   const user = ref<User | null>(null)
+  const token = ref<string | null>(null)
+
+  async function login(email: string, password: string) {
+    try {
+      const response = await myApi<DataEnvelope<{ user: User; token: string }>>(
+        'users/login',
+        { email, password },
+        { method: 'POST' },
+      )
+      if (!response.isSuccess) {
+        addMessage(response.message || 'Login failed', 'danger')
+        return
+      }
+      const { user: loggedInUser, token: authToken } = response.data
+      user.value = loggedInUser
+      token.value = authToken
+      useAuthStore().login(loggedInUser)
+      console.log('Login successful!', loggedInUser)
+      addMessage(`Welcome, ${loggedInUser.firstName}!`, 'success')
+    } catch (error) {
+      handleError(error as Error)
+    }
+  }
+
+  function logout() {
+    user.value = null
+    token.value = null
+    useAuthStore().logout()
+  }
 
   const messages = ref<FeedbackMessage[]>([])
   function addMessage(text: string, type: FeedbackMessage['type'] = 'info') {
@@ -28,6 +59,11 @@ export const useSessionStore = defineStore('session', () => {
   function api<T>(endpoint: string, data?: unknown, options: RequestInit = {}) {
     loadingCount.value++
 
+    options.headers = {
+      ...(token.value ? { Authorization: `Bearer ${token.value}` } : {}),
+      ...options.headers,
+    }
+
     return myApi<T>(endpoint, data, options)
       .catch((error) => {
         handleError(error)
@@ -40,6 +76,9 @@ export const useSessionStore = defineStore('session', () => {
 
   return {
     user,
+    token,
+    login,
+    logout,
     messages,
     addMessage,
     handleError,

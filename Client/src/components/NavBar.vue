@@ -16,16 +16,15 @@
 import { ref, onMounted, computed } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { useUsersStore } from '@/stores/usersStores'
-import { useAuthStore } from '@/stores/authStore'
 import type { User } from '../../../Server/Types/users'
+import useSessionStore from '@/stores/session'
 
 // ============================================================================
 // STORE INITIALIZATION
 // ============================================================================
 // Get the users store instance for accessing user data
 const usersStore = useUsersStore()
-// Get the auth store instance for managing logged-in user
-const authStore = useAuthStore()
+const sessionStore = useSessionStore()
 // Get the router instance for navigation
 const router = useRouter()
 
@@ -40,17 +39,17 @@ const isDarkMode = ref(false)
 // ============================================================================
 // Get users from the store (computed to stay reactive)
 const testUsers = computed(() => usersStore.users)
-// Get selected user from auth store (computed to stay reactive)
-const selectedUser = computed(() => authStore.currentUser)
+// Get selected user from session store
+const selectedUser = computed(() => sessionStore.user)
 // Track if user dropdown is open (for click-based dropdown)
 const isUserDropdownOpen = ref(false)
 
 // Function to select a test user (login/logout)
-function selectUser(user: User | null) {
+async function selectUser(user: User | null) {
   if (user) {
-    authStore.login(user)
+    await sessionStore.login(user.email, '')
   } else {
-    authStore.logout()
+    sessionStore.logout()
     router.push('/')
   }
   isUserDropdownOpen.value = false

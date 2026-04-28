@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useAuthStore } from '@/stores/authStore'
+import useSessionStore from '@/stores/session'
 import { usePostsStore } from '@/stores/postsStore'
 import { useUsersStore } from '@/stores/usersStores'
 import StatusTag from '@/components/ui/StatusTag.vue'
@@ -8,7 +8,7 @@ import DeleteButton from '@/components/ui/buttons/DeleteButton.vue'
 import type { Post } from '../../../../Server/Types/posts'
 import { formatDate } from '@/Services/activityHelpers'
 
-const authStore = useAuthStore()
+const sessionStore = useSessionStore()
 const postsStore = usePostsStore()
 const usersStore = useUsersStore()
 
@@ -115,7 +115,7 @@ function toggleExpand(postId: number) {
       <p class="subtitle has-text-centered">Review posts containing flagged content</p>
 
       <!-- Not admin -->
-      <div v-if="authStore.currentUser?.role !== 'admin'" class="columns is-centered">
+      <div v-if="sessionStore.user?.role !== 'admin'" class="columns is-centered">
         <div class="column is-half">
           <div class="notification is-danger has-text-centered">
             <p>

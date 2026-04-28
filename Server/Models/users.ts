@@ -217,6 +217,19 @@ export async function login(
   const user = toCamelCase(
     result.data as Record<string, unknown>,
   ) as unknown as ItemType;
+
+  // Populate following / followers from user_follows table
+  const [followingResult, followersResult] = await Promise.all([
+    db.from("user_follows").select("following_id").eq("follower_id", user.id),
+    db.from("user_follows").select("follower_id").eq("following_id", user.id),
+  ]);
+  user.following = (
+    (followingResult.data ?? []) as { following_id: number }[]
+  ).map((r) => r.following_id);
+  user.followers = (
+    (followersResult.data ?? []) as { follower_id: number }[]
+  ).map((r) => r.follower_id);
+
   /* If we had passwords, we would verify them here.
   if (!user || user.password !== _password) {
     throw { status: 401, message: "Invalid email or password" };

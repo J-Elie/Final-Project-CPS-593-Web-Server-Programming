@@ -20,8 +20,14 @@ const emit = defineEmits<{
   submit: [
     data: {
       firstName: string
+      lastName: string
+      age: number
+      gender: string
+      email: string
       username: string
       image: string
+      height: number
+      weight: number
       role: string
       bio: string
     },
@@ -31,8 +37,14 @@ const emit = defineEmits<{
 
 const formData = reactive({
   firstName: props.user.firstName,
+  lastName: props.user.lastName,
+  age: props.user.age,
+  gender: props.user.gender,
+  email: props.user.email,
   username: props.user.username,
   image: props.user.image ?? '',
+  height: props.user.height,
+  weight: props.user.weight,
   role: props.user.role,
   bio: props.user.bio ?? '',
 })
@@ -42,16 +54,22 @@ watch(
   () => props.user,
   (u) => {
     formData.firstName = u.firstName
+    formData.lastName = u.lastName
+    formData.age = u.age
+    formData.gender = u.gender
+    formData.email = u.email
     formData.username = u.username
     formData.image = u.image ?? ''
+    formData.height = u.height
+    formData.weight = u.weight
     formData.role = u.role
     formData.bio = u.bio ?? ''
   },
 )
 
 function handleSubmit() {
-  if (!formData.firstName.trim() || !formData.username.trim()) {
-    alert('Name and username are required.')
+  if (!formData.firstName.trim() || !formData.username.trim() || !formData.email.trim()) {
+    alert('First name, username, and email are required.')
     return
   }
   emit('submit', { ...formData })
@@ -67,10 +85,38 @@ function handleSubmit() {
 
     <!-- Name -->
     <div class="field">
-      <label class="label">Name *</label>
+      <label class="label">First Name *</label>
       <div class="control has-icons-left">
-        <input class="input" type="text" placeholder="Enter name" v-model="formData.firstName" />
+        <input
+          class="input"
+          type="text"
+          placeholder="Enter first name"
+          v-model="formData.firstName"
+        />
         <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
+      </div>
+    </div>
+
+    <!-- Last Name -->
+    <div class="field">
+      <label class="label">Last Name</label>
+      <div class="control has-icons-left">
+        <input
+          class="input"
+          type="text"
+          placeholder="Enter last name"
+          v-model="formData.lastName"
+        />
+        <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="field">
+      <label class="label">Email *</label>
+      <div class="control has-icons-left">
+        <input class="input" type="email" placeholder="Enter email" v-model="formData.email" />
+        <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
       </div>
     </div>
 
@@ -89,6 +135,66 @@ function handleSubmit() {
       <div class="control has-icons-left">
         <input class="input" type="text" placeholder="Enter image URL" v-model="formData.image" />
         <span class="icon is-small is-left"><i class="fas fa-image"></i></span>
+      </div>
+    </div>
+
+    <!-- Age -->
+    <div class="field">
+      <label class="label">Age</label>
+      <div class="control has-icons-left">
+        <input
+          class="input"
+          type="number"
+          placeholder="Enter age"
+          v-model.number="formData.age"
+          min="0"
+        />
+        <span class="icon is-small is-left"><i class="fas fa-birthday-cake"></i></span>
+      </div>
+    </div>
+
+    <!-- Gender -->
+    <div class="field">
+      <label class="label">Gender</label>
+      <div class="control">
+        <div class="select is-fullwidth">
+          <select v-model="formData.gender">
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Height / Weight -->
+    <div class="field is-grouped">
+      <div class="control is-expanded">
+        <label class="label">Height (cm)</label>
+        <div class="control has-icons-left">
+          <input
+            class="input"
+            type="number"
+            placeholder="cm"
+            v-model.number="formData.height"
+            min="0"
+          />
+          <span class="icon is-small is-left"><i class="fas fa-ruler-vertical"></i></span>
+        </div>
+      </div>
+      <div class="control is-expanded">
+        <label class="label">Weight (kg)</label>
+        <div class="control has-icons-left">
+          <input
+            class="input"
+            type="number"
+            placeholder="kg"
+            v-model.number="formData.weight"
+            min="0"
+          />
+          <span class="icon is-small is-left"><i class="fas fa-weight"></i></span>
+        </div>
       </div>
     </div>
 

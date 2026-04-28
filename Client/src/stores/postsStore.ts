@@ -13,9 +13,9 @@ import { defineStore } from 'pinia'
 import type { Post, Comment } from '../../../Server/Types/posts'
 import type { DataListEnvelope } from '../../../Server/Types/dataEnvelopes'
 // Vue's ref and computed for reactive data
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
-import { api } from '../Services/myFetch'
+import { useSessionStore } from './session'
 
 // ============================================================================
 // POSTS STORE DEFINITION
@@ -26,9 +26,21 @@ export const usePostsStore = defineStore('posts', () => {
   // ============================================================================
   const posts = ref<Post[]>([])
 
-  api<DataListEnvelope<Post>>('posts?pageSize=1000').then((data) => {
+  function sessionApi() {
+    return useSessionStore().api
+  }
+
+  async function fetchPosts() {
+    const data = await sessionApi()<DataListEnvelope<Post>>('posts?pageSize=1000')
     posts.value = data.data
-  })
+  }
+
+  watch(
+    () => useSessionStore().token,
+    (newToken) => {
+      if (newToken) fetchPosts()
+    },
+  )
 
   // ============================================================================
   // GETTERS
@@ -53,7 +65,7 @@ export const usePostsStore = defineStore('posts', () => {
   // ============================================================================
 
   async function addPost(post: Omit<Post, 'id' | 'createdAt' | 'likes' | 'comments'>) {
-    const response = await api<{ data: Post }>('posts', post)
+    const response = await sessionApi()<{ data: Post }>('posts', post)
     const newPost = response.data
     posts.value.unshift(newPost)
     return newPost
@@ -64,7 +76,7 @@ export const usePostsStore = defineStore('posts', () => {
    * Note: id and userId cannot be changed
    */
   async function updatePost(postId: number, updates: Partial<Omit<Post, 'id' | 'userId'>>) {
-    const response = await api<{ data: Post }>(`posts/${postId}`, updates, { method: 'PATCH' })
+    const response = await sessionApi()<{ data: Post }>(`posts/${postId}`, updates, { method: 'PATCH' })
     const updatedPost = response.data
     const index = posts.value.findIndex((p) => p.id === postId)
     if (index !== -1) {
@@ -76,7 +88,7 @@ export const usePostsStore = defineStore('posts', () => {
    * deletePost - Removes a post from the store
    */
   async function deletePost(postId: number) {
-    await api(`posts/${postId}`, undefined, { method: 'DELETE' })
+    await sessionApi()(`posts/${postId}`, undefined, { method: 'DELETE' })
     const index = posts.value.findIndex((p) => p.id === postId)
     if (index !== -1) {
       posts.value.splice(index, 1)
@@ -99,7 +111,7 @@ export const usePostsStore = defineStore('posts', () => {
       }
     }
     // Persist and sync with server response
-    const response = await api<{ data: number[] }>(
+    const response = await sessionApi()<{ data: number[] }>(
       `likes/post/${postId}`,
       { userId },
       { method: 'PATCH' },
@@ -113,7 +125,7 @@ export const usePostsStore = defineStore('posts', () => {
    * fetchComments - Loads comments from the server into a post
    */
   async function fetchComments(postId: number) {
-    const response = await api<{ data: Comment[] }>(`comments/post/${postId}`)
+    const response = await sessionApi()<{ data: Comment[] }>(`comments/post/${postId}`)
     const post = posts.value.find((p) => p.id === postId)
     if (post) {
       post.comments = response.data
@@ -125,7 +137,7 @@ export const usePostsStore = defineStore('posts', () => {
    * addComment - Adds a comment to a post
    */
   async function addComment(postId: number, userId: number, content: string) {
-    const response = await api<{ data: Comment }>(`comments/post/${postId}`, { userId, content })
+    const response = await sessionApi()<{ data: Comment }>(`comments/post/${postId}`, { userId, content })
     const newComment = response.data
     const post = posts.value.find((p) => p.id === postId)
     if (post) {
@@ -139,7 +151,7 @@ export const usePostsStore = defineStore('posts', () => {
    * deleteComment - Removes a comment from a post
    */
   async function deleteComment(postId: number, commentId: number) {
-    await api(`comments/post/${postId}/${commentId}`, undefined, { method: 'DELETE' })
+    await sessionApi()(`comments/post/${postId}/${commentId}`, undefined, { method: 'DELETE' })
     const post = posts.value.find((p) => p.id === postId)
     if (post && post.comments) {
       const commentIndex = post.comments.findIndex((c) => c.id === commentId)
@@ -160,6 +172,7 @@ export const usePostsStore = defineStore('posts', () => {
     getPostById,
     getFeedPosts,
     // Actions
+    fetchPosts,
     addPost,
     updatePost,
     deletePost,

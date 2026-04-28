@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/authStore'
+import useSessionStore from '@/stores/session'
 import { useUsersStore } from '@/stores/usersStores'
 import type { User } from '../../../../Server/Types/users'
 import AddButton from '@/components/ui/buttons/AddButton.vue'
@@ -12,7 +12,7 @@ import EditProfileForm from '@/components/EditProfileForm.vue'
 // ============================================================================
 // STORE & ROUTER INITIALIZATION
 // ============================================================================
-const authStore = useAuthStore()
+const sessionStore = useSessionStore()
 const usersStore = useUsersStore()
 const router = useRouter()
 
@@ -20,7 +20,7 @@ const router = useRouter()
 // ACCESS CONTROL
 // ============================================================================
 onMounted(() => {
-  if (!authStore.isLoggedIn || !authStore.isAdmin) {
+  if (!sessionStore.user || sessionStore.user.role !== 'admin') {
     router.push('/')
   }
 })
@@ -66,22 +66,29 @@ function closeAddModal() {
 
 function handleAddSubmit(formData: {
   firstName: string
+  lastName: string
+  age: number
+  gender: string
+  email: string
   username: string
   image: string
+  height: number
+  weight: number
   role: string
+  bio: string
 }) {
   usersStore.addUser({
     firstName: formData.firstName,
-    lastName: '',
-    age: 0,
-    gender: '',
-    email: '',
+    lastName: formData.lastName,
+    age: formData.age,
+    gender: formData.gender,
+    email: formData.email,
     username: formData.username,
     image: formData.image,
-    height: 0,
-    weight: 0,
+    height: formData.height,
+    weight: formData.weight,
     role: formData.role,
-    bio: '',
+    bio: formData.bio,
     following: [],
     followers: [],
   })
@@ -103,9 +110,16 @@ function closeEditModal() {
 
 function handleEditSubmit(formData: {
   firstName: string
+  lastName: string
+  age: number
+  gender: string
+  email: string
   username: string
   image: string
+  height: number
+  weight: number
   role: string
+  bio: string
 }) {
   if (!editingUser.value) return
   usersStore.updateUser(editingUser.value.id, formData)
@@ -116,7 +130,7 @@ function handleEditSubmit(formData: {
 // DELETE
 // ============================================================================
 function deleteUser(userId: number) {
-  if (userId === authStore.currentUser?.id) {
+  if (userId === sessionStore.user?.id) {
     alert('You cannot delete yourself!')
     return
   }
@@ -130,7 +144,10 @@ function deleteUser(userId: number) {
   <main class="section">
     <div class="container">
       <!-- Access Denied -->
-      <div v-if="!authStore.isLoggedIn || !authStore.isAdmin" class="notification is-danger">
+      <div
+        v-if="!sessionStore.user || sessionStore.user.role !== 'admin'"
+        class="notification is-danger"
+      >
         <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>
         Access denied. Admin privileges required.
       </div>
@@ -199,11 +216,9 @@ function deleteUser(userId: number) {
                     </button>
                     <DeleteButton
                       small
-                      :disabled="user.id === authStore.currentUser?.id"
+                      :disabled="user.id === sessionStore.user?.id"
                       :title="
-                        user.id === authStore.currentUser?.id
-                          ? 'Cannot delete yourself'
-                          : 'Delete user'
+                        user.id === sessionStore.user?.id ? 'Cannot delete yourself' : 'Delete user'
                       "
                       @click="deleteUser(user.id)"
                     />

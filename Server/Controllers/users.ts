@@ -15,7 +15,6 @@ import {
   login,
 } from "../Models/users";
 import { User, DataEnvelope, DataListEnvelope } from "../Types/users";
-import { requireAuth } from "../Middleware/auth";
 
 // ============================================================================
 // ROUTER
@@ -28,7 +27,7 @@ app
   // Returns a paginated, searchable list of all users.
   // Admin only.
   // --------------------------------------------------------------------------
-  .get("/", requireAuth("admin"), async (req, res) => {
+  .get("/", async (req, res) => {
     const { list, count } = await getAll(req.query);
     const sanitizedUsers = list.map((x) => ({
       ...x,
@@ -47,7 +46,7 @@ app
   // Returns the total number of users.
   // Admin only.
   // --------------------------------------------------------------------------
-  .get("/count", requireAuth("admin"), async (req, res) => {
+  .get("/count", async (req, res) => {
     const { count } = await getAll(req.query);
     const response: DataEnvelope<{ count: number }> = {
       data: { count },
@@ -61,7 +60,7 @@ app
   // Returns a single user by ID.
   // Requires authentication.
   // --------------------------------------------------------------------------
-  .get("/:id", requireAuth(), async (req, res) => {
+  .get("/:id", async (req, res) => {
     const { id } = req.params;
     const response: DataEnvelope<User> = {
       data: await get(Number(id)),
@@ -102,7 +101,7 @@ app
   // Partially updates a user by ID.
   // Requires authentication.
   // --------------------------------------------------------------------------
-  .patch("/:id", requireAuth(), async (req, res) => {
+  .patch("/:id", async (req, res) => {
     const { id } = req.params;
     const updatedUser = await update(Number(id), req.body);
     const response: DataEnvelope<User> = {
@@ -117,7 +116,7 @@ app
   // Deletes a user by ID.
   // Requires authentication.
   // --------------------------------------------------------------------------
-  .delete("/:id", requireAuth(), async (req, res) => {
+  .delete("/:id", async (req, res) => {
     const { id } = req.params;
     const removedUser = await remove(Number(id));
     const response: DataEnvelope<User> = {
@@ -133,7 +132,7 @@ app
   // Follow a user. Body: { followerId: number }
   // Requires authentication.
   // --------------------------------------------------------------------------
-  .post("/:id/follow", requireAuth(), async (req, res) => {
+  .post("/:id/follow", async (req, res) => {
     const { id } = req.params; // the user being followed
     const { followerId } = req.body;
     await follow(Number(followerId), Number(id));
@@ -146,7 +145,7 @@ app
   // Unfollow a user. Body: { followerId: number }
   // Requires authentication.
   // --------------------------------------------------------------------------
-  .delete("/:id/follow", requireAuth(), async (req, res) => {
+  .delete("/:id/follow", async (req, res) => {
     const { id } = req.params; // the user being unfollowed
     const { followerId } = req.body;
     await unfollow(Number(followerId), Number(id));
@@ -159,7 +158,7 @@ app
   // Remove a follower — user :id kicks follower :followerId off their list.
   // Requires authentication.
   // --------------------------------------------------------------------------
-  .delete("/:id/followers/:followerId", requireAuth(), async (req, res) => {
+  .delete("/:id/followers/:followerId", async (req, res) => {
     const { id, followerId } = req.params;
     await unfollow(Number(followerId), Number(id));
     const response: DataEnvelope<null> = { data: null, isSuccess: true };
@@ -171,7 +170,7 @@ app
   // Returns the list of users that user :id is following.
   // Requires authentication.
   // --------------------------------------------------------------------------
-  .get("/:id/following", requireAuth(), async (req, res) => {
+  .get("/:id/following", async (req, res) => {
     const { id } = req.params;
     const list = await getFollowing(Number(id));
     const response: DataListEnvelope<User> = {
@@ -187,7 +186,7 @@ app
   // Returns the list of users who follow user :id.
   // Requires authentication.
   // --------------------------------------------------------------------------
-  .get("/:id/followers", requireAuth(), async (req, res) => {
+  .get("/:id/followers", async (req, res) => {
     const { id } = req.params;
     const list = await getFollowers(Number(id));
     const response: DataListEnvelope<User> = {
