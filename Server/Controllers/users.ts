@@ -9,6 +9,7 @@ import {
   unfollow,
   getFollowing,
   getFollowers,
+  login,
 } from "../Models/users";
 import { User, DataEnvelope, DataListEnvelope } from "../Types/users";
 
@@ -45,6 +46,14 @@ app
     res.send(response);
   })
 
+  .post("/login", async (req, res) => {
+    const { email } = req.body;
+    const response: DataEnvelope<{ token: string; user: User }> = {
+      data: await login(email),
+      isSuccess: true,
+    };
+    res.send(response);
+  })
   .post("/", async (req, res) => {
     const newUser = await create(req.body);
     const response: DataEnvelope<User> = {

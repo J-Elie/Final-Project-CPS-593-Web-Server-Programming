@@ -7,6 +7,7 @@ import postsController from "./Controllers/posts";
 import commentsController from "./Controllers/comments";
 import likesController from "./Controllers/likes";
 import { DataEnvelope } from "./Types/dataEnvelopes";
+import { validateJWT } from "./Middleware/auth";
 
 const PORT = process.env.PORT ?? 3000;
 const SERVER = process.env.SERVER ?? "localhost";
@@ -22,8 +23,8 @@ app
     res.setHeader("Access-Control-Allow-Headers", "*"); // Allow specific headers
     next();
   })
-  .use(express.json()); // Middleware to parse JSON request bodies
-
+  .use(express.json()) // Middleware to parse JSON request bodies
+  .use(validateJWT); // Middleware to validate JWT and attach user info to the request
 ///////// Routes
 app
   .use(express.static(STATIC_DIR))

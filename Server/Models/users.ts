@@ -1,9 +1,9 @@
 import type { User } from "../Types/users";
 import { PagingRequest } from "../Types/dataEnvelopes";
 import { connect, toCamelCase, toSnakeCase } from "./supabase";
+import { sign } from "jsonwebtoken";
 
 export const TABLE_NAME = "users";
-
 type ItemType = User;
 
 export async function getAll(params: PagingRequest) {
@@ -199,4 +199,45 @@ export async function remove(id: number) {
   return toCamelCase(
     result.data as Record<string, unknown>,
   ) as unknown as ItemType;
+}
+
+export async function login(
+  email: string,
+  _password?: string,
+): Promise<{ token: string; user: ItemType }> {
+  const db = connect();
+  const result = await db
+    .from(TABLE_NAME)
+    .select("*")
+    .eq("email", email)
+    .single();
+  if (result.error || !result.data) {
+    throw { status: 401, message: "Invalid email" };
+  }
+  const user = toCamelCase(
+    result.data as Record<string, unknown>,
+  ) as unknown as ItemType;
+  /* If we had passwords, we would verify them here.
+  if (!user || user.password !== _password) {
+    throw { status: 401, message: "Invalid email or password" };
+  }
+  */
+  return new Promise((resolve, reject) => {
+    sign(
+      user as object,
+      process.env.JWT_SECRET || "secret",
+      { expiresIn: "1h" },
+      (err, token) => {
+        if (err || !token) {
+          reject(err || new Error("Token generation failed"));
+          return;
+        }
+        resolve({ token, user });
+      },
+    );
+  });
+}
+
+export async function seed() {
+  // Seed function placeholder — data is managed via seed.sql
 }

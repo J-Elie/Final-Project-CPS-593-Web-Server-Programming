@@ -5,24 +5,28 @@
 
 
 -- 1. USERS (4 users) ----------------------------------------
-INSERT INTO users (id, first_name, username, image, role, bio)
+INSERT INTO users (id, first_name, last_name, age, gender, email, username, image, height, weight, role, bio)
 OVERRIDING SYSTEM VALUE
 VALUES
-  (1, 'Clove', 'clove',
+  (1, 'Clove', '', 20, 'non-binary',
+   'clove@valorant.protocol.com', 'clove',
    'https://titles.trackercdn.com/valorant-api/agents/1dbf2edd-4729-0984-3115-daa5eed44993/displayicon.png',
-   'admin',
+   165.0, 54.0, 'admin',
    'Radiant agent and part-time chaos gremlin. I run on spite and post-match adrenaline. Always training, never peaking.'),
-  (2, 'Skye', 'skye',
+  (2, 'Skye', '', 28, 'female',
+   'skye@valorant.protocol.com', 'skye',
    'https://i1.sndcdn.com/avatars-GfJ2hSJWEiRKzSeY-UHT4zA-t240x240.jpg',
-   'user',
+   172.0, 63.0, 'user',
    'Nature lover, healer, and certified golden retriever energy. Hiking and swimming keep me sane between ops.'),
-  (3, 'Sova', 'sova',
+  (3, 'Sova', 'Markov', 32, 'male',
+   'sova@valorant.protocol.com', 'sova',
    'https://fbi.cults3d.com/uploaders/14684840/illustration-file/388d5e1a-7c44-4172-a0c9-0a34c088be8c/sova-avatar.jpg',
-   'admin',
+   188.0, 85.0, 'admin',
    'Precision is everything. Russian archer, scientist, and reluctant team player. I train so the mission never fails.'),
-  (4, 'Jett', 'jett',
+  (4, 'Jett', 'Han', 24, 'female',
+   'jett@valorant.protocol.com', 'jett',
    'https://mmonster.co/media/7e/88/5a/1745860923/Jett-icon-valorant.webp',
-   'user',
+   165.5, 52.3, 'user',
    'Wind doesn''t wait and neither do I. Seoul born, sky bound. Sprinting and cycling are basically meditation for me.')
 ON CONFLICT DO NOTHING;
 
@@ -157,7 +161,89 @@ VALUES
 
   (112, 4, 'Sprint Drills',            'Running',       '2026-03-06', '25', 'Hard',
    'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=800',
-   '10x60m sprints. Fast twitch fibers only. This is my element.', '2026-03-06T16:00:00Z')
+   '10x60m sprints. Fast twitch fibers only. This is my element.', '2026-03-06T16:00:00Z'),
+
+  -- *** THIS WEEK (April 21-27, 2026) — 2 posts per user ***
+
+  -- Clove (user 1) — this week
+  (200, 1, 'Monday Morning 5K',        'Running',       '2026-04-27', '25', 'Easy',
+   'https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=800',
+   'Starting the week with a solid easy run. Legs feel fresh.', '2026-04-27T07:00:00Z'),
+  (201, 1, 'Wednesday Swim',           'Swimming',      '2026-04-23', '40', 'Moderate',
+   'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=800',
+   '30 laps steady pace. Really dialed in my flip turns today.', '2026-04-23T07:30:00Z'),
+
+  -- Skye (user 2) — this week + 2 more to reach 10 total
+  (202, 2, 'Sunday Trail Run',         'Running',       '2026-04-27', '45', 'Moderate',
+   'https://images.unsplash.com/photo-1502904550040-7534597429ae?w=800',
+   'Gorgeous morning on the coastal trail. Everything hurts in the best way.', '2026-04-27T08:00:00Z'),
+  (203, 2, 'Thursday Yoga Flow',       'Yoga',          '2026-04-24', '45', 'Easy',
+   'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800',
+   'Full body stretch and breathwork session. Exactly what I needed mid-week.', '2026-04-24T09:00:00Z'),
+  (204, 2, 'Forest Hike',             'Hiking',        '2026-02-14', '90', 'Moderate',
+   'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800',
+   'Valentine''s Day solo hike. Treated myself to a long one.', '2026-02-14T10:00:00Z'),
+  (205, 2, 'Open Water Swim',         'Swimming',      '2026-01-25', '35', 'Hard',
+   'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800',
+   'Cold water and wild energy. My best open water time yet.', '2026-01-25T10:00:00Z'),
+
+  -- Sova (user 3) — this week + 7 more to reach 10 total
+  (206, 3, 'Sunday Upper Body Grind',  'Weightlifting', '2026-04-27', '55', 'Hard',
+   'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=800',
+   'Bench, OHP, rows. Hit 4x8 at 185 on bench. Progress is steady.', '2026-04-27T09:00:00Z'),
+  (207, 3, 'Wednesday Squat Session',  'Weightlifting', '2026-04-23', '50', 'Hard',
+   'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=800',
+   '5x5 at 235lbs. PR attempt next week. Feeling solid.', '2026-04-23T18:00:00Z'),
+  (208, 3, 'Push Day',                 'Weightlifting', '2026-03-20', '50', 'Hard',
+   'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800',
+   'Chest and shoulders. 4x10 bench at 175. Pump was real.', '2026-03-20T17:00:00Z'),
+  (209, 3, 'Pull Day',                 'Weightlifting', '2026-03-14', '45', 'Moderate',
+   'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=800',
+   'Weighted pull-ups, barbell rows. Back is responding well.', '2026-03-14T17:00:00Z'),
+  (210, 3, 'Bench Press Focus',        'Weightlifting', '2026-03-01', '40', 'Hard',
+   'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800',
+   '4x6 at 205. Getting closer to that 225 mark.', '2026-03-01T17:00:00Z'),
+  (211, 3, 'Archery Cross-Training',   'Other',         '2026-02-20', '60', 'Moderate',
+   'https://images.unsplash.com/photo-1555597673-b21d5c935865?w=800',
+   'Precision focus session. 200 arrows at 40m. No misses.', '2026-02-20T07:00:00Z'),
+  (212, 3, 'Heavy Leg Day',            'Weightlifting', '2026-02-12', '55', 'Hard',
+   'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=800',
+   'Squats, lunges, leg press. Walking is optional tomorrow.', '2026-02-12T18:00:00Z'),
+  (213, 3, 'HIIT Circuit',             'Other',         '2026-02-05', '30', 'Hard',
+   'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800',
+   '5 rounds of 6 exercises. Heart rate stayed above 160 the whole time.', '2026-02-05T07:00:00Z'),
+  (214, 3, 'Morning Run',              'Running',       '2026-01-25', '30', 'Easy',
+   'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800',
+   'Easy recovery run between lift sessions. Needed the fresh air.', '2026-01-25T07:00:00Z'),
+
+  -- Jett (user 4) — this week + 7 more to reach 10 total
+  (215, 4, 'Saturday Sprint Session',  'Running',       '2026-04-26', '30', 'Hard',
+   'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=800',
+   '12x60m all-out sprints. New top speed personal best. Untouchable.', '2026-04-26T16:00:00Z'),
+  (216, 4, 'Monday Evening HIIT',      'Other',         '2026-04-21', '25', 'Hard',
+   'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800',
+   'Tabata style: 20s on, 10s off, 8 rounds. Starting the week right.', '2026-04-21T19:00:00Z'),
+  (217, 4, 'Cycling Intervals',        'Cycling',       '2026-03-20', '45', 'Hard',
+   'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800',
+   '6x4min at threshold. Wind was fighting me the whole time.', '2026-03-20T16:00:00Z'),
+  (218, 4, 'Jump Rope Conditioning',   'Other',         '2026-03-15', '20', 'Moderate',
+   'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800',
+   '10 minutes of double-unders. Footwork is everything.', '2026-03-15T15:00:00Z'),
+  (219, 4, '400m Repeat Track Work',   'Running',       '2026-03-10', '35', 'Hard',
+   'https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=800',
+   '8x400m. Hit sub-75s on every rep. That''s a first.', '2026-03-10T16:30:00Z'),
+  (220, 4, 'Speed Endurance Run',      'Running',       '2026-02-25', '40', 'Hard',
+   'https://images.unsplash.com/photo-1502904550040-7534597429ae?w=800',
+   '5K at race pace. Every km faster than the last. Dialed in.', '2026-02-25T16:00:00Z'),
+  (221, 4, 'Pull-up Volume Day',       'Weightlifting', '2026-02-18', '25', 'Moderate',
+   'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=800',
+   '5 sets of 8 unassisted. Eight months ago I couldn''t do one.', '2026-02-18T16:00:00Z'),
+  (222, 4, 'Cardio Blast',             'Other',         '2026-02-08', '30', 'Hard',
+   'https://images.unsplash.com/photo-1593079831268-3381b0db4a77?w=800',
+   'Bike + row + ski erg. 10 min each. Destroyed me in the best way.', '2026-02-08T17:00:00Z'),
+  (223, 4, 'Morning Speed Work',       'Running',       '2026-01-28', '25', 'Hard',
+   'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800',
+   'Fartlek run through the city. I don''t stop for red lights.', '2026-01-28T07:00:00Z')
 ON CONFLICT DO NOTHING;
 
 

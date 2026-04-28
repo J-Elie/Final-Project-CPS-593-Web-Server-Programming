@@ -66,3 +66,12 @@ GET http://localhost:3000/api/v1/users/5/following
 
 ### Get all followers of user 1 (Clove)
 GET http://localhost:3000/api/v1/users/1/followers
+
+
+###
+POST http://localhost:3000/api/v1/users/login
+Content-Type: application/json
+
+{
+    "email": "clove@valorant.protocol.com"
+}
