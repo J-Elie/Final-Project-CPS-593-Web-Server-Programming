@@ -12,7 +12,7 @@ import {
   login,
 } from "../Models/users";
 import { User, DataEnvelope, DataListEnvelope } from "../Types/users";
-
+import { requireAuth } from "../Middleware/auth";
 const app = Router();
 
 app
