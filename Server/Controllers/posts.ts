@@ -1,3 +1,6 @@
+// ============================================================================
+// IMPORTS
+// ============================================================================
 import { Router } from "express";
 import {
   getAll,
@@ -8,11 +11,20 @@ import {
   remove,
 } from "../Models/posts";
 import { Post, DataEnvelope, DataListEnvelope } from "../Types/posts";
+import { requireAuth } from "../Middleware/auth";
 
+// ============================================================================
+// ROUTER
+// ============================================================================
 const app = Router();
 
 app
-  .get("/", async (req, res) => {
+  // --------------------------------------------------------------------------
+  // GET /api/v1/posts
+  // Returns a paginated, searchable list of all posts.
+  // Requires authentication.
+  // --------------------------------------------------------------------------
+  .get("/", requireAuth(), async (req, res) => {
     const { posts, count } = await getAll(req.query);
     const response: DataListEnvelope<Post> = {
       data: posts,
@@ -21,7 +33,13 @@ app
     };
     res.send(response);
   })
-  .get("/count", async (req, res) => {
+
+  // --------------------------------------------------------------------------
+  // GET /api/v1/posts/count
+  // Returns the total number of posts.
+  // Requires authentication.
+  // --------------------------------------------------------------------------
+  .get("/count", requireAuth(), async (req, res) => {
     const { count } = await getAll(req.query);
     const response: DataEnvelope<{ count: number }> = {
       data: { count },
@@ -29,7 +47,13 @@ app
     };
     res.send(response);
   })
-  .get("/user/:userId", async (req, res) => {
+
+  // --------------------------------------------------------------------------
+  // GET /api/v1/posts/user/:userId
+  // Returns all posts belonging to a specific user.
+  // Requires authentication.
+  // --------------------------------------------------------------------------
+  .get("/user/:userId", requireAuth(), async (req, res) => {
     const { userId } = req.params;
     const posts = await getByUserId(Number(userId));
     const response: DataListEnvelope<Post> = {
@@ -39,7 +63,13 @@ app
     };
     res.send(response);
   })
-  .get("/:id", async (req, res) => {
+
+  // --------------------------------------------------------------------------
+  // GET /api/v1/posts/:id
+  // Returns a single post by ID.
+  // Requires authentication.
+  // --------------------------------------------------------------------------
+  .get("/:id", requireAuth(), async (req, res) => {
     const { id } = req.params;
     const response: DataEnvelope<Post> = {
       data: await get(Number(id)),
@@ -47,7 +77,13 @@ app
     };
     res.send(response);
   })
-  .post("/", async (req, res) => {
+
+  // --------------------------------------------------------------------------
+  // POST /api/v1/posts
+  // Creates a new post.
+  // Requires authentication.
+  // --------------------------------------------------------------------------
+  .post("/", requireAuth(), async (req, res) => {
     const newPost = await create(req.body);
     const response: DataEnvelope<Post> = {
       data: newPost,
@@ -55,7 +91,13 @@ app
     };
     res.send(response);
   })
-  .patch("/:id", async (req, res) => {
+
+  // --------------------------------------------------------------------------
+  // PATCH /api/v1/posts/:id
+  // Partially updates a post by ID.
+  // Requires authentication.
+  // --------------------------------------------------------------------------
+  .patch("/:id", requireAuth(), async (req, res) => {
     const { id } = req.params;
     const updatedPost = await update(Number(id), req.body);
     const response: DataEnvelope<Post> = {
@@ -64,7 +106,13 @@ app
     };
     res.send(response);
   })
-  .delete("/:id", async (req, res) => {
+
+  // --------------------------------------------------------------------------
+  // DELETE /api/v1/posts/:id
+  // Deletes a post by ID.
+  // Requires authentication.
+  // --------------------------------------------------------------------------
+  .delete("/:id", requireAuth(), async (req, res) => {
     const { id } = req.params;
     const removedPost = await remove(Number(id));
     const response: DataEnvelope<Post> = {

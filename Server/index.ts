@@ -7,8 +7,7 @@ import postsController from "./Controllers/posts";
 import commentsController from "./Controllers/comments";
 import likesController from "./Controllers/likes";
 import { DataEnvelope } from "./Types/dataEnvelopes";
-import { validateJWT } from "./Middleware/auth";
-
+import { requireAuth, validateJWT } from "./Middleware/auth";
 const PORT = process.env.PORT ?? 3000;
 const SERVER = process.env.SERVER ?? "localhost";
 const STATIC_DIR = process.env.STATIC_DIR ?? "Client/dist";
@@ -17,10 +16,16 @@ const app = express();
 
 ///////// Middleware
 app
-  .use((_req, res, next) => {
+  .use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE"); // Allow specific HTTP methods
     res.setHeader("Access-Control-Allow-Headers", "*"); // Allow specific headers
+
+    if (req.method === "OPTIONS") {
+      res.sendStatus(200);
+      return;
+    }
+
     next();
   })
   .use(express.json()) // Middleware to parse JSON request bodies
@@ -29,9 +34,9 @@ app
 app
   .use(express.static(STATIC_DIR))
   .use("/api/v1/users", usersController)
-  .use("/api/v1/posts", postsController)
-  .use("/api/v1/comments", commentsController)
-  .use("/api/v1/likes", likesController);
+  .use("/api/v1/posts", requireAuth(), postsController)
+  .use("/api/v1/comments", requireAuth(), commentsController)
+  .use("/api/v1/likes", requireAuth(), likesController);
 //////// Error handling
 app.use(
   (

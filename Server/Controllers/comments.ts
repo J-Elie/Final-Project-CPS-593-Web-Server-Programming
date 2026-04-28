@@ -1,3 +1,6 @@
+// ============================================================================
+// IMPORTS
+// ============================================================================
 import { Router } from "express";
 import {
   getCommentsByPostId,
@@ -7,11 +10,19 @@ import {
 } from "../Models/comments";
 import type { Comment } from "../Types/comments";
 import { DataEnvelope } from "../Types/dataEnvelopes";
+import { requireAuth } from "../Middleware/auth";
 
+// ============================================================================
+// ROUTER
+// ============================================================================
 const app = Router();
 
-// Get all comments for a post
-app.get("/post/:postId", async (req, res) => {
+// --------------------------------------------------------------------------
+// GET /api/v1/comments/post/:postId
+// Returns all comments for a given post.
+// Requires authentication.
+// --------------------------------------------------------------------------
+app.get("/post/:postId", requireAuth(), async (req, res) => {
   const { postId } = req.params;
   const comments = await getCommentsByPostId(Number(postId));
   const response: DataEnvelope<Comment[]> = {
@@ -21,8 +32,12 @@ app.get("/post/:postId", async (req, res) => {
   res.send(response);
 });
 
-// Add a comment to a post
-app.post("/post/:postId", async (req, res) => {
+// --------------------------------------------------------------------------
+// POST /api/v1/comments/post/:postId
+// Adds a new comment to a post.
+// Requires authentication.
+// --------------------------------------------------------------------------
+app.post("/post/:postId", requireAuth(), async (req, res) => {
   const { postId } = req.params;
   const comment = await addComment(Number(postId), req.body);
   const response: DataEnvelope<Comment> = {
@@ -32,8 +47,12 @@ app.post("/post/:postId", async (req, res) => {
   res.send(response);
 });
 
-// Edit a comment on a post
-app.patch("/post/:postId/:commentId", async (req, res) => {
+// --------------------------------------------------------------------------
+// PATCH /api/v1/comments/post/:postId/:commentId
+// Edits the content of an existing comment.
+// Requires authentication.
+// --------------------------------------------------------------------------
+app.patch("/post/:postId/:commentId", requireAuth(), async (req, res) => {
   const { postId, commentId } = req.params;
   const { content } = req.body;
   const updated = await updateComment(
@@ -48,8 +67,12 @@ app.patch("/post/:postId/:commentId", async (req, res) => {
   res.send(response);
 });
 
-// Remove a comment from a post
-app.delete("/post/:postId/:commentId", async (req, res) => {
+// --------------------------------------------------------------------------
+// DELETE /api/v1/comments/post/:postId/:commentId
+// Removes a comment from a post.
+// Requires authentication.
+// --------------------------------------------------------------------------
+app.delete("/post/:postId/:commentId", requireAuth(), async (req, res) => {
   const { postId, commentId } = req.params;
   const removed = await removeComment(Number(postId), Number(commentId));
   const response: DataEnvelope<Comment> = {
