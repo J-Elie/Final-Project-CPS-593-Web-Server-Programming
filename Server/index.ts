@@ -36,7 +36,11 @@ app
   .use("/api/v1/users", usersController)
   .use("/api/v1/posts", requireAuth(), postsController)
   .use("/api/v1/comments", requireAuth(), commentsController)
-  .use("/api/v1/likes", requireAuth(), likesController);
+  .use("/api/v1/likes", requireAuth(), likesController)
+  // Catch-all: send index.html for any non-API route so Vue Router handles navigation
+  .get("/{*path}", (_req, res) => {
+    res.sendFile("index.html", { root: STATIC_DIR });
+  });
 //////// Error handling
 app.use(
   (
