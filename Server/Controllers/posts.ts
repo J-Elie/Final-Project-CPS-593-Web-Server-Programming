@@ -6,6 +6,7 @@ import {
   getAll,
   get,
   getByUserId,
+  getFeed,
   create,
   update,
   remove,
@@ -44,6 +45,39 @@ app
     const response: DataEnvelope<{ count: number }> = {
       data: { count },
       isSuccess: true,
+    };
+    res.send(response);
+  })
+
+  // --------------------------------------------------------------------------
+  // GET /api/v1/posts/feed?userIds=1,2,3&page=1&pageSize=5
+  // Returns a paginated feed of posts for a set of user IDs, sorted newest first.
+  // Requires authentication.
+  // --------------------------------------------------------------------------
+  .get("/feed", requireAuth(), async (req, res) => {
+    // req.query.userIds may be a string "4,1,2,3" or an array ["4","1","2","3"]
+    const rawUserIds = req.query.userIds;
+    const parts: string[] = Array.isArray(rawUserIds)
+      ? (rawUserIds as string[])
+      : typeof rawUserIds === "string"
+        ? rawUserIds.split(",")
+        : [];
+    const userIds = parts
+      .map((s) => parseInt(s.trim(), 10))
+      .filter((n) => Number.isInteger(n) && n > 0);
+    const page = Math.max(1, parseInt(req.query.page as string) || 1);
+    const pageSize = Math.max(1, parseInt(req.query.pageSize as string) || 5);
+
+    if (userIds.length === 0) {
+      res.send({ data: [], isSuccess: true, total: 0 });
+      return;
+    }
+
+    const { posts, count } = await getFeed(userIds, page, pageSize);
+    const response: DataListEnvelope<Post> = {
+      data: posts,
+      isSuccess: true,
+      total: count,
     };
     res.send(response);
   })

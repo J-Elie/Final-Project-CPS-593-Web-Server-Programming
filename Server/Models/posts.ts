@@ -77,6 +77,30 @@ export async function getByUserId(userId: number): Promise<ItemType[]> {
   return (result.data as Record<string, unknown>[]).map(transformPost);
 }
 
+export async function getFeed(
+  userIds: number[],
+  page: number,
+  pageSize: number,
+): Promise<{ posts: ItemType[]; count: number }> {
+  const db = connect();
+  const start = (page - 1) * pageSize;
+
+  const result = await db
+    .from(TABLE_NAME)
+    .select("*, post_likes(user_id), comments(*)", { count: "estimated" })
+    .in("user_id", userIds)
+    .order("created_at", { ascending: false })
+    .range(start, start + pageSize - 1);
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  const posts = (result.data as Record<string, unknown>[]).map(transformPost);
+  const count = result.count ?? 0;
+  return { posts, count };
+}
+
 export async function create(post: Exclude<ItemType, "id">) {
   const db = connect();
   const result = await db
