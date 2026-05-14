@@ -147,3 +147,40 @@ Seed data is in `db/seed.sql`.
 - [x] Sensitive values (Supabase URL, keys, JWT secret) are in `.env` and never committed
 - [x] `.env` is in `.gitignore`; `.env.example` is committed as a template
 - [x] All environment variables are configured in Render dashboard (not hardcoded)
+
+---
+
+### In-Class Final: Infinite Scrolling
+
+For this final in-class assignment, I added an **Infinite Scroll** feature to two pages:
+
+- **Activity Feed** (`ActivityFeedView.vue`) — displays posts from users the logged-in user follows
+- **My Activity** (`MyActivityView.vue`) — displays the logged-in user's own posts
+
+#### What Was Added
+
+**Data volume:**
+The seed data was expanded so that each user has between 30–40 posts, giving enough volume to meaningfully demonstrate chunked loading without overwhelming the screen on first load.
+
+**Server-side pagination:**
+The `GET /api/v1/posts/feed/:userId` endpoint was updated to accept `limit` and `offset` query parameters. The model query uses `LIMIT` and `OFFSET` in SQL so that only the requested slice of rows is ever transferred over the network — the full dataset is never downloaded to the client.
+
+**Third-party scroll library:**
+Rather than writing custom scroll-detection logic, I used the **`useInfiniteScroll`** composable from [VueUse](https://vueuse.org/core/useInfiniteScroll/). VueUse is a collection of composition utilities for Vue 3. `useInfiniteScroll` handles the IntersectionObserver setup, edge cases (rapid scrolling, component unmounting, etc.), and exposes a simple async callback that fires when the user scrolls near the bottom of the target element.
+
+**Client integration (`ActivityFeedView.vue` / `postsStore.ts`):**
+
+- The Pinia store tracks `page`, `pageSize`, and a `hasMore` flag.
+- On each `useInfiniteScroll` callback, the store calls `api()` with the next `offset` and appends the returned posts to the existing list — no full refetch.
+- Loading state is tracked so a skeleton card animation (Bulma skeleton) is shown while the next batch is in flight.
+- A **"Showing X of Y"** counter updates live as new posts load, giving the user clear visual feedback.
+
+#### Technical Requirements Checklist
+
+- [x] Server only returns the data needed for the current batch (`LIMIT` / `OFFSET`)
+- [x] New requests are sent to the server as the user scrolls — not on page load
+- [x] Fetch calls go through the existing `api()` wrapper in `myFetch.ts`
+- [x] Scroll detection is handled by `useInfiniteScroll` from VueUse (no custom IntersectionObserver code)
+- [x] Skeleton loading animation is shown during each fetch
+- [x] "Showing X of Y" counter keeps the user informed
+- [x] Scrolling is seamless — no button or user action required beyond scrolling
