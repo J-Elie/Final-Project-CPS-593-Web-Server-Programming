@@ -1,17 +1,22 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useInfiniteScroll } from '@vueuse/core'
 import { useAuthStore } from '@/stores/authStore'
 import { usePostsStore } from '@/stores/postsStore'
+import { useSessionStore } from '@/stores/session'
 import type { Post } from '../../../../Server/Types/posts'
+import type { DataListEnvelope, DataEnvelope } from '../../../../Server/Types/dataEnvelopes'
 import PostCard from '@/components/PostCard.vue'
 import PostDetailModal from '@/components/modal/PostDetailModal.vue'
 import AddButton from '@/components/ui/buttons/AddButton.vue'
 import AddActivityForm from '@/components/AddActivityForm.vue'
+import FeedCounter from '@/components/ui/FeedCounter.vue'
 import { getActivityIcon, formatDuration } from '@/Services/activityHelpers'
 
 const authStore = useAuthStore()
 const postsStore = usePostsStore()
+const sessionStore = useSessionStore()
 const route = useRoute()
 const router = useRouter()
 
@@ -21,53 +26,69 @@ const router = useRouter()
 const viewMode = ref<'list' | 'grid' | 'condensed'>('list')
 
 // ============================================================================
-// POSTS
+// INFINITE SCROLL STATE
 // ============================================================================
-const myPosts = computed(() => {
-  if (!authStore.currentUser) return []
-  return postsStore.getPostsByUserId(authStore.currentUser.id)
-})
+const PAGE_SIZE = 5
 
-const sortedActivities = computed(() =>
-  [...myPosts.value].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+// IDs in display order; actual Post objects come from the store so that
+// reactive mutations (likes, comments) are reflected immediately.
+const loadedPostIds = ref<number[]>([])
+const loadedPosts = computed(
+  () =>
+    loadedPostIds.value
+      .map((id) => postsStore.getPostById(id))
+      .filter((p): p is Post => p !== undefined),
+)
+const totalCount = ref(0)
+const currentPage = ref(1)
+const isLoadingMore = ref(false)
+const allLoaded = ref(false)
+
+const isEmpty = computed(
+  () => !isLoadingMore.value && loadedPosts.value.length === 0 && allLoaded.value,
 )
 
-// ============================================================================
-// PAGINATION
-// ============================================================================
-const PAGE_SIZE = 20
-const visibleCount = ref(PAGE_SIZE)
-
-const visibleActivities = computed(() => sortedActivities.value.slice(0, visibleCount.value))
-const hasMore = computed(() => visibleCount.value < sortedActivities.value.length)
-
-function loadMore() {
-  visibleCount.value = Math.min(visibleCount.value + PAGE_SIZE, sortedActivities.value.length)
+async function loadNextPage() {
+  if (isLoadingMore.value || allLoaded.value || !authStore.currentUser) return
+  isLoadingMore.value = true
+  try {
+    const userId = authStore.currentUser.id
+    const qs = `userIds=${userId}&page=${currentPage.value}&pageSize=${PAGE_SIZE}`
+    const result = await sessionStore.api<DataListEnvelope<Post>>(`posts/feed?${qs}`)
+    for (const p of result.data) {
+      if (!postsStore.posts.find((sp) => sp.id === p.id)) postsStore.posts.push(p)
+    }
+    loadedPostIds.value.push(...result.data.map((p) => p.id))
+    totalCount.value = result.total
+    if (loadedPostIds.value.length >= result.total || result.data.length === 0) {
+      allLoaded.value = true
+    } else {
+      currentPage.value++
+    }
+  } finally {
+    isLoadingMore.value = false
+  }
 }
 
-function resetPagination() {
-  visibleCount.value = PAGE_SIZE
-}
+// Reset and reload when user changes
+watch(
+  () => authStore.currentUser?.id,
+  async (userId) => {
+    if (!userId) return
+    loadedPostIds.value = []
+    totalCount.value = 0
+    currentPage.value = 1
+    allLoaded.value = false
+    await loadNextPage()
+  },
+  { immediate: true },
+)
 
-// ============================================================================
-// INFINITE SCROLL
-// ============================================================================
-const sentinel = ref<HTMLElement | null>(null)
-let observer: IntersectionObserver | null = null
-
-onMounted(async () => {
-  observer = new IntersectionObserver(
-    (entries) => {
-      if (entries[0]?.isIntersecting && hasMore.value) loadMore()
-    },
-    { threshold: 0.1 },
-  )
-  if (sentinel.value) observer.observe(sentinel.value)
-  const targetId = Number(route.query.post)
-  if (targetId) await scrollToPost(targetId)
+// Infinite scroll — VueUse targets window (where the page scroll actually happens)
+useInfiniteScroll(window, async () => { await loadNextPage() }, {
+  distance: 300,
+  canLoadMore: () => !allLoaded.value,
 })
-
-onUnmounted(() => observer?.disconnect())
 
 // ============================================================================
 // SCROLL TO POST & HIGHLIGHT
@@ -80,23 +101,33 @@ function setPostRef(el: HTMLElement | null, postId: number) {
 }
 
 async function scrollToPost(postId: number) {
-  const idx = sortedActivities.value.findIndex((p) => p.id === postId)
-  if (idx === -1) return
-  while (idx >= visibleCount.value) {
-    loadMore()
+  if (loadedPostIds.value.includes(postId)) {
     await nextTick()
+    const el = postRefs.value[postId]
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      highlightedPostId.value = postId
+      setTimeout(() => {
+        highlightedPostId.value = null
+        router.replace({ query: {} })
+      }, 3000)
+    }
+    return
   }
-  await nextTick()
-  const el = postRefs.value[postId]
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    highlightedPostId.value = postId
-    setTimeout(() => {
-      highlightedPostId.value = null
-      router.replace({ query: {} })
-    }, 3000)
+  // Post not in current batch — fetch directly and open modal
+  try {
+    const result = await sessionStore.api<DataEnvelope<Post>>(`posts/${postId}`)
+    openDetail(result.data)
+    router.replace({ query: {} })
+  } catch {
+    // post not found, ignore
   }
 }
+
+onMounted(async () => {
+  const targetId = Number(route.query.post)
+  if (targetId) await scrollToPost(targetId)
+})
 
 // ============================================================================
 // POST DETAIL MODAL
@@ -140,7 +171,7 @@ function closeModal() {
   editingActivity.value = null
 }
 
-function handleFormSubmit(formData: {
+async function handleFormSubmit(formData: {
   title: string
   type: string
   date: string
@@ -151,16 +182,23 @@ function handleFormSubmit(formData: {
 }) {
   if (!authStore.currentUser) return
   if (editingActivity.value) {
-    postsStore.updatePost(editingActivity.value.id, formData)
+    await postsStore.updatePost(editingActivity.value.id, formData)
+    // store is updated; the computed loadedPosts will reflect the change automatically
   } else {
-    postsStore.addPost({ userId: authStore.currentUser.id, ...formData })
-    resetPagination()
+    const newPost = await postsStore.addPost({ userId: authStore.currentUser.id, ...formData })
+    loadedPostIds.value.unshift(newPost.id)
+    totalCount.value++
   }
   closeModal()
 }
 
 function deleteActivity(id: number) {
   postsStore.deletePost(id)
+  const idx = loadedPostIds.value.indexOf(id)
+  if (idx !== -1) {
+    loadedPostIds.value.splice(idx, 1)
+    totalCount.value = Math.max(0, totalCount.value - 1)
+  }
 }
 
 // ============================================================================
@@ -234,7 +272,7 @@ function typeIcon(type: string) {
       <template v-if="viewMode === 'list'">
         <div class="columns is-centered">
           <div class="column is-three-quarters">
-            <div v-if="sortedActivities.length === 0" class="notification is-light">
+            <div v-if="isEmpty" class="notification is-light">
               <p class="has-text-centered">
                 <span class="icon is-large"><i class="fas fa-running fa-2x"></i></span>
               </p>
@@ -244,10 +282,7 @@ function typeIcon(type: string) {
             </div>
 
             <div
-              v-for="activity in visibleActivities"
-              :key="activity.id"
-              :ref="(el) => setPostRef(el as HTMLElement, activity.id)"
-              class="post-wrapper"
+              v-for="activity in loadedPosts"
               :class="{ 'is-highlighted': highlightedPostId === activity.id }"
             >
               <div class="post-click-area" @click="openDetail(activity)">
@@ -269,12 +304,12 @@ function typeIcon(type: string) {
 
       <!-- ── GRID VIEW (Instagram-style) ───────────────────────────────────── -->
       <template v-if="viewMode === 'grid'">
-        <div v-if="sortedActivities.length === 0" class="notification is-light has-text-centered">
+        <div v-if="isEmpty" class="notification is-light has-text-centered">
           No activities yet.
         </div>
         <div class="grid-layout">
           <div
-            v-for="activity in visibleActivities"
+            v-for="activity in loadedPosts"
             :key="activity.id"
             :ref="(el) => setPostRef(el as HTMLElement, activity.id)"
             class="grid-tile"
@@ -349,13 +384,13 @@ function typeIcon(type: string) {
         <div class="columns is-centered">
           <div class="column is-three-quarters">
             <div
-              v-if="sortedActivities.length === 0"
+              v-if="isEmpty"
               class="notification is-light has-text-centered"
             >
               No activities yet.
             </div>
             <div
-              v-for="activity in visibleActivities"
+              v-for="activity in loadedPosts"
               :key="activity.id"
               :ref="(el) => setPostRef(el as HTMLElement, activity.id)"
               class="condensed-row"
@@ -419,21 +454,39 @@ function typeIcon(type: string) {
         </div>
       </template>
 
-      <!-- Sentinel (shared across all views) -->
-      <div ref="sentinel" class="sentinel" />
-
-      <!-- Loading -->
-      <div v-if="hasMore" class="has-text-centered py-4">
-        <span class="icon has-text-grey"><i class="fas fa-spinner fa-pulse"></i></span>
-        <p class="has-text-grey is-size-7 mt-1">Loading more activities…</p>
+      <!-- Skeleton loading (list view) -->
+      <div v-if="isLoadingMore && viewMode === 'list'" class="columns is-centered">
+        <div class="column is-three-quarters">
+          <div v-for="n in PAGE_SIZE" :key="'skel-' + n" class="card mb-3 skeleton-card">
+            <div class="card-content">
+              <div class="media mb-3">
+                <div class="media-left">
+                  <div class="skeleton-block" style="width:48px;height:48px;border-radius:50%;"></div>
+                </div>
+                <div class="media-content">
+                  <div class="skeleton-block mb-2" style="width:40%;height:14px;"></div>
+                  <div class="skeleton-block" style="width:25%;height:12px;"></div>
+                </div>
+              </div>
+              <div class="skeleton-block mb-2" style="width:70%;height:18px;"></div>
+              <div class="skeleton-block mb-1" style="width:100%;height:12px;"></div>
+              <div class="skeleton-block" style="width:85%;height:12px;"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- All loaded -->
-      <div v-else-if="sortedActivities.length > PAGE_SIZE" class="has-text-centered py-4">
-        <p class="has-text-grey is-size-7">
+      <!-- Spinner for grid/condensed while loading -->
+      <div v-if="isLoadingMore && viewMode !== 'list'" class="has-text-centered py-4">
+        <span class="icon has-text-grey"><i class="fas fa-spinner fa-pulse"></i></span>
+      </div>
+
+      <!-- All loaded indicator -->
+      <div v-if="allLoaded && loadedPosts.length > 0" class="has-text-centered py-4">
+        <span class="tag is-success is-light">
           <span class="icon is-small"><i class="fas fa-check-circle"></i></span>
-          All {{ sortedActivities.length }} activities loaded
-        </p>
+          <span>All {{ loadedPosts.length }} activities loaded</span>
+        </span>
       </div>
     </div>
 
@@ -445,6 +498,8 @@ function typeIcon(type: string) {
       :open-comment-box="openCommentBox"
       @close="closeDetail"
     />
+
+    <FeedCounter :shown="loadedPosts.length" :total="totalCount" label="activities" />
 
     <!-- Add/Edit Modal -->
     <div class="modal" :class="{ 'is-active': isFormModalOpen }">
@@ -462,10 +517,6 @@ function typeIcon(type: string) {
 </template>
 
 <style scoped>
-.sentinel {
-  height: 1px;
-}
-
 /* ── Shared highlight ──────────────────────────────────────────────────────── */
 .is-highlighted {
   outline: 3px solid hsl(204, 86%, 53%);
@@ -630,5 +681,23 @@ function typeIcon(type: string) {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* ── Skeleton shimmer ─────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton-block {
+  background: linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 4px;
+  display: block;
+}
+
+.skeleton-card {
+  border: 1px solid #ededed;
 }
 </style>

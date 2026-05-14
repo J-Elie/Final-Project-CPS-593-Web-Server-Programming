@@ -7,6 +7,7 @@ import { useUsersStore } from '@/stores/usersStores'
 import { useSessionStore } from '@/stores/session'
 import PostCard from '@/components/PostCard.vue'
 import PostDetailModal from '@/components/modal/PostDetailModal.vue'
+import FeedCounter from '@/components/ui/FeedCounter.vue'
 import type { Post } from '../../../../Server/Types/posts'
 import type { DataListEnvelope } from '../../../../Server/Types/dataEnvelopes'
 
@@ -20,7 +21,15 @@ const sessionStore = useSessionStore()
 // ============================================================================
 const PAGE_SIZE = 5
 
-const feedPosts = ref<Post[]>([])
+// IDs in display order; actual Post objects come from the store so that
+// reactive mutations (likes, comments) are reflected immediately.
+const feedPostIds = ref<number[]>([])
+const feedPosts = computed(
+  () =>
+    feedPostIds.value
+      .map((id) => postsStore.getPostById(id))
+      .filter((p): p is Post => p !== undefined),
+)
 const totalCount = ref(0)
 const currentPage = ref(1)
 const isLoadingMore = ref(false)
@@ -45,9 +54,13 @@ async function loadNextPage() {
     const validIds = feedUserIds.value.filter((id) => Number.isInteger(id) && id > 0)
     const qs = `userIds=${validIds.join(',')}&page=${currentPage.value}&pageSize=${PAGE_SIZE}`
     const result = await sessionStore.api<DataListEnvelope<Post>>(`posts/feed?${qs}`)
-    feedPosts.value.push(...result.data)
+    // Merge into the store so likes/comments are reactive, then track IDs for order.
+    for (const p of result.data) {
+      if (!postsStore.posts.find((sp) => sp.id === p.id)) postsStore.posts.push(p)
+    }
+    feedPostIds.value.push(...result.data.map((p) => p.id))
     totalCount.value = result.total
-    if (feedPosts.value.length >= result.total || result.data.length === 0) {
+    if (feedPostIds.value.length >= result.total || result.data.length === 0) {
       allLoaded.value = true
     } else {
       currentPage.value++
@@ -62,7 +75,7 @@ watch(
   feedUserIds,
   async (ids) => {
     if (ids.length === 0) return
-    feedPosts.value = []
+    feedPostIds.value = []
     totalCount.value = 0
     currentPage.value = 1
     allLoaded.value = false
@@ -109,14 +122,6 @@ function isOwner(post: Post | null): boolean {
   return authStore.currentUser?.id === post.userId
 }
 
-// Keep postsStore in sync so other views (likes, comments, etc.) still work
-function syncToStore(posts: Post[]) {
-  for (const post of posts) {
-    const idx = postsStore.posts.findIndex((p) => p.id === post.id)
-    if (idx === -1) postsStore.posts.push(post)
-  }
-}
-watch(feedPosts, syncToStore, { deep: false })
 </script>
 
 <template>
@@ -220,10 +225,7 @@ watch(feedPosts, syncToStore, { deep: false })
       @close="closeDetail"
     />
 
-    <!-- Fixed counter badge -->
-    <div v-if="feedPosts.length > 0" class="feed-counter">
-      {{ feedPosts.length }} / {{ totalCount }} posts
-    </div>
+    <FeedCounter :shown="feedPosts.length" :total="totalCount" />
   </main>
 </template>
 
@@ -239,23 +241,6 @@ watch(feedPosts, syncToStore, { deep: false })
 
 .post-click-area:hover .card {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-}
-
-/* Fixed counter badge */
-.feed-counter {
-  position: fixed;
-  bottom: 1.25rem;
-  left: 1.25rem;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 999px;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.72rem;
-  color: #888;
-  pointer-events: none;
-  z-index: 50;
-  transition: opacity 0.3s;
 }
 
 /* Skeleton shimmer animation */
