@@ -8,6 +8,8 @@ import { useSessionStore } from '@/stores/session'
 import PostCard from '@/components/PostCard.vue'
 import PostDetailModal from '@/components/modal/PostDetailModal.vue'
 import FeedCounter from '@/components/ui/FeedCounter.vue'
+import BackToTopButton from '@/components/ui/BackToTopButton.vue'
+import PostCardSkeleton from '@/components/ui/PostCardSkeleton.vue'
 import type { Post } from '../../../../Server/Types/posts'
 import type { DataListEnvelope } from '../../../../Server/Types/dataEnvelopes'
 
@@ -24,11 +26,10 @@ const PAGE_SIZE = 5
 // IDs in display order; actual Post objects come from the store so that
 // reactive mutations (likes, comments) are reflected immediately.
 const feedPostIds = ref<number[]>([])
-const feedPosts = computed(
-  () =>
-    feedPostIds.value
-      .map((id) => postsStore.getPostById(id))
-      .filter((p): p is Post => p !== undefined),
+const feedPosts = computed(() =>
+  feedPostIds.value
+    .map((id) => postsStore.getPostById(id))
+    .filter((p): p is Post => p !== undefined),
 )
 const totalCount = ref(0)
 const currentPage = ref(1)
@@ -121,7 +122,6 @@ function isOwner(post: Post | null): boolean {
   if (!post) return false
   return authStore.currentUser?.id === post.userId
 }
-
 </script>
 
 <template>
@@ -166,8 +166,6 @@ function isOwner(post: Post | null): boolean {
         <!-- Posts -->
         <div class="columns is-centered">
           <div class="column is-three-quarters">
-
-
             <div v-for="post in feedPosts" :key="post.id" class="post-wrapper">
               <div class="post-click-area" @click="openDetail(post)">
                 <PostCard
@@ -180,29 +178,7 @@ function isOwner(post: Post | null): boolean {
             </div>
 
             <!-- Skeleton loading cards (shown while fetching next batch) -->
-            <div v-if="isLoadingMore">
-              <div v-for="n in PAGE_SIZE" :key="'skel-' + n" class="card mb-3 skeleton-card">
-                <div class="card-content">
-                  <div class="media mb-3">
-                    <div class="media-left">
-                      <div
-                        class="skeleton-block"
-                        style="width: 48px; height: 48px; border-radius: 50%"
-                      ></div>
-                    </div>
-                    <div class="media-content">
-                      <div class="skeleton-lines">
-                        <div class="skeleton-block mb-2" style="width: 40%; height: 14px"></div>
-                        <div class="skeleton-block" style="width: 25%; height: 12px"></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="skeleton-block mb-2" style="width: 70%; height: 18px"></div>
-                  <div class="skeleton-block mb-1" style="width: 100%; height: 12px"></div>
-                  <div class="skeleton-block" style="width: 85%; height: 12px"></div>
-                </div>
-              </div>
-            </div>
+            <PostCardSkeleton v-if="isLoadingMore" :count="PAGE_SIZE" />
 
             <!-- All loaded indicator -->
             <div v-if="allLoaded && feedPosts.length > 0" class="has-text-centered py-4">
@@ -226,6 +202,7 @@ function isOwner(post: Post | null): boolean {
     />
 
     <FeedCounter :shown="feedPosts.length" :total="totalCount" />
+    <BackToTopButton />
   </main>
 </template>
 
@@ -244,24 +221,5 @@ function isOwner(post: Post | null): boolean {
 }
 
 /* Skeleton shimmer animation */
-@keyframes shimmer {
-  0% {
-    background-position: -400px 0;
-  }
-  100% {
-    background-position: 400px 0;
-  }
-}
-
-.skeleton-block {
-  background: linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%);
-  background-size: 800px 100%;
-  animation: shimmer 1.4s infinite linear;
-  border-radius: 4px;
-  display: block;
-}
-
-.skeleton-card {
-  border: 1px solid #ededed;
-}
+/* Skeleton shimmer handled by PostCardSkeleton component */
 </style>
